@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "invoice-ledger-checker"
+version = "0.1.0"
+description = "电子发票智能台账与重复报销检测桌面应用：数电票 XML/版式 PDF 解析、本地 SQLite 台账、规则引擎异常检测、全离线运行"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+authors = [{ name = "yuluo554" }]
+keywords = ["invoice", "e-invoice", "expense", "audit", "ledger", "desktop"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Financial and Insurance Industry",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Office/Business :: Financial",
+]
+# 核心零第三方依赖：解析（非 XML/OFD）、生成、GUI、导出全部走 extras 惰性导入
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
+parse = ["pdfplumber>=0.10"]
+data = ["reportlab>=3.6"]
+export = ["openpyxl>=3.1"]
+report = ["python-docx>=0.8.11"]
+# QtCharts 位于 PySide6-Addons，必须显式声明（extras 覆盖真实 import 纪律）
+# 6.7 起 py3.8 无 cp38 wheel（待 M5 以 PyPI 实际 wheel 复核，见 plan/06）
+desktop = [
+    "PySide6>=6.5,<6.7; python_version < '3.9'",
+    "PySide6>=6.5; python_version >= '3.9'",
+    "PySide6-Addons>=6.5,<6.7; python_version < '3.9'",
+    "PySide6-Addons>=6.5; python_version >= '3.9'",
+]
+all = [
+    "invoice-ledger-checker[dev,parse,data,export,report,desktop]",
+]
+
+[project.scripts]
+invoice-ledger = "invoice_ledger_checker.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

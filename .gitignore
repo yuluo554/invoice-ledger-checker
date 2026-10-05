@@ -7,7 +7,7 @@ venv/
 .pytest_cache/
 build/
 dist/
-*.spec
+# 注意：PyInstaller 主 .spec 入仓（可复现构建，plan/03 §6），故不忽略 *.spec
 
 # 数据库与运行产物
 *.db
