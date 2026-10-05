@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 合成测试数据：invoice-ledger-checker synthetic-v1，公司/税号/号码全虚构，与任何真实主体无关 -->
+<ElectronicInvoice version="synthetic-v1">
+  <InvoiceHeader>
+    <InvoiceNumber>08100000000010000359</InvoiceNumber>
+    <InvoiceType>纸质专票</InvoiceType>
+    <IssueDate>2026-08-22</IssueDate>
+    <Buyer>
+      <Name>远航物流股份有限公司</Name>
+      <TaxId>915101FAKE22047277</TaxId>
+    </Buyer>
+    <Seller>
+      <Name>恒岳建筑工程股份有限公司</Name>
+      <TaxId>914201FAKE36153051</TaxId>
+    </Seller>
+    <Items>
+      <Item>
+        <Name>广告服务费</Name>
+        <Amount>12361.50</Amount>
+        <TaxRate>0.01</TaxRate>
+        <TaxAmount>123.62</TaxAmount>
+      </Item>
+      <Item>
+        <Name>设备维修费</Name>
+        <Amount>24337.35</Amount>
+        <TaxRate>0.09</TaxRate>
+        <TaxAmount>2190.36</TaxAmount>
+      </Item>
+      <Item>
+        <Name>软件维护费</Name>
+        <Amount>6365.29</Amount>
+        <TaxRate>0.01</TaxRate>
+        <TaxAmount>63.65</TaxAmount>
+      </Item>
+      <Item>
+        <Name>场地租赁费</Name>
+        <Amount>3202.64</Amount>
+        <TaxRate>0.01</TaxRate>
+        <TaxAmount>32.03</TaxAmount>
+      </Item>
+    </Items>
+    <AmountWithoutTax>46266.78</AmountWithoutTax>
+    <TaxAmount>2409.66</TaxAmount>
+    <TotalWithTax>48676.44</TotalWithTax>
+    <TotalWithTaxCN>肆万捌仟陆佰柒拾陆元肆角肆分</TotalWithTaxCN>
+    <Remark>合同编号 HT-000262</Remark>
+  </InvoiceHeader>
+</ElectronicInvoice>

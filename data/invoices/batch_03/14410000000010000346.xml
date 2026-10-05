@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 合成测试数据：invoice-ledger-checker synthetic-v1，公司/税号/号码全虚构，与任何真实主体无关 -->
+<ElectronicInvoice version="synthetic-v1">
+  <InvoiceHeader>
+    <InvoiceNumber>14410000000010000346</InvoiceNumber>
+    <InvoiceType>电子普票</InvoiceType>
+    <IssueDate>2026-09-06</IssueDate>
+    <Buyer>
+      <Name>照夜照明工程有限公司</Name>
+      <TaxId>913301FAKE92546291</TaxId>
+    </Buyer>
+    <Seller>
+      <Name>星辰科技股份有限公司</Name>
+      <TaxId>913101FAKE15186449</TaxId>
+    </Seller>
+    <Items>
+      <Item>
+        <Name>云服务费</Name>
+        <Amount>23731.83</Amount>
+        <TaxRate>0.09</TaxRate>
+        <TaxAmount>2135.86</TaxAmount>
+      </Item>
+      <Item>
+        <Name>加工费</Name>
+        <Amount>8768.02</Amount>
+        <TaxRate>0.06</TaxRate>
+        <TaxAmount>526.08</TaxAmount>
+      </Item>
+      <Item>
+        <Name>咨询服务费</Name>
+        <Amount>29052.09</Amount>
+        <TaxRate>0.13</TaxRate>
+        <TaxAmount>3776.77</TaxAmount>
+      </Item>
+    </Items>
+    <AmountWithoutTax>61551.94</AmountWithoutTax>
+    <TaxAmount>6438.71</TaxAmount>
+    <TotalWithTax>67990.65</TotalWithTax>
+    <TotalWithTaxCN>陆万柒仟玖佰玖拾元陆角伍分</TotalWithTaxCN>
+    <Remark>差旅报销（第 832 批）</Remark>
+  </InvoiceHeader>
+</ElectronicInvoice>

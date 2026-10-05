@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 合成测试数据：invoice-ledger-checker synthetic-v1，公司/税号/号码全虚构，与任何真实主体无关 -->
+<ElectronicInvoice version="synthetic-v1">
+  <InvoiceHeader>
+    <InvoiceNumber>08200000000010000177</InvoiceNumber>
+    <InvoiceType>纸质普票</InvoiceType>
+    <IssueDate>2027-10-12</IssueDate>
+    <Buyer>
+      <Name>北斗精密仪器有限公司</Name>
+      <TaxId>913101FAKE99468044</TaxId>
+    </Buyer>
+    <Seller>
+      <Name>白泽咨询股份有限公司</Name>
+      <TaxId>914201FAKE56482366</TaxId>
+    </Seller>
+    <Items>
+      <Item>
+        <Name>劳务费</Name>
+        <Amount>53166.30</Amount>
+        <TaxRate>0.06</TaxRate>
+        <TaxAmount>3189.98</TaxAmount>
+      </Item>
+    </Items>
+    <AmountWithoutTax>53166.30</AmountWithoutTax>
+    <TaxAmount>3189.98</TaxAmount>
+    <TotalWithTax>56356.28</TotalWithTax>
+    <TotalWithTaxCN>伍万陆仟叁佰伍拾陆元贰角捌分</TotalWithTaxCN>
+    <Remark>服务费 670 号结算单</Remark>
+  </InvoiceHeader>
+</ElectronicInvoice>

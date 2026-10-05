@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 合成测试数据：invoice-ledger-checker synthetic-v1，公司/税号/号码全虚构，与任何真实主体无关 -->
+<ElectronicInvoice version="synthetic-v1">
+  <InvoiceHeader>
+    <InvoiceNumber>25910000000010000122</InvoiceNumber>
+    <InvoiceType>数电普票</InvoiceType>
+    <IssueDate>2026-06-21</IssueDate>
+    <Buyer>
+      <Name>云图商贸有限公司</Name>
+      <TaxId>914403FAKE76311656</TaxId>
+    </Buyer>
+    <Seller>
+      <Name>兰台档案服务股份有限公司</Name>
+      <TaxId>915101FAKE70154303</TaxId>
+    </Seller>
+    <Items>
+      <Item>
+        <Name>审计费</Name>
+        <Amount>38910.05</Amount>
+        <TaxRate>0.01</TaxRate>
+        <TaxAmount>389.10</TaxAmount>
+      </Item>
+    </Items>
+    <AmountWithoutTax>38910.05</AmountWithoutTax>
+    <TaxAmount>389.10</TaxAmount>
+    <TotalWithTax>39299.15</TotalWithTax>
+    <TotalWithTaxCN>叁万玖仟贰佰玖拾玖元壹角伍分</TotalWithTaxCN>
+    <Remark>合同编号 HT-000689</Remark>
+  </InvoiceHeader>
+</ElectronicInvoice>

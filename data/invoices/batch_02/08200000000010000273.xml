@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 合成测试数据：invoice-ledger-checker synthetic-v1，公司/税号/号码全虚构，与任何真实主体无关 -->
+<ElectronicInvoice version="synthetic-v1">
+  <InvoiceHeader>
+    <InvoiceNumber>08200000000010000273</InvoiceNumber>
+    <InvoiceType>纸质普票</InvoiceType>
+    <IssueDate>2026-07-27</IssueDate>
+    <Buyer>
+      <Name>白泽咨询股份有限公司</Name>
+      <TaxId>913301FAKE62328588</TaxId>
+    </Buyer>
+    <Seller>
+      <Name>南风电气有限公司</Name>
+      <TaxId>911101FAKE10470952</TaxId>
+    </Seller>
+    <Items>
+      <Item>
+        <Name>水电费</Name>
+        <Amount>29555.82</Amount>
+        <TaxRate>0.03</TaxRate>
+        <TaxAmount>886.67</TaxAmount>
+      </Item>
+      <Item>
+        <Name>物业管理费</Name>
+        <Amount>18959.59</Amount>
+        <TaxRate>0.03</TaxRate>
+        <TaxAmount>568.79</TaxAmount>
+      </Item>
+    </Items>
+    <AmountWithoutTax>48515.41</AmountWithoutTax>
+    <TaxAmount>1455.46</TaxAmount>
+    <TotalWithTax>49970.87</TotalWithTax>
+    <TotalWithTaxCN>肆万玖仟玖佰柒拾元捌角柒分</TotalWithTaxCN>
+  </InvoiceHeader>
+</ElectronicInvoice>

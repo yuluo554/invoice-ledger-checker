@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 合成测试数据：invoice-ledger-checker synthetic-v1，公司/税号/号码全虚构，与任何真实主体无关 -->
+<ElectronicInvoice version="synthetic-v1">
+  <InvoiceHeader>
+    <InvoiceNumber>14410000000010000225</InvoiceNumber>
+    <InvoiceType>电子普票</InvoiceType>
+    <IssueDate>2026-07-22</IssueDate>
+    <Buyer>
+      <Name>砚台文教用品股份有限公司</Name>
+      <TaxId>913301FAKE49909133</TaxId>
+    </Buyer>
+    <Seller>
+      <Name>牧野农业开发股份有限公司</Name>
+      <TaxId>913301FAKE99938677</TaxId>
+    </Seller>
+    <Items>
+      <Item>
+        <Name>办公耗材</Name>
+        <Amount>1565.45</Amount>
+        <TaxRate>0.13</TaxRate>
+        <TaxAmount>203.51</TaxAmount>
+      </Item>
+      <Item>
+        <Name>广告服务费</Name>
+        <Amount>7928.66</Amount>
+        <TaxRate>0.01</TaxRate>
+        <TaxAmount>79.29</TaxAmount>
+      </Item>
+    </Items>
+    <AmountWithoutTax>9494.11</AmountWithoutTax>
+    <TaxAmount>282.80</TaxAmount>
+    <TotalWithTax>9776.91</TotalWithTax>
+    <TotalWithTaxCN>玖仟柒佰柒拾陆元玖角壹分</TotalWithTaxCN>
+  </InvoiceHeader>
+</ElectronicInvoice>

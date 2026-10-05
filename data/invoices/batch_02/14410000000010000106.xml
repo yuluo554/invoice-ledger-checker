@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 合成测试数据：invoice-ledger-checker synthetic-v1，公司/税号/号码全虚构，与任何真实主体无关 -->
+<ElectronicInvoice version="synthetic-v1">
+  <InvoiceHeader>
+    <InvoiceNumber>14410000000010000106</InvoiceNumber>
+    <InvoiceType>电子普票</InvoiceType>
+    <IssueDate>2026-07-09</IssueDate>
+    <Buyer>
+      <Name>北斗精密仪器股份有限公司</Name>
+      <TaxId>915101FAKE81618495</TaxId>
+    </Buyer>
+    <Seller>
+      <Name>听雨茶业股份有限公司</Name>
+      <TaxId>911101FAKE11615594</TaxId>
+    </Seller>
+    <Items>
+      <Item>
+        <Name>办公用品</Name>
+        <Amount>1108.85</Amount>
+        <TaxRate>0.06</TaxRate>
+        <TaxAmount>66.53</TaxAmount>
+      </Item>
+      <Item>
+        <Name>装卸搬运费</Name>
+        <Amount>481.46</Amount>
+        <TaxRate>0.03</TaxRate>
+        <TaxAmount>14.44</TaxAmount>
+      </Item>
+    </Items>
+    <AmountWithoutTax>1590.31</AmountWithoutTax>
+    <TaxAmount>80.97</TaxAmount>
+    <TotalWithTax>1671.28</TotalWithTax>
+    <TotalWithTaxCN>壹仟陆佰柒拾壹元贰角捌分</TotalWithTaxCN>
+    <Remark>合同编号 HT-000677</Remark>
+  </InvoiceHeader>
+</ElectronicInvoice>

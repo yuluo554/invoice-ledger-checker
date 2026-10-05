@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 合成测试数据：invoice-ledger-checker synthetic-v1，公司/税号/号码全虚构，与任何真实主体无关 -->
+<ElectronicInvoice version="synthetic-v1">
+  <InvoiceHeader>
+    <InvoiceNumber>14410000000010000383</InvoiceNumber>
+    <InvoiceType>电子普票</InvoiceType>
+    <IssueDate>2026-06-27</IssueDate>
+    <Buyer>
+      <Name>南风电气股份有限公司</Name>
+      <TaxId>911101FAKE73947312</TaxId>
+    </Buyer>
+    <Seller>
+      <Name>照夜照明工程股份有限公司</Name>
+      <TaxId>911101FAKE31027868</TaxId>
+    </Seller>
+    <Items>
+      <Item>
+        <Name>印刷费</Name>
+        <Amount>31207.74</Amount>
+        <TaxRate>0.01</TaxRate>
+        <TaxAmount>312.08</TaxAmount>
+      </Item>
+      <Item>
+        <Name>劳务费</Name>
+        <Amount>6033.58</Amount>
+        <TaxRate>0.03</TaxRate>
+        <TaxAmount>181.01</TaxAmount>
+      </Item>
+      <Item>
+        <Name>场地租赁费</Name>
+        <Amount>38743.16</Amount>
+        <TaxRate>0.06</TaxRate>
+        <TaxAmount>2324.59</TaxAmount>
+      </Item>
+    </Items>
+    <AmountWithoutTax>75984.48</AmountWithoutTax>
+    <TaxAmount>2817.68</TaxAmount>
+    <TotalWithTax>78802.16</TotalWithTax>
+    <TotalWithTaxCN>柒万捌仟捌佰零贰元壹角陆分</TotalWithTaxCN>
+  </InvoiceHeader>
+</ElectronicInvoice>

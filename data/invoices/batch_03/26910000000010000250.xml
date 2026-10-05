@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 合成测试数据：invoice-ledger-checker synthetic-v1，公司/税号/号码全虚构，与任何真实主体无关 -->
+<ElectronicInvoice version="synthetic-v1">
+  <InvoiceHeader>
+    <InvoiceNumber>26910000000010000250</InvoiceNumber>
+    <InvoiceType>数电专票</InvoiceType>
+    <IssueDate>2026-08-09</IssueDate>
+    <Buyer>
+      <Name>临江建材股份有限公司</Name>
+      <TaxId>913101FAKE67737826</TaxId>
+    </Buyer>
+    <Seller>
+      <Name>山海实业股份有限公司</Name>
+      <TaxId>915101FAKE13171274</TaxId>
+    </Seller>
+    <Items>
+      <Item>
+        <Name>安保服务费</Name>
+        <Amount>2422.74</Amount>
+        <TaxRate>0.13</TaxRate>
+        <TaxAmount>314.96</TaxAmount>
+      </Item>
+      <Item>
+        <Name>委托研发费</Name>
+        <Amount>7764.21</Amount>
+        <TaxRate>0.03</TaxRate>
+        <TaxAmount>232.93</TaxAmount>
+      </Item>
+      <Item>
+        <Name>办公耗材</Name>
+        <Amount>30474.62</Amount>
+        <TaxRate>0.03</TaxRate>
+        <TaxAmount>914.24</TaxAmount>
+      </Item>
+      <Item>
+        <Name>信息技术服务费</Name>
+        <Amount>8161.70</Amount>
+        <TaxRate>0.13</TaxRate>
+        <TaxAmount>1061.02</TaxAmount>
+      </Item>
+    </Items>
+    <AmountWithoutTax>48823.27</AmountWithoutTax>
+    <TaxAmount>2523.15</TaxAmount>
+    <TotalWithTax>51346.42</TotalWithTax>
+    <TotalWithTaxCN>伍万壹仟叁佰肆拾陆元肆角贰分</TotalWithTaxCN>
+    <Remark>差旅报销（第 791 批）</Remark>
+  </InvoiceHeader>
+</ElectronicInvoice>

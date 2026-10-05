@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 合成测试数据：invoice-ledger-checker synthetic-v1，公司/税号/号码全虚构，与任何真实主体无关 -->
+<ElectronicInvoice version="synthetic-v1">
+  <InvoiceHeader>
+    <InvoiceNumber>08100000000010000364</InvoiceNumber>
+    <InvoiceType>纸质专票</InvoiceType>
+    <IssueDate>2026-07-24</IssueDate>
+    <Buyer>
+      <Name>知行教育培训股份有限公司</Name>
+      <TaxId>913101FAKE22170430</TaxId>
+    </Buyer>
+    <Seller>
+      <Name>长风医疗器械有限公司</Name>
+      <TaxId>914201FAKE95205852</TaxId>
+    </Seller>
+    <Items>
+      <Item>
+        <Name>设备维修费</Name>
+        <Amount>3412.53</Amount>
+        <TaxRate>0.09</TaxRate>
+        <TaxAmount>307.13</TaxAmount>
+      </Item>
+      <Item>
+        <Name>数据服务费</Name>
+        <Amount>3892.33</Amount>
+        <TaxRate>0.06</TaxRate>
+        <TaxAmount>233.54</TaxAmount>
+      </Item>
+      <Item>
+        <Name>设备维修费</Name>
+        <Amount>58203.40</Amount>
+        <TaxRate>0.01</TaxRate>
+        <TaxAmount>582.03</TaxAmount>
+      </Item>
+      <Item>
+        <Name>设备维修费</Name>
+        <Amount>13368.31</Amount>
+        <TaxRate>0.01</TaxRate>
+        <TaxAmount>133.68</TaxAmount>
+      </Item>
+      <Item>
+        <Name>数据服务费</Name>
+        <Amount>6788.36</Amount>
+        <TaxRate>0.03</TaxRate>
+        <TaxAmount>203.65</TaxAmount>
+      </Item>
+    </Items>
+    <AmountWithoutTax>85664.93</AmountWithoutTax>
+    <TaxAmount>1460.03</TaxAmount>
+    <TotalWithTax>87124.96</TotalWithTax>
+    <TotalWithTaxCN>捌万柒仟壹佰贰拾肆元玖角陆分</TotalWithTaxCN>
+    <Remark>差旅报销（第 527 批）</Remark>
+  </InvoiceHeader>
+</ElectronicInvoice>

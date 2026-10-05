@@ -1,0 +1,469 @@
+{
+  "anomaly_rate": 0.35,
+  "batches": [
+    {
+      "batch_id": "batch_01",
+      "expense_anchor": "2026-07-15",
+      "file_count": 21
+    },
+    {
+      "batch_id": "batch_02",
+      "expense_anchor": "2026-08-15",
+      "file_count": 19
+    },
+    {
+      "batch_id": "batch_03",
+      "expense_anchor": "2026-09-15",
+      "file_count": 20
+    }
+  ],
+  "counts": {
+    "baseline": 39,
+    "by_format": {
+      "ofd": 3,
+      "pdf": 22,
+      "xml": 35
+    },
+    "by_injection": {
+      "INJ-ARITH-CN": 2,
+      "INJ-ARITH-SUM": 2,
+      "INJ-DUP-EXACT": 2,
+      "INJ-DUP-FUZZY": 2,
+      "INJ-DUP-JOINT": 2,
+      "INJ-FIELD-MISS": 2,
+      "INJ-SEQ": 5,
+      "INJ-TIME-FUTURE": 2,
+      "INJ-TIME-STALE": 2
+    }
+  },
+  "files": [
+    {
+      "batch_id": "batch_01",
+      "format": "xml",
+      "injection": "INJ-DUP-EXACT",
+      "invoice_number": "14410000000010000106",
+      "path": "invoices/batch_01/14410000000010000106.xml"
+    },
+    {
+      "batch_id": "batch_02",
+      "format": "xml",
+      "injection": "INJ-DUP-EXACT",
+      "invoice_number": "14410000000010000106",
+      "path": "invoices/batch_02/14410000000010000106.xml"
+    },
+    {
+      "batch_id": "batch_02",
+      "format": "xml",
+      "injection": "INJ-DUP-JOINT",
+      "invoice_number": "25910000000010000111",
+      "path": "invoices/batch_02/25910000000010000111.xml"
+    },
+    {
+      "batch_id": "batch_03",
+      "format": "xml",
+      "injection": "INJ-DUP-JOINT",
+      "invoice_number": "25910000000010000111",
+      "path": "invoices/batch_03/25910000000010000111.xml"
+    },
+    {
+      "batch_id": "batch_03",
+      "format": "xml",
+      "injection": "INJ-DUP-FUZZY",
+      "invoice_number": "26910000000010000116",
+      "path": "invoices/batch_03/26910000000010000116.xml"
+    },
+    {
+      "batch_id": "batch_03",
+      "format": "xml",
+      "injection": "INJ-DUP-FUZZY",
+      "invoice_number": "26910000000010000120",
+      "path": "invoices/batch_03/26910000000010000120.xml"
+    },
+    {
+      "batch_id": "batch_01",
+      "format": "pdf",
+      "injection": "INJ-SEQ",
+      "invoice_number": "25910000000010000121",
+      "path": "invoices/batch_01/25910000000010000121.pdf"
+    },
+    {
+      "batch_id": "batch_01",
+      "format": "xml",
+      "injection": "INJ-SEQ",
+      "invoice_number": "25910000000010000122",
+      "path": "invoices/batch_01/25910000000010000122.xml"
+    },
+    {
+      "batch_id": "batch_01",
+      "format": "pdf",
+      "injection": "INJ-SEQ",
+      "invoice_number": "25910000000010000123",
+      "path": "invoices/batch_01/25910000000010000123.pdf"
+    },
+    {
+      "batch_id": "batch_01",
+      "format": "xml",
+      "injection": "INJ-SEQ",
+      "invoice_number": "25910000000010000124",
+      "path": "invoices/batch_01/25910000000010000124.xml"
+    },
+    {
+      "batch_id": "batch_01",
+      "format": "xml",
+      "injection": "INJ-SEQ",
+      "invoice_number": "25910000000010000125",
+      "path": "invoices/batch_01/25910000000010000125.xml"
+    },
+    {
+      "batch_id": "batch_02",
+      "format": "pdf",
+      "injection": "INJ-ARITH-SUM",
+      "invoice_number": "26910000000010000155",
+      "path": "invoices/batch_02/26910000000010000155.pdf"
+    },
+    {
+      "batch_id": "batch_02",
+      "format": "xml",
+      "injection": "INJ-ARITH-SUM",
+      "invoice_number": "08100000000010000157",
+      "path": "invoices/batch_02/08100000000010000157.xml"
+    },
+    {
+      "batch_id": "batch_03",
+      "format": "pdf",
+      "injection": "INJ-ARITH-CN",
+      "invoice_number": "14410000000010000164",
+      "path": "invoices/batch_03/14410000000010000164.pdf"
+    },
+    {
+      "batch_id": "batch_03",
+      "format": "xml",
+      "injection": "INJ-ARITH-CN",
+      "invoice_number": "26910000000010000169",
+      "path": "invoices/batch_03/26910000000010000169.xml"
+    },
+    {
+      "batch_id": "batch_01",
+      "format": "xml",
+      "injection": "INJ-TIME-FUTURE",
+      "invoice_number": "08200000000010000177",
+      "path": "invoices/batch_01/08200000000010000177.xml"
+    },
+    {
+      "batch_id": "batch_01",
+      "format": "pdf",
+      "injection": "INJ-TIME-FUTURE",
+      "invoice_number": "26910000000010000179",
+      "path": "invoices/batch_01/26910000000010000179.pdf"
+    },
+    {
+      "batch_id": "batch_02",
+      "format": "xml",
+      "injection": "INJ-TIME-STALE",
+      "invoice_number": "26910000000010000185",
+      "path": "invoices/batch_02/26910000000010000185.xml"
+    },
+    {
+      "batch_id": "batch_02",
+      "format": "pdf",
+      "injection": "INJ-TIME-STALE",
+      "invoice_number": "25910000000010000194",
+      "path": "invoices/batch_02/25910000000010000194.pdf"
+    },
+    {
+      "batch_id": "batch_03",
+      "format": "ofd",
+      "injection": "INJ-FIELD-MISS",
+      "invoice_number": "26910000000010000196",
+      "path": "invoices/batch_03/26910000000010000196.ofd"
+    },
+    {
+      "batch_id": "batch_03",
+      "format": "xml",
+      "injection": "INJ-FIELD-MISS",
+      "invoice_number": "08100000000010000201",
+      "path": "invoices/batch_03/08100000000010000201.xml"
+    },
+    {
+      "batch_id": "batch_01",
+      "format": "pdf",
+      "injection": "BASELINE",
+      "invoice_number": "14410000000010000206",
+      "path": "invoices/batch_01/14410000000010000206.pdf"
+    },
+    {
+      "batch_id": "batch_02",
+      "format": "xml",
+      "injection": "BASELINE",
+      "invoice_number": "14410000000010000208",
+      "path": "invoices/batch_02/14410000000010000208.xml"
+    },
+    {
+      "batch_id": "batch_03",
+      "format": "pdf",
+      "injection": "BASELINE",
+      "invoice_number": "25910000000010000213",
+      "path": "invoices/batch_03/25910000000010000213.pdf"
+    },
+    {
+      "batch_id": "batch_01",
+      "format": "xml",
+      "injection": "BASELINE",
+      "invoice_number": "26910000000010000222",
+      "path": "invoices/batch_01/26910000000010000222.xml"
+    },
+    {
+      "batch_id": "batch_02",
+      "format": "xml",
+      "injection": "BASELINE",
+      "invoice_number": "14410000000010000225",
+      "path": "invoices/batch_02/14410000000010000225.xml"
+    },
+    {
+      "batch_id": "batch_03",
+      "format": "pdf",
+      "injection": "BASELINE",
+      "invoice_number": "25910000000010000229",
+      "path": "invoices/batch_03/25910000000010000229.pdf"
+    },
+    {
+      "batch_id": "batch_01",
+      "format": "xml",
+      "injection": "BASELINE",
+      "invoice_number": "08100000000010000237",
+      "path": "invoices/batch_01/08100000000010000237.xml"
+    },
+    {
+      "batch_id": "batch_02",
+      "format": "pdf",
+      "injection": "BASELINE",
+      "invoice_number": "25910000000010000246",
+      "path": "invoices/batch_02/25910000000010000246.pdf"
+    },
+    {
+      "batch_id": "batch_03",
+      "format": "xml",
+      "injection": "BASELINE",
+      "invoice_number": "26910000000010000250",
+      "path": "invoices/batch_03/26910000000010000250.xml"
+    },
+    {
+      "batch_id": "batch_01",
+      "format": "xml",
+      "injection": "BASELINE",
+      "invoice_number": "08100000000010000259",
+      "path": "invoices/batch_01/08100000000010000259.xml"
+    },
+    {
+      "batch_id": "batch_02",
+      "format": "pdf",
+      "injection": "BASELINE",
+      "invoice_number": "08200000000010000265",
+      "path": "invoices/batch_02/08200000000010000265.pdf"
+    },
+    {
+      "batch_id": "batch_03",
+      "format": "xml",
+      "injection": "BASELINE",
+      "invoice_number": "08200000000010000267",
+      "path": "invoices/batch_03/08200000000010000267.xml"
+    },
+    {
+      "batch_id": "batch_01",
+      "format": "pdf",
+      "injection": "BASELINE",
+      "invoice_number": "25910000000010000269",
+      "path": "invoices/batch_01/25910000000010000269.pdf"
+    },
+    {
+      "batch_id": "batch_02",
+      "format": "xml",
+      "injection": "BASELINE",
+      "invoice_number": "08200000000010000273",
+      "path": "invoices/batch_02/08200000000010000273.xml"
+    },
+    {
+      "batch_id": "batch_03",
+      "format": "xml",
+      "injection": "BASELINE",
+      "invoice_number": "08100000000010000280",
+      "path": "invoices/batch_03/08100000000010000280.xml"
+    },
+    {
+      "batch_id": "batch_01",
+      "format": "pdf",
+      "injection": "BASELINE",
+      "invoice_number": "25910000000010000289",
+      "path": "invoices/batch_01/25910000000010000289.pdf"
+    },
+    {
+      "batch_id": "batch_02",
+      "format": "xml",
+      "injection": "BASELINE",
+      "invoice_number": "26910000000010000293",
+      "path": "invoices/batch_02/26910000000010000293.xml"
+    },
+    {
+      "batch_id": "batch_03",
+      "format": "pdf",
+      "injection": "BASELINE",
+      "invoice_number": "08100000000010000295",
+      "path": "invoices/batch_03/08100000000010000295.pdf"
+    },
+    {
+      "batch_id": "batch_01",
+      "format": "ofd",
+      "injection": "BASELINE",
+      "invoice_number": "26910000000010000303",
+      "path": "invoices/batch_01/26910000000010000303.ofd"
+    },
+    {
+      "batch_id": "batch_02",
+      "format": "xml",
+      "injection": "BASELINE",
+      "invoice_number": "14410000000010000305",
+      "path": "invoices/batch_02/14410000000010000305.xml"
+    },
+    {
+      "batch_id": "batch_03",
+      "format": "pdf",
+      "injection": "BASELINE",
+      "invoice_number": "26910000000010000311",
+      "path": "invoices/batch_03/26910000000010000311.pdf"
+    },
+    {
+      "batch_id": "batch_01",
+      "format": "xml",
+      "injection": "BASELINE",
+      "invoice_number": "26910000000010000314",
+      "path": "invoices/batch_01/26910000000010000314.xml"
+    },
+    {
+      "batch_id": "batch_02",
+      "format": "pdf",
+      "injection": "BASELINE",
+      "invoice_number": "14410000000010000319",
+      "path": "invoices/batch_02/14410000000010000319.pdf"
+    },
+    {
+      "batch_id": "batch_03",
+      "format": "xml",
+      "injection": "BASELINE",
+      "invoice_number": "26910000000010000323",
+      "path": "invoices/batch_03/26910000000010000323.xml"
+    },
+    {
+      "batch_id": "batch_01",
+      "format": "xml",
+      "injection": "BASELINE",
+      "invoice_number": "14410000000010000329",
+      "path": "invoices/batch_01/14410000000010000329.xml"
+    },
+    {
+      "batch_id": "batch_02",
+      "format": "pdf",
+      "injection": "BASELINE",
+      "invoice_number": "26910000000010000338",
+      "path": "invoices/batch_02/26910000000010000338.pdf"
+    },
+    {
+      "batch_id": "batch_03",
+      "format": "xml",
+      "injection": "BASELINE",
+      "invoice_number": "14410000000010000346",
+      "path": "invoices/batch_03/14410000000010000346.xml"
+    },
+    {
+      "batch_id": "batch_01",
+      "format": "pdf",
+      "injection": "BASELINE",
+      "invoice_number": "25910000000010000354",
+      "path": "invoices/batch_01/25910000000010000354.pdf"
+    },
+    {
+      "batch_id": "batch_02",
+      "format": "xml",
+      "injection": "BASELINE",
+      "invoice_number": "25910000000010000357",
+      "path": "invoices/batch_02/25910000000010000357.xml"
+    },
+    {
+      "batch_id": "batch_03",
+      "format": "xml",
+      "injection": "BASELINE",
+      "invoice_number": "08100000000010000359",
+      "path": "invoices/batch_03/08100000000010000359.xml"
+    },
+    {
+      "batch_id": "batch_01",
+      "format": "pdf",
+      "injection": "BASELINE",
+      "invoice_number": "25910000000010000362",
+      "path": "invoices/batch_01/25910000000010000362.pdf"
+    },
+    {
+      "batch_id": "batch_02",
+      "format": "xml",
+      "injection": "BASELINE",
+      "invoice_number": "08100000000010000364",
+      "path": "invoices/batch_02/08100000000010000364.xml"
+    },
+    {
+      "batch_id": "batch_03",
+      "format": "pdf",
+      "injection": "BASELINE",
+      "invoice_number": "26910000000010000367",
+      "path": "invoices/batch_03/26910000000010000367.pdf"
+    },
+    {
+      "batch_id": "batch_01",
+      "format": "xml",
+      "injection": "BASELINE",
+      "invoice_number": "26910000000010000374",
+      "path": "invoices/batch_01/26910000000010000374.xml"
+    },
+    {
+      "batch_id": "batch_02",
+      "format": "xml",
+      "injection": "BASELINE",
+      "invoice_number": "14410000000010000383",
+      "path": "invoices/batch_02/14410000000010000383.xml"
+    },
+    {
+      "batch_id": "batch_03",
+      "format": "pdf",
+      "injection": "BASELINE",
+      "invoice_number": "14410000000010000392",
+      "path": "invoices/batch_03/14410000000010000392.pdf"
+    },
+    {
+      "batch_id": "batch_01",
+      "format": "xml",
+      "injection": "BASELINE",
+      "invoice_number": "14410000000010000396",
+      "path": "invoices/batch_01/14410000000010000396.xml"
+    },
+    {
+      "batch_id": "batch_02",
+      "format": "pdf",
+      "injection": "BASELINE",
+      "invoice_number": "25910000000010000405",
+      "path": "invoices/batch_02/25910000000010000405.pdf"
+    },
+    {
+      "batch_id": "batch_03",
+      "format": "ofd",
+      "injection": "BASELINE",
+      "invoice_number": "25910000000010000414",
+      "path": "invoices/batch_03/25910000000010000414.ofd"
+    }
+  ],
+  "formats": [
+    "xml",
+    "pdf",
+    "ofd"
+  ],
+  "injected_files": 21,
+  "n": 60,
+  "seed": 42
+}

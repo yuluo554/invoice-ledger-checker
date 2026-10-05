@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 合成测试数据：invoice-ledger-checker synthetic-v1，公司/税号/号码全虚构，与任何真实主体无关 -->
+<ElectronicInvoice version="synthetic-v1">
+  <InvoiceHeader>
+    <InvoiceNumber>14410000000010000305</InvoiceNumber>
+    <InvoiceType>电子普票</InvoiceType>
+    <IssueDate>2026-07-10</IssueDate>
+    <Buyer>
+      <Name>长风医疗器械股份有限公司</Name>
+      <TaxId>915101FAKE11116152</TaxId>
+    </Buyer>
+    <Seller>
+      <Name>青竹文化传媒股份有限公司</Name>
+      <TaxId>913101FAKE66156545</TaxId>
+    </Seller>
+    <Items>
+      <Item>
+        <Name>广告服务费</Name>
+        <Amount>72154.76</Amount>
+        <TaxRate>0.09</TaxRate>
+        <TaxAmount>6493.93</TaxAmount>
+      </Item>
+      <Item>
+        <Name>检测服务费</Name>
+        <Amount>20843.94</Amount>
+        <TaxRate>0.09</TaxRate>
+        <TaxAmount>1875.95</TaxAmount>
+      </Item>
+    </Items>
+    <AmountWithoutTax>92998.70</AmountWithoutTax>
+    <TaxAmount>8369.88</TaxAmount>
+    <TotalWithTax>101368.58</TotalWithTax>
+    <TotalWithTaxCN>壹拾万零壹仟叁佰陆拾捌元伍角捌分</TotalWithTaxCN>
+    <Remark>服务费 575 号结算单</Remark>
+  </InvoiceHeader>
+</ElectronicInvoice>

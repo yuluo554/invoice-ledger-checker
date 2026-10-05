@@ -14,7 +14,8 @@
 | [04-模块详设.md](04-模块详设.md) | InvoiceCard schema、解析字段映射、八规则表、SQLite DDL、GUI 划分 | ✅ 定稿 2026-10-05 |
 | [05-数据计划与里程碑.md](05-数据计划与里程碑.md) | 生成器+注入异常清单+真值语义、M0-M6 DoD、基准口径、交付对标 | ✅ 定稿 2026-10-05 |
 | [06-决策记录.md](06-决策记录.md) | 重大决策表（已定+待定+缓议清零区） | ✅ 独立成文 2026-10-05 |
-| [HANDOFF-M1.md](HANDOFF-M1.md) | 交接快照：M0 收尾 → M1 数据先行续接 | ✅ 2026-10-05 |
+| [HANDOFF-M1.md](HANDOFF-M1.md) | 交接快照：M0 收尾 → M1 数据先行续接（已过时留档） | ✅ 2026-10-05 |
+| [HANDOFF-M2.md](HANDOFF-M2.md) | 交接快照：M1 收尾 → M2 解析层续接 | ✅ 2026-10-06 |
 
 ## 决策记录
 
@@ -24,11 +25,13 @@
 | 2026-10-05 | 技术栈 | Python + PySide6（QtCharts）+ SQLite（FTS 可选）+ openpyxl + reportlab（生成器）+ PyInstaller 打包；LLM 仅可选兜底，非必需 |
 | 2026-10-05 | 仓库名与发布 | `invoice-ledger-checker`，GitHub 公开；Release 附 Windows exe |
 | 2026-10-05 | 政策依据 | 11号公告/764号令/56号令已查证（见 01 §五），条文入库时逐条挂出处 |
+| 2026-10-06 | 真值语义定稿 | 双键真值（cards 按文件路径、expectations 按号码）；基准按全部非 pass 集合对账；R-DUP-02 排除纯复制件（只报 R-DUP-01）；R-TIME 基准通路取批次 expense_anchor（与墙钟无关）；权威出处 = generator/synthetic.py 模块注释 |
+| 2026-10-06 | 法规查证收口 | 764号令/《发票管理办法》修订原文已直连核对入库；11号公告/56号令原文未直连成功 → 条文标"待核对"+登记渠道，不空转（M2+ 补核） |
 
 ## 里程碑
 
 - **M0 计划+骨架 ✅（2026-10-05）**：plan 02-06 定稿；src 布局骨架（models/parsing/storage/rules/generator/benchmarks/export/app + CLI）；种子规则 R-ARITH-01/R-DUP-01；25 项测试全绿；`py -m invoice_ledger_checker demo/doctor` 可用；CI（win 3.8/3.12 + ubuntu 3.12）；MIT + README + .gitattributes(EOL 门)
-- M1 数据先行：发票模板（数电票 XML + PDF 版式）+ 生成器（固定 seed，植入重复/连号/算术错误真值）+ 数据台账
+- **M1 数据先行 ✅（2026-10-06）**：合成发票生成器（5 类型 × XML/PDF/OFD 三格式，seed 可复现位级一致）；9 类注入 + 基线全落地，真值 JSON（cards/expectations/manifest）语义定稿；`generate --out data --seed 42 --n 60` 冻结 60 份入仓；法规知识库（764号令已核对、11号公告/56号令待核对挂渠道）；数据台账四行登记齐；65 项测试全绿
 - M2 解析层：PDF 文本层 + XML 数据电文双解析器 → 发票参数卡，回归测试
 - M3 规则引擎：重复报销/连号簇/时间逻辑/算术复核四类检测 + 三级判定
 - M4 内置基准：解析 F1 ≥0.95、检出率 100%、误报 0

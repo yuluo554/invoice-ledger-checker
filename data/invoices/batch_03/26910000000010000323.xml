@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 合成测试数据：invoice-ledger-checker synthetic-v1，公司/税号/号码全虚构，与任何真实主体无关 -->
+<ElectronicInvoice version="synthetic-v1">
+  <InvoiceHeader>
+    <InvoiceNumber>26910000000010000323</InvoiceNumber>
+    <InvoiceType>数电专票</InvoiceType>
+    <IssueDate>2026-08-02</IssueDate>
+    <Buyer>
+      <Name>拾光摄影股份有限公司</Name>
+      <TaxId>913301FAKE96816453</TaxId>
+    </Buyer>
+    <Seller>
+      <Name>牧野农业开发股份有限公司</Name>
+      <TaxId>911101FAKE05297516</TaxId>
+    </Seller>
+    <Items>
+      <Item>
+        <Name>印刷费</Name>
+        <Amount>197.51</Amount>
+        <TaxRate>0.06</TaxRate>
+        <TaxAmount>11.85</TaxAmount>
+      </Item>
+      <Item>
+        <Name>印刷费</Name>
+        <Amount>619.93</Amount>
+        <TaxRate>0.09</TaxRate>
+        <TaxAmount>55.79</TaxAmount>
+      </Item>
+      <Item>
+        <Name>委托研发费</Name>
+        <Amount>4004.43</Amount>
+        <TaxRate>0.09</TaxRate>
+        <TaxAmount>360.40</TaxAmount>
+      </Item>
+      <Item>
+        <Name>办公耗材</Name>
+        <Amount>2775.27</Amount>
+        <TaxRate>0.09</TaxRate>
+        <TaxAmount>249.77</TaxAmount>
+      </Item>
+    </Items>
+    <AmountWithoutTax>7597.14</AmountWithoutTax>
+    <TaxAmount>677.81</TaxAmount>
+    <TotalWithTax>8274.95</TotalWithTax>
+    <TotalWithTaxCN>捌仟贰佰柒拾肆元玖角伍分</TotalWithTaxCN>
+  </InvoiceHeader>
+</ElectronicInvoice>

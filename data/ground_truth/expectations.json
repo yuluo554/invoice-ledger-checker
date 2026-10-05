@@ -1,0 +1,566 @@
+{
+  "08100000000010000157": {
+    "also_expect": {},
+    "expect": {
+      "R-ARITH-01": "error"
+    },
+    "files": [
+      "invoices/batch_02/08100000000010000157.xml"
+    ],
+    "injection": "INJ-ARITH-SUM",
+    "missing_fields": []
+  },
+  "08100000000010000201": {
+    "also_expect": {},
+    "expect": {},
+    "files": [
+      "invoices/batch_03/08100000000010000201.xml"
+    ],
+    "injection": "INJ-FIELD-MISS",
+    "missing_fields": [
+      "remark"
+    ]
+  },
+  "08100000000010000237": {
+    "also_expect": {},
+    "expect": {},
+    "files": [
+      "invoices/batch_01/08100000000010000237.xml"
+    ],
+    "injection": "BASELINE",
+    "missing_fields": []
+  },
+  "08100000000010000259": {
+    "also_expect": {},
+    "expect": {},
+    "files": [
+      "invoices/batch_01/08100000000010000259.xml"
+    ],
+    "injection": "BASELINE",
+    "missing_fields": []
+  },
+  "08100000000010000280": {
+    "also_expect": {},
+    "expect": {},
+    "files": [
+      "invoices/batch_03/08100000000010000280.xml"
+    ],
+    "injection": "BASELINE",
+    "missing_fields": []
+  },
+  "08100000000010000295": {
+    "also_expect": {},
+    "expect": {},
+    "files": [
+      "invoices/batch_03/08100000000010000295.pdf"
+    ],
+    "injection": "BASELINE",
+    "missing_fields": []
+  },
+  "08100000000010000359": {
+    "also_expect": {},
+    "expect": {},
+    "files": [
+      "invoices/batch_03/08100000000010000359.xml"
+    ],
+    "injection": "BASELINE",
+    "missing_fields": []
+  },
+  "08100000000010000364": {
+    "also_expect": {},
+    "expect": {},
+    "files": [
+      "invoices/batch_02/08100000000010000364.xml"
+    ],
+    "injection": "BASELINE",
+    "missing_fields": []
+  },
+  "08200000000010000177": {
+    "also_expect": {},
+    "expect": {
+      "R-TIME-01": "error"
+    },
+    "files": [
+      "invoices/batch_01/08200000000010000177.xml"
+    ],
+    "injection": "INJ-TIME-FUTURE",
+    "missing_fields": []
+  },
+  "08200000000010000265": {
+    "also_expect": {},
+    "expect": {},
+    "files": [
+      "invoices/batch_02/08200000000010000265.pdf"
+    ],
+    "injection": "BASELINE",
+    "missing_fields": []
+  },
+  "08200000000010000267": {
+    "also_expect": {},
+    "expect": {},
+    "files": [
+      "invoices/batch_03/08200000000010000267.xml"
+    ],
+    "injection": "BASELINE",
+    "missing_fields": []
+  },
+  "08200000000010000273": {
+    "also_expect": {},
+    "expect": {},
+    "files": [
+      "invoices/batch_02/08200000000010000273.xml"
+    ],
+    "injection": "BASELINE",
+    "missing_fields": []
+  },
+  "14410000000010000106": {
+    "also_expect": {},
+    "expect": {
+      "R-DUP-01": "error"
+    },
+    "files": [
+      "invoices/batch_01/14410000000010000106.xml",
+      "invoices/batch_02/14410000000010000106.xml"
+    ],
+    "injection": "INJ-DUP-EXACT",
+    "missing_fields": []
+  },
+  "14410000000010000164": {
+    "also_expect": {},
+    "expect": {
+      "R-ARITH-02": "error"
+    },
+    "files": [
+      "invoices/batch_03/14410000000010000164.pdf"
+    ],
+    "injection": "INJ-ARITH-CN",
+    "missing_fields": []
+  },
+  "14410000000010000206": {
+    "also_expect": {},
+    "expect": {},
+    "files": [
+      "invoices/batch_01/14410000000010000206.pdf"
+    ],
+    "injection": "BASELINE",
+    "missing_fields": []
+  },
+  "14410000000010000208": {
+    "also_expect": {},
+    "expect": {},
+    "files": [
+      "invoices/batch_02/14410000000010000208.xml"
+    ],
+    "injection": "BASELINE",
+    "missing_fields": []
+  },
+  "14410000000010000225": {
+    "also_expect": {},
+    "expect": {},
+    "files": [
+      "invoices/batch_02/14410000000010000225.xml"
+    ],
+    "injection": "BASELINE",
+    "missing_fields": []
+  },
+  "14410000000010000305": {
+    "also_expect": {},
+    "expect": {},
+    "files": [
+      "invoices/batch_02/14410000000010000305.xml"
+    ],
+    "injection": "BASELINE",
+    "missing_fields": []
+  },
+  "14410000000010000319": {
+    "also_expect": {},
+    "expect": {},
+    "files": [
+      "invoices/batch_02/14410000000010000319.pdf"
+    ],
+    "injection": "BASELINE",
+    "missing_fields": []
+  },
+  "14410000000010000329": {
+    "also_expect": {},
+    "expect": {},
+    "files": [
+      "invoices/batch_01/14410000000010000329.xml"
+    ],
+    "injection": "BASELINE",
+    "missing_fields": []
+  },
+  "14410000000010000346": {
+    "also_expect": {},
+    "expect": {},
+    "files": [
+      "invoices/batch_03/14410000000010000346.xml"
+    ],
+    "injection": "BASELINE",
+    "missing_fields": []
+  },
+  "14410000000010000383": {
+    "also_expect": {},
+    "expect": {},
+    "files": [
+      "invoices/batch_02/14410000000010000383.xml"
+    ],
+    "injection": "BASELINE",
+    "missing_fields": []
+  },
+  "14410000000010000392": {
+    "also_expect": {},
+    "expect": {},
+    "files": [
+      "invoices/batch_03/14410000000010000392.pdf"
+    ],
+    "injection": "BASELINE",
+    "missing_fields": []
+  },
+  "14410000000010000396": {
+    "also_expect": {},
+    "expect": {},
+    "files": [
+      "invoices/batch_01/14410000000010000396.xml"
+    ],
+    "injection": "BASELINE",
+    "missing_fields": []
+  },
+  "25910000000010000111": {
+    "also_expect": {
+      "R-DUP-01": "error"
+    },
+    "expect": {
+      "R-DUP-02": "error"
+    },
+    "files": [
+      "invoices/batch_02/25910000000010000111.xml",
+      "invoices/batch_03/25910000000010000111.xml"
+    ],
+    "injection": "INJ-DUP-JOINT",
+    "missing_fields": []
+  },
+  "25910000000010000121": {
+    "also_expect": {},
+    "expect": {
+      "R-SEQ-01": "suspicious"
+    },
+    "files": [
+      "invoices/batch_01/25910000000010000121.pdf"
+    ],
+    "injection": "INJ-SEQ",
+    "missing_fields": []
+  },
+  "25910000000010000122": {
+    "also_expect": {},
+    "expect": {
+      "R-SEQ-01": "suspicious"
+    },
+    "files": [
+      "invoices/batch_01/25910000000010000122.xml"
+    ],
+    "injection": "INJ-SEQ",
+    "missing_fields": []
+  },
+  "25910000000010000123": {
+    "also_expect": {},
+    "expect": {
+      "R-SEQ-01": "suspicious"
+    },
+    "files": [
+      "invoices/batch_01/25910000000010000123.pdf"
+    ],
+    "injection": "INJ-SEQ",
+    "missing_fields": []
+  },
+  "25910000000010000124": {
+    "also_expect": {},
+    "expect": {
+      "R-SEQ-01": "suspicious"
+    },
+    "files": [
+      "invoices/batch_01/25910000000010000124.xml"
+    ],
+    "injection": "INJ-SEQ",
+    "missing_fields": []
+  },
+  "25910000000010000125": {
+    "also_expect": {},
+    "expect": {
+      "R-SEQ-01": "suspicious"
+    },
+    "files": [
+      "invoices/batch_01/25910000000010000125.xml"
+    ],
+    "injection": "INJ-SEQ",
+    "missing_fields": []
+  },
+  "25910000000010000194": {
+    "also_expect": {},
+    "expect": {
+      "R-TIME-02": "review"
+    },
+    "files": [
+      "invoices/batch_02/25910000000010000194.pdf"
+    ],
+    "injection": "INJ-TIME-STALE",
+    "missing_fields": []
+  },
+  "25910000000010000213": {
+    "also_expect": {},
+    "expect": {},
+    "files": [
+      "invoices/batch_03/25910000000010000213.pdf"
+    ],
+    "injection": "BASELINE",
+    "missing_fields": []
+  },
+  "25910000000010000229": {
+    "also_expect": {},
+    "expect": {},
+    "files": [
+      "invoices/batch_03/25910000000010000229.pdf"
+    ],
+    "injection": "BASELINE",
+    "missing_fields": []
+  },
+  "25910000000010000246": {
+    "also_expect": {},
+    "expect": {},
+    "files": [
+      "invoices/batch_02/25910000000010000246.pdf"
+    ],
+    "injection": "BASELINE",
+    "missing_fields": []
+  },
+  "25910000000010000269": {
+    "also_expect": {},
+    "expect": {},
+    "files": [
+      "invoices/batch_01/25910000000010000269.pdf"
+    ],
+    "injection": "BASELINE",
+    "missing_fields": []
+  },
+  "25910000000010000289": {
+    "also_expect": {},
+    "expect": {},
+    "files": [
+      "invoices/batch_01/25910000000010000289.pdf"
+    ],
+    "injection": "BASELINE",
+    "missing_fields": []
+  },
+  "25910000000010000354": {
+    "also_expect": {},
+    "expect": {},
+    "files": [
+      "invoices/batch_01/25910000000010000354.pdf"
+    ],
+    "injection": "BASELINE",
+    "missing_fields": []
+  },
+  "25910000000010000357": {
+    "also_expect": {},
+    "expect": {},
+    "files": [
+      "invoices/batch_02/25910000000010000357.xml"
+    ],
+    "injection": "BASELINE",
+    "missing_fields": []
+  },
+  "25910000000010000362": {
+    "also_expect": {},
+    "expect": {},
+    "files": [
+      "invoices/batch_01/25910000000010000362.pdf"
+    ],
+    "injection": "BASELINE",
+    "missing_fields": []
+  },
+  "25910000000010000405": {
+    "also_expect": {},
+    "expect": {},
+    "files": [
+      "invoices/batch_02/25910000000010000405.pdf"
+    ],
+    "injection": "BASELINE",
+    "missing_fields": []
+  },
+  "25910000000010000414": {
+    "also_expect": {},
+    "expect": {},
+    "files": [
+      "invoices/batch_03/25910000000010000414.ofd"
+    ],
+    "injection": "BASELINE",
+    "missing_fields": []
+  },
+  "26910000000010000116": {
+    "also_expect": {},
+    "expect": {
+      "R-DUP-03": "suspicious"
+    },
+    "files": [
+      "invoices/batch_03/26910000000010000116.xml"
+    ],
+    "injection": "INJ-DUP-FUZZY",
+    "missing_fields": []
+  },
+  "26910000000010000120": {
+    "also_expect": {},
+    "expect": {
+      "R-DUP-03": "suspicious"
+    },
+    "files": [
+      "invoices/batch_03/26910000000010000120.xml"
+    ],
+    "injection": "INJ-DUP-FUZZY",
+    "missing_fields": []
+  },
+  "26910000000010000155": {
+    "also_expect": {},
+    "expect": {
+      "R-ARITH-01": "error"
+    },
+    "files": [
+      "invoices/batch_02/26910000000010000155.pdf"
+    ],
+    "injection": "INJ-ARITH-SUM",
+    "missing_fields": []
+  },
+  "26910000000010000169": {
+    "also_expect": {},
+    "expect": {
+      "R-ARITH-02": "error"
+    },
+    "files": [
+      "invoices/batch_03/26910000000010000169.xml"
+    ],
+    "injection": "INJ-ARITH-CN",
+    "missing_fields": []
+  },
+  "26910000000010000179": {
+    "also_expect": {},
+    "expect": {
+      "R-TIME-01": "error"
+    },
+    "files": [
+      "invoices/batch_01/26910000000010000179.pdf"
+    ],
+    "injection": "INJ-TIME-FUTURE",
+    "missing_fields": []
+  },
+  "26910000000010000185": {
+    "also_expect": {},
+    "expect": {
+      "R-TIME-02": "review"
+    },
+    "files": [
+      "invoices/batch_02/26910000000010000185.xml"
+    ],
+    "injection": "INJ-TIME-STALE",
+    "missing_fields": []
+  },
+  "26910000000010000196": {
+    "also_expect": {},
+    "expect": {},
+    "files": [
+      "invoices/batch_03/26910000000010000196.ofd"
+    ],
+    "injection": "INJ-FIELD-MISS",
+    "missing_fields": [
+      "remark"
+    ]
+  },
+  "26910000000010000222": {
+    "also_expect": {},
+    "expect": {},
+    "files": [
+      "invoices/batch_01/26910000000010000222.xml"
+    ],
+    "injection": "BASELINE",
+    "missing_fields": []
+  },
+  "26910000000010000250": {
+    "also_expect": {},
+    "expect": {},
+    "files": [
+      "invoices/batch_03/26910000000010000250.xml"
+    ],
+    "injection": "BASELINE",
+    "missing_fields": []
+  },
+  "26910000000010000293": {
+    "also_expect": {},
+    "expect": {},
+    "files": [
+      "invoices/batch_02/26910000000010000293.xml"
+    ],
+    "injection": "BASELINE",
+    "missing_fields": []
+  },
+  "26910000000010000303": {
+    "also_expect": {},
+    "expect": {},
+    "files": [
+      "invoices/batch_01/26910000000010000303.ofd"
+    ],
+    "injection": "BASELINE",
+    "missing_fields": []
+  },
+  "26910000000010000311": {
+    "also_expect": {},
+    "expect": {},
+    "files": [
+      "invoices/batch_03/26910000000010000311.pdf"
+    ],
+    "injection": "BASELINE",
+    "missing_fields": []
+  },
+  "26910000000010000314": {
+    "also_expect": {},
+    "expect": {},
+    "files": [
+      "invoices/batch_01/26910000000010000314.xml"
+    ],
+    "injection": "BASELINE",
+    "missing_fields": []
+  },
+  "26910000000010000323": {
+    "also_expect": {},
+    "expect": {},
+    "files": [
+      "invoices/batch_03/26910000000010000323.xml"
+    ],
+    "injection": "BASELINE",
+    "missing_fields": []
+  },
+  "26910000000010000338": {
+    "also_expect": {},
+    "expect": {},
+    "files": [
+      "invoices/batch_02/26910000000010000338.pdf"
+    ],
+    "injection": "BASELINE",
+    "missing_fields": []
+  },
+  "26910000000010000367": {
+    "also_expect": {},
+    "expect": {},
+    "files": [
+      "invoices/batch_03/26910000000010000367.pdf"
+    ],
+    "injection": "BASELINE",
+    "missing_fields": []
+  },
+  "26910000000010000374": {
+    "also_expect": {},
+    "expect": {},
+    "files": [
+      "invoices/batch_01/26910000000010000374.xml"
+    ],
+    "injection": "BASELINE",
+    "missing_fields": []
+  }
+}

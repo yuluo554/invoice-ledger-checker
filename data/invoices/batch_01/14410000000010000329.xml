@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 合成测试数据：invoice-ledger-checker synthetic-v1，公司/税号/号码全虚构，与任何真实主体无关 -->
+<ElectronicInvoice version="synthetic-v1">
+  <InvoiceHeader>
+    <InvoiceNumber>14410000000010000329</InvoiceNumber>
+    <InvoiceType>电子普票</InvoiceType>
+    <IssueDate>2026-06-05</IssueDate>
+    <Buyer>
+      <Name>知行教育培训有限公司</Name>
+      <TaxId>911101FAKE77449058</TaxId>
+    </Buyer>
+    <Seller>
+      <Name>听雨茶业股份有限公司</Name>
+      <TaxId>913101FAKE79979955</TaxId>
+    </Seller>
+    <Items>
+      <Item>
+        <Name>培训服务费</Name>
+        <Amount>24779.24</Amount>
+        <TaxRate>0.03</TaxRate>
+        <TaxAmount>743.38</TaxAmount>
+      </Item>
+      <Item>
+        <Name>办公用品</Name>
+        <Amount>7753.40</Amount>
+        <TaxRate>0.03</TaxRate>
+        <TaxAmount>232.60</TaxAmount>
+      </Item>
+      <Item>
+        <Name>仓储服务费</Name>
+        <Amount>26083.80</Amount>
+        <TaxRate>0.03</TaxRate>
+        <TaxAmount>782.51</TaxAmount>
+      </Item>
+      <Item>
+        <Name>运输服务费</Name>
+        <Amount>289.32</Amount>
+        <TaxRate>0.13</TaxRate>
+        <TaxAmount>37.61</TaxAmount>
+      </Item>
+      <Item>
+        <Name>仓储服务费</Name>
+        <Amount>30614.95</Amount>
+        <TaxRate>0.01</TaxRate>
+        <TaxAmount>306.15</TaxAmount>
+      </Item>
+    </Items>
+    <AmountWithoutTax>89520.71</AmountWithoutTax>
+    <TaxAmount>2102.25</TaxAmount>
+    <TotalWithTax>91622.96</TotalWithTax>
+    <TotalWithTaxCN>玖万壹仟陆佰贰拾贰元玖角陆分</TotalWithTaxCN>
+    <Remark>合同编号 HT-000058</Remark>
+  </InvoiceHeader>
+</ElectronicInvoice>

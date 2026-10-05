@@ -1,5 +1,6 @@
 """CLI 集成测试：子进程跑真实入口（编码/退出码契约，Windows GBK 防线）。"""
 
+import importlib.util
 import os
 import subprocess
 import sys
@@ -58,7 +59,6 @@ def test_doctor_reports_optional_deps():
 
 def test_stub_commands_exit_two_with_milestone_hint():
     for command, milestone in [
-        ("generate", "M1"),
         ("parse", "M2"),
         ("check", "M3"),
         ("export", "M5"),
@@ -67,3 +67,26 @@ def test_stub_commands_exit_two_with_milestone_hint():
         result = run_cli(command)
         assert result.returncode == 2, command
         assert milestone in result.stdout, command
+
+
+def test_generate_produces_dataset(tmp_path):
+    """generate 一键产出数据集 + 真值（CI 无 reportlab 时降级 xml,ofd）。"""
+    has_reportlab = importlib.util.find_spec("reportlab") is not None
+    formats = "xml,pdf,ofd" if has_reportlab else "xml,ofd"
+    out_dir = tmp_path / "data"
+    result = run_cli(
+        "generate", "--out", str(out_dir), "--seed", "7", "--n", "12",
+        "--formats", formats,
+    )
+    assert result.returncode == 0, result.stderr
+    assert "全虚构" in result.stdout
+    manifest = (out_dir / "ground_truth" / "manifest.json").read_text(encoding="utf-8")
+    assert '"seed": 7' in manifest
+    assert (out_dir / "ground_truth" / "cards.json").exists()
+    assert (out_dir / "ground_truth" / "expectations.json").exists()
+
+
+def test_generate_rejects_bad_formats(tmp_path):
+    result = run_cli("generate", "--out", str(tmp_path), "--formats", "pdf")
+    assert result.returncode == 2
+    assert "参数错误" in result.stdout

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 合成测试数据：invoice-ledger-checker synthetic-v1，公司/税号/号码全虚构，与任何真实主体无关 -->
+<ElectronicInvoice version="synthetic-v1">
+  <InvoiceHeader>
+    <InvoiceNumber>26910000000010000185</InvoiceNumber>
+    <InvoiceType>数电专票</InvoiceType>
+    <IssueDate>2025-10-29</IssueDate>
+    <Buyer>
+      <Name>听雨茶业有限公司</Name>
+      <TaxId>913101FAKE48734714</TaxId>
+    </Buyer>
+    <Seller>
+      <Name>听雨茶业股份有限公司</Name>
+      <TaxId>913301FAKE98687277</TaxId>
+    </Seller>
+    <Items>
+      <Item>
+        <Name>系统集成费</Name>
+        <Amount>2107.31</Amount>
+        <TaxRate>0.01</TaxRate>
+        <TaxAmount>21.07</TaxAmount>
+      </Item>
+      <Item>
+        <Name>安保服务费</Name>
+        <Amount>8345.82</Amount>
+        <TaxRate>0.03</TaxRate>
+        <TaxAmount>250.37</TaxAmount>
+      </Item>
+      <Item>
+        <Name>加工费</Name>
+        <Amount>9032.50</Amount>
+        <TaxRate>0.09</TaxRate>
+        <TaxAmount>812.93</TaxAmount>
+      </Item>
+      <Item>
+        <Name>设计服务费</Name>
+        <Amount>3894.66</Amount>
+        <TaxRate>0.13</TaxRate>
+        <TaxAmount>506.31</TaxAmount>
+      </Item>
+      <Item>
+        <Name>检测服务费</Name>
+        <Amount>6628.59</Amount>
+        <TaxRate>0.13</TaxRate>
+        <TaxAmount>861.72</TaxAmount>
+      </Item>
+    </Items>
+    <AmountWithoutTax>30008.88</AmountWithoutTax>
+    <TaxAmount>2452.40</TaxAmount>
+    <TotalWithTax>32461.28</TotalWithTax>
+    <TotalWithTaxCN>叁万贰仟肆佰陆拾壹元贰角捌分</TotalWithTaxCN>
+    <Remark>服务费 082 号结算单</Remark>
+  </InvoiceHeader>
+</ElectronicInvoice>

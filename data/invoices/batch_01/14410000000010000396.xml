@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 合成测试数据：invoice-ledger-checker synthetic-v1，公司/税号/号码全虚构，与任何真实主体无关 -->
+<ElectronicInvoice version="synthetic-v1">
+  <InvoiceHeader>
+    <InvoiceNumber>14410000000010000396</InvoiceNumber>
+    <InvoiceType>电子普票</InvoiceType>
+    <IssueDate>2026-07-02</IssueDate>
+    <Buyer>
+      <Name>望舒餐饮股份有限公司</Name>
+      <TaxId>913301FAKE35841438</TaxId>
+    </Buyer>
+    <Seller>
+      <Name>听雨茶业有限公司</Name>
+      <TaxId>913101FAKE26801824</TaxId>
+    </Seller>
+    <Items>
+      <Item>
+        <Name>加工费</Name>
+        <Amount>3111.70</Amount>
+        <TaxRate>0.09</TaxRate>
+        <TaxAmount>280.05</TaxAmount>
+      </Item>
+      <Item>
+        <Name>设备维修费</Name>
+        <Amount>15762.59</Amount>
+        <TaxRate>0.13</TaxRate>
+        <TaxAmount>2049.14</TaxAmount>
+      </Item>
+      <Item>
+        <Name>绿化养护费</Name>
+        <Amount>2652.05</Amount>
+        <TaxRate>0.03</TaxRate>
+        <TaxAmount>79.56</TaxAmount>
+      </Item>
+    </Items>
+    <AmountWithoutTax>21526.34</AmountWithoutTax>
+    <TaxAmount>2408.75</TaxAmount>
+    <TotalWithTax>23935.09</TotalWithTax>
+    <TotalWithTaxCN>贰万叁仟玖佰叁拾伍元零玖分</TotalWithTaxCN>
+    <Remark>服务费 546 号结算单</Remark>
+  </InvoiceHeader>
+</ElectronicInvoice>

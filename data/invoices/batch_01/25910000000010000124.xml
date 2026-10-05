@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 合成测试数据：invoice-ledger-checker synthetic-v1，公司/税号/号码全虚构，与任何真实主体无关 -->
+<ElectronicInvoice version="synthetic-v1">
+  <InvoiceHeader>
+    <InvoiceNumber>25910000000010000124</InvoiceNumber>
+    <InvoiceType>数电普票</InvoiceType>
+    <IssueDate>2026-06-23</IssueDate>
+    <Buyer>
+      <Name>砚台文教用品有限公司</Name>
+      <TaxId>911101FAKE50097882</TaxId>
+    </Buyer>
+    <Seller>
+      <Name>兰台档案服务股份有限公司</Name>
+      <TaxId>915101FAKE70154303</TaxId>
+    </Seller>
+    <Items>
+      <Item>
+        <Name>场地租赁费</Name>
+        <Amount>3974.82</Amount>
+        <TaxRate>0.01</TaxRate>
+        <TaxAmount>39.75</TaxAmount>
+      </Item>
+      <Item>
+        <Name>安保服务费</Name>
+        <Amount>6362.56</Amount>
+        <TaxRate>0.06</TaxRate>
+        <TaxAmount>381.75</TaxAmount>
+      </Item>
+    </Items>
+    <AmountWithoutTax>10337.38</AmountWithoutTax>
+    <TaxAmount>421.50</TaxAmount>
+    <TotalWithTax>10758.88</TotalWithTax>
+    <TotalWithTaxCN>壹万零柒佰伍拾捌元捌角捌分</TotalWithTaxCN>
+    <Remark>合同编号 HT-000609</Remark>
+  </InvoiceHeader>
+</ElectronicInvoice>

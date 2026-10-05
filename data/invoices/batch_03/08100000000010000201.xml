@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 合成测试数据：invoice-ledger-checker synthetic-v1，公司/税号/号码全虚构，与任何真实主体无关 -->
+<ElectronicInvoice version="synthetic-v1">
+  <InvoiceHeader>
+    <InvoiceNumber>08100000000010000201</InvoiceNumber>
+    <InvoiceType>纸质专票</InvoiceType>
+    <IssueDate>2026-08-29</IssueDate>
+    <Buyer>
+      <Name>临江建材有限公司</Name>
+      <TaxId>914403FAKE24190496</TaxId>
+    </Buyer>
+    <Seller>
+      <Name>云图商贸有限公司</Name>
+      <TaxId>914201FAKE93745299</TaxId>
+    </Seller>
+    <Items>
+      <Item>
+        <Name>运输服务费</Name>
+        <Amount>1710.59</Amount>
+        <TaxRate>0.13</TaxRate>
+        <TaxAmount>222.38</TaxAmount>
+      </Item>
+      <Item>
+        <Name>运输服务费</Name>
+        <Amount>40276.66</Amount>
+        <TaxRate>0.03</TaxRate>
+        <TaxAmount>1208.30</TaxAmount>
+      </Item>
+    </Items>
+    <AmountWithoutTax>41987.25</AmountWithoutTax>
+    <TaxAmount>1430.68</TaxAmount>
+    <TotalWithTax>43417.93</TotalWithTax>
+    <TotalWithTaxCN>肆万叁仟肆佰壹拾柒元玖角叁分</TotalWithTaxCN>
+  </InvoiceHeader>
+</ElectronicInvoice>

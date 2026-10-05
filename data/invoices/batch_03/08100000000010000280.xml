@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 合成测试数据：invoice-ledger-checker synthetic-v1，公司/税号/号码全虚构，与任何真实主体无关 -->
+<ElectronicInvoice version="synthetic-v1">
+  <InvoiceHeader>
+    <InvoiceNumber>08100000000010000280</InvoiceNumber>
+    <InvoiceType>纸质专票</InvoiceType>
+    <IssueDate>2026-09-10</IssueDate>
+    <Buyer>
+      <Name>知行教育培训股份有限公司</Name>
+      <TaxId>915101FAKE49651370</TaxId>
+    </Buyer>
+    <Seller>
+      <Name>听雨茶业有限公司</Name>
+      <TaxId>911101FAKE68516048</TaxId>
+    </Seller>
+    <Items>
+      <Item>
+        <Name>安保服务费</Name>
+        <Amount>62626.93</Amount>
+        <TaxRate>0.06</TaxRate>
+        <TaxAmount>3757.62</TaxAmount>
+      </Item>
+      <Item>
+        <Name>系统集成费</Name>
+        <Amount>10388.25</Amount>
+        <TaxRate>0.01</TaxRate>
+        <TaxAmount>103.88</TaxAmount>
+      </Item>
+      <Item>
+        <Name>运输服务费</Name>
+        <Amount>8325.47</Amount>
+        <TaxRate>0.01</TaxRate>
+        <TaxAmount>83.25</TaxAmount>
+      </Item>
+    </Items>
+    <AmountWithoutTax>81340.65</AmountWithoutTax>
+    <TaxAmount>3944.75</TaxAmount>
+    <TotalWithTax>85285.40</TotalWithTax>
+    <TotalWithTaxCN>捌万伍仟贰佰捌拾伍元肆角</TotalWithTaxCN>
+    <Remark>项目第 663 期结算</Remark>
+  </InvoiceHeader>
+</ElectronicInvoice>

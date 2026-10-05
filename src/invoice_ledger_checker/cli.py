@@ -1,11 +1,12 @@
 """invoice-ledger 命令行入口。
 
-骨架期可用命令：
-- demo    内置合成演示数据走通 解析外全链路（台账入库 -> 规则引擎 -> 异常清单）
-- doctor  可选依赖体检（extras 覆盖自检）
+可用命令：
+- demo      内置合成演示数据走通 解析外全链路（台账入库 -> 规则引擎 -> 异常清单）
+- doctor    可选依赖体检（extras 覆盖自检）
+- generate  合成发票数据集 + 真值 JSON（M1 交付；数据全虚构）
 - --version
 
-未交付命令（generate/parse/check/export/app）打印所属里程碑后退出码 2，
+未交付命令（parse/check/export/app）打印所属里程碑后退出码 2，
 不做半成品假实现。设计契约：plan/03 §2 目录结构、plan/05 §2 里程碑。
 """
 
@@ -20,7 +21,6 @@ from .utils import OptionalDependencyError, force_utf8_stdio
 
 # 未交付命令 -> (所属里程碑, 一句话说明)
 _STUB_COMMANDS = {
-    "generate": ("M1 数据先行", "合成发票生成器（固定 seed + 真值 JSON）"),
     "parse": ("M2 解析层", "数电票 XML / 版式 PDF 批量解析为发票参数卡"),
     "check": ("M3 规则引擎", "对台账执行八类异常检测规则"),
     "export": ("M5 桌面交付", "Excel 台账导出（openpyxl，条件格式标红）"),
@@ -39,6 +39,15 @@ def build_parser() -> argparse.ArgumentParser:
     sub = parser.add_subparsers(dest="command", metavar="command")
     sub.add_parser("demo", help="内置合成演示：入库+查重+算术复核全链路（骨架可用）")
     sub.add_parser("doctor", help="可选依赖体检：报告各 extras 组件可用性")
+    gen = sub.add_parser(
+        "generate", help="合成发票数据集 + 真值 JSON（M1 交付；数据全虚构）")
+    gen.add_argument("--out", default="data", help="输出根目录（默认 data）")
+    gen.add_argument("--seed", type=int, default=42, help="随机种子（默认 42）")
+    gen.add_argument("--n", type=int, default=60, help="生成发票文件数（默认 60）")
+    gen.add_argument("--anomaly-rate", dest="anomaly_rate", type=float, default=0.35,
+                     help="注入异常的文件占比（默认 0.35）")
+    gen.add_argument("--formats", default="xml,pdf,ofd",
+                     help="输出格式逗号分隔，须含 xml（默认 xml,pdf,ofd）")
     for name, (milestone, desc) in sorted(_STUB_COMMANDS.items()):
         sub.add_parser(name, help="[%s 未交付] %s" % (milestone, desc))
     return parser
@@ -56,6 +65,8 @@ def main(argv: Optional[List[str]] = None) -> int:
             return _cmd_demo()
         if args.command == "doctor":
             return _cmd_doctor()
+        if args.command == "generate":
+            return _cmd_generate(args)
         return _cmd_stub(args.command)
     except OptionalDependencyError as exc:
         print("[缺少依赖] %s" % exc)
@@ -70,6 +81,40 @@ def _cmd_stub(command: str) -> int:
     print("命令 %r 尚未实现：%s" % (command, desc))
     print("所属里程碑：%s（路线图见 plan/05-数据计划与里程碑.md）" % milestone)
     return 2
+
+
+def _cmd_generate(args) -> int:
+    from .generator import generate
+
+    formats = [f.strip().lower() for f in args.formats.split(",") if f.strip()]
+    try:
+        summary = generate(args.out, seed=args.seed, n=args.n,
+                           anomaly_rate=args.anomaly_rate, formats=formats)
+    except ValueError as exc:
+        print("[参数错误] %s" % exc)
+        return 2
+    print("invoice-ledger generate（合成数据：公司/税号/号码全虚构）")
+    print("-" * 56)
+    print("输出目录: %s" % summary["out_dir"])
+    print("参数: seed=%d n=%d anomaly_rate=%s formats=%s"
+          % (summary["seed"], summary["n"], summary["anomaly_rate"],
+             ",".join(summary["formats"])))
+    print("批次: %s" % "；".join(
+        "%s（报销基准日 %s，%d 个文件）" % (b["batch_id"], b["expense_anchor"],
+                                        b["file_count"])
+        for b in summary["batches"]))
+    print("文件: %s（合计 %d）" % (
+        " / ".join("%s %d" % (fmt, count)
+                   for fmt, count in sorted(summary["by_format"].items())),
+        summary["files"]))
+    print("注入: %s；基线 %d 张" % (
+        " ".join("%s×%d" % (code, count)
+                 for code, count in sorted(summary["by_injection"].items())),
+        summary["baseline"]))
+    print("真值: %s" % "、".join(summary["truth_files"]))
+    print("-" * 56)
+    print("同参数重跑逐字节一致（守门测试断言）；解析/检测对账语义见生成器模块注释。")
+    return 0
 
 
 def _cmd_demo() -> int:
@@ -107,7 +152,7 @@ def _cmd_demo() -> int:
         print("  [%s] %s %s" % (finding.level, finding.rule_id, finding.message))
     print("findings 持久化：%d 条" % len(ledger.list_findings()))
     print("-" * 56)
-    print("下一步：generate(M1) -> parse(M2) -> check(M3) 全量规则；见 plan/05 里程碑")
+    print("下一步：parse(M2) -> check(M3) 全量规则；合成数据用 generate 命令；见 plan/05 里程碑")
     return 0
 
 

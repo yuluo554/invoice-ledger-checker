@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 合成测试数据：invoice-ledger-checker synthetic-v1，公司/税号/号码全虚构，与任何真实主体无关 -->
+<ElectronicInvoice version="synthetic-v1">
+  <InvoiceHeader>
+    <InvoiceNumber>26910000000010000314</InvoiceNumber>
+    <InvoiceType>数电专票</InvoiceType>
+    <IssueDate>2026-05-23</IssueDate>
+    <Buyer>
+      <Name>白泽咨询股份有限公司</Name>
+      <TaxId>914201FAKE99102290</TaxId>
+    </Buyer>
+    <Seller>
+      <Name>澄江水务有限公司</Name>
+      <TaxId>913301FAKE18366752</TaxId>
+    </Seller>
+    <Items>
+      <Item>
+        <Name>加工费</Name>
+        <Amount>376.52</Amount>
+        <TaxRate>0.13</TaxRate>
+        <TaxAmount>48.95</TaxAmount>
+      </Item>
+      <Item>
+        <Name>会议服务费</Name>
+        <Amount>1147.86</Amount>
+        <TaxRate>0.09</TaxRate>
+        <TaxAmount>103.31</TaxAmount>
+      </Item>
+    </Items>
+    <AmountWithoutTax>1524.38</AmountWithoutTax>
+    <TaxAmount>152.26</TaxAmount>
+    <TotalWithTax>1676.64</TotalWithTax>
+    <TotalWithTaxCN>壹仟陆佰柒拾陆元陆角肆分</TotalWithTaxCN>
+  </InvoiceHeader>
+</ElectronicInvoice>

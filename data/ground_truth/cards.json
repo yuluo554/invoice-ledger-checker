@@ -1,0 +1,2264 @@
+{
+  "invoices/batch_01/08100000000010000237.xml": {
+    "amount": "48920.82",
+    "batch_id": "",
+    "buyer_name": "听雨茶业股份有限公司",
+    "buyer_tax_id": "915101FAKE90278742",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "08100000000010000237",
+    "invoice_type": "纸质专票",
+    "issue_date": "2026-06-19",
+    "items": [
+      {
+        "amount": "10432.54",
+        "name": "办公用品",
+        "tax_amount": "938.93",
+        "tax_rate": "0.09"
+      },
+      {
+        "amount": "15077.47",
+        "name": "设计服务费",
+        "tax_amount": "1960.07",
+        "tax_rate": "0.13"
+      },
+      {
+        "amount": "13808.22",
+        "name": "系统集成费",
+        "tax_amount": "1242.74",
+        "tax_rate": "0.09"
+      },
+      {
+        "amount": "9602.59",
+        "name": "物业管理费",
+        "tax_amount": "96.03",
+        "tax_rate": "0.01"
+      }
+    ],
+    "remark": "办公用品采购 992",
+    "seller_name": "墨白设计股份有限公司",
+    "seller_tax_id": "911101FAKE59401399",
+    "tax_amount": "4237.77",
+    "total_with_tax": "53158.59",
+    "total_with_tax_cn": "伍万叁仟壹佰伍拾捌元伍角玖分"
+  },
+  "invoices/batch_01/08100000000010000259.xml": {
+    "amount": "70115.78",
+    "batch_id": "",
+    "buyer_name": "知行教育培训股份有限公司",
+    "buyer_tax_id": "914201FAKE33963605",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "08100000000010000259",
+    "invoice_type": "纸质专票",
+    "issue_date": "2026-06-09",
+    "items": [
+      {
+        "amount": "42593.12",
+        "name": "绿化养护费",
+        "tax_amount": "2555.59",
+        "tax_rate": "0.06"
+      },
+      {
+        "amount": "23486.40",
+        "name": "办公耗材",
+        "tax_amount": "234.86",
+        "tax_rate": "0.01"
+      },
+      {
+        "amount": "4036.26",
+        "name": "绿化养护费",
+        "tax_amount": "242.18",
+        "tax_rate": "0.06"
+      }
+    ],
+    "remark": "办公用品采购 395",
+    "seller_name": "砚台文教用品股份有限公司",
+    "seller_tax_id": "914403FAKE27875588",
+    "tax_amount": "3032.63",
+    "total_with_tax": "73148.41",
+    "total_with_tax_cn": "柒万叁仟壹佰肆拾捌元肆角壹分"
+  },
+  "invoices/batch_01/08200000000010000177.xml": {
+    "amount": "53166.30",
+    "batch_id": "",
+    "buyer_name": "北斗精密仪器有限公司",
+    "buyer_tax_id": "913101FAKE99468044",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "08200000000010000177",
+    "invoice_type": "纸质普票",
+    "issue_date": "2027-10-12",
+    "items": [
+      {
+        "amount": "53166.30",
+        "name": "劳务费",
+        "tax_amount": "3189.98",
+        "tax_rate": "0.06"
+      }
+    ],
+    "remark": "服务费 670 号结算单",
+    "seller_name": "白泽咨询股份有限公司",
+    "seller_tax_id": "914201FAKE56482366",
+    "tax_amount": "3189.98",
+    "total_with_tax": "56356.28",
+    "total_with_tax_cn": "伍万陆仟叁佰伍拾陆元贰角捌分"
+  },
+  "invoices/batch_01/14410000000010000106.xml": {
+    "amount": "1590.31",
+    "batch_id": "",
+    "buyer_name": "北斗精密仪器股份有限公司",
+    "buyer_tax_id": "915101FAKE81618495",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "14410000000010000106",
+    "invoice_type": "电子普票",
+    "issue_date": "2026-07-09",
+    "items": [
+      {
+        "amount": "1108.85",
+        "name": "办公用品",
+        "tax_amount": "66.53",
+        "tax_rate": "0.06"
+      },
+      {
+        "amount": "481.46",
+        "name": "装卸搬运费",
+        "tax_amount": "14.44",
+        "tax_rate": "0.03"
+      }
+    ],
+    "remark": "合同编号 HT-000677",
+    "seller_name": "听雨茶业股份有限公司",
+    "seller_tax_id": "911101FAKE11615594",
+    "tax_amount": "80.97",
+    "total_with_tax": "1671.28",
+    "total_with_tax_cn": "壹仟陆佰柒拾壹元贰角捌分"
+  },
+  "invoices/batch_01/14410000000010000206.pdf": {
+    "amount": "51097.17",
+    "batch_id": "",
+    "buyer_name": "星辰科技股份有限公司",
+    "buyer_tax_id": "914403FAKE76945314",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "14410000000010000206",
+    "invoice_type": "电子普票",
+    "issue_date": "2026-05-29",
+    "items": [
+      {
+        "amount": "3446.12",
+        "name": "软件维护费",
+        "tax_amount": "448.00",
+        "tax_rate": "0.13"
+      },
+      {
+        "amount": "6709.71",
+        "name": "会议服务费",
+        "tax_amount": "402.58",
+        "tax_rate": "0.06"
+      },
+      {
+        "amount": "18970.73",
+        "name": "水电费",
+        "tax_amount": "2466.19",
+        "tax_rate": "0.13"
+      },
+      {
+        "amount": "18348.30",
+        "name": "信息技术服务费",
+        "tax_amount": "1100.90",
+        "tax_rate": "0.06"
+      },
+      {
+        "amount": "3622.31",
+        "name": "绿化养护费",
+        "tax_amount": "326.01",
+        "tax_rate": "0.09"
+      }
+    ],
+    "remark": "服务费 624 号结算单",
+    "seller_name": "云图商贸有限公司",
+    "seller_tax_id": "915101FAKE65726284",
+    "tax_amount": "4743.68",
+    "total_with_tax": "55840.85",
+    "total_with_tax_cn": "伍万伍仟捌佰肆拾元捌角伍分"
+  },
+  "invoices/batch_01/14410000000010000329.xml": {
+    "amount": "89520.71",
+    "batch_id": "",
+    "buyer_name": "知行教育培训有限公司",
+    "buyer_tax_id": "911101FAKE77449058",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "14410000000010000329",
+    "invoice_type": "电子普票",
+    "issue_date": "2026-06-05",
+    "items": [
+      {
+        "amount": "24779.24",
+        "name": "培训服务费",
+        "tax_amount": "743.38",
+        "tax_rate": "0.03"
+      },
+      {
+        "amount": "7753.40",
+        "name": "办公用品",
+        "tax_amount": "232.60",
+        "tax_rate": "0.03"
+      },
+      {
+        "amount": "26083.80",
+        "name": "仓储服务费",
+        "tax_amount": "782.51",
+        "tax_rate": "0.03"
+      },
+      {
+        "amount": "289.32",
+        "name": "运输服务费",
+        "tax_amount": "37.61",
+        "tax_rate": "0.13"
+      },
+      {
+        "amount": "30614.95",
+        "name": "仓储服务费",
+        "tax_amount": "306.15",
+        "tax_rate": "0.01"
+      }
+    ],
+    "remark": "合同编号 HT-000058",
+    "seller_name": "听雨茶业股份有限公司",
+    "seller_tax_id": "913101FAKE79979955",
+    "tax_amount": "2102.25",
+    "total_with_tax": "91622.96",
+    "total_with_tax_cn": "玖万壹仟陆佰贰拾贰元玖角陆分"
+  },
+  "invoices/batch_01/14410000000010000396.xml": {
+    "amount": "21526.34",
+    "batch_id": "",
+    "buyer_name": "望舒餐饮股份有限公司",
+    "buyer_tax_id": "913301FAKE35841438",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "14410000000010000396",
+    "invoice_type": "电子普票",
+    "issue_date": "2026-07-02",
+    "items": [
+      {
+        "amount": "3111.70",
+        "name": "加工费",
+        "tax_amount": "280.05",
+        "tax_rate": "0.09"
+      },
+      {
+        "amount": "15762.59",
+        "name": "设备维修费",
+        "tax_amount": "2049.14",
+        "tax_rate": "0.13"
+      },
+      {
+        "amount": "2652.05",
+        "name": "绿化养护费",
+        "tax_amount": "79.56",
+        "tax_rate": "0.03"
+      }
+    ],
+    "remark": "服务费 546 号结算单",
+    "seller_name": "听雨茶业有限公司",
+    "seller_tax_id": "913101FAKE26801824",
+    "tax_amount": "2408.75",
+    "total_with_tax": "23935.09",
+    "total_with_tax_cn": "贰万叁仟玖佰叁拾伍元零玖分"
+  },
+  "invoices/batch_01/25910000000010000121.pdf": {
+    "amount": "14870.26",
+    "batch_id": "",
+    "buyer_name": "牧野农业开发有限公司",
+    "buyer_tax_id": "913101FAKE31509839",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "25910000000010000121",
+    "invoice_type": "数电普票",
+    "issue_date": "2026-06-20",
+    "items": [
+      {
+        "amount": "1452.49",
+        "name": "加工费",
+        "tax_amount": "43.57",
+        "tax_rate": "0.03"
+      },
+      {
+        "amount": "1185.89",
+        "name": "设计服务费",
+        "tax_amount": "106.73",
+        "tax_rate": "0.09"
+      },
+      {
+        "amount": "8534.27",
+        "name": "办公用品",
+        "tax_amount": "256.03",
+        "tax_rate": "0.03"
+      },
+      {
+        "amount": "3697.61",
+        "name": "审计费",
+        "tax_amount": "480.69",
+        "tax_rate": "0.13"
+      }
+    ],
+    "remark": "",
+    "seller_name": "兰台档案服务股份有限公司",
+    "seller_tax_id": "915101FAKE70154303",
+    "tax_amount": "887.02",
+    "total_with_tax": "15757.28",
+    "total_with_tax_cn": "壹万伍仟柒佰伍拾柒元贰角捌分"
+  },
+  "invoices/batch_01/25910000000010000122.xml": {
+    "amount": "38910.05",
+    "batch_id": "",
+    "buyer_name": "云图商贸有限公司",
+    "buyer_tax_id": "914403FAKE76311656",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "25910000000010000122",
+    "invoice_type": "数电普票",
+    "issue_date": "2026-06-21",
+    "items": [
+      {
+        "amount": "38910.05",
+        "name": "审计费",
+        "tax_amount": "389.10",
+        "tax_rate": "0.01"
+      }
+    ],
+    "remark": "合同编号 HT-000689",
+    "seller_name": "兰台档案服务股份有限公司",
+    "seller_tax_id": "915101FAKE70154303",
+    "tax_amount": "389.10",
+    "total_with_tax": "39299.15",
+    "total_with_tax_cn": "叁万玖仟贰佰玖拾玖元壹角伍分"
+  },
+  "invoices/batch_01/25910000000010000123.pdf": {
+    "amount": "17011.77",
+    "batch_id": "",
+    "buyer_name": "知行教育培训有限公司",
+    "buyer_tax_id": "913101FAKE17810801",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "25910000000010000123",
+    "invoice_type": "数电普票",
+    "issue_date": "2026-06-22",
+    "items": [
+      {
+        "amount": "17011.77",
+        "name": "数据服务费",
+        "tax_amount": "1531.06",
+        "tax_rate": "0.09"
+      }
+    ],
+    "remark": "办公用品采购 218",
+    "seller_name": "兰台档案服务股份有限公司",
+    "seller_tax_id": "915101FAKE70154303",
+    "tax_amount": "1531.06",
+    "total_with_tax": "18542.83",
+    "total_with_tax_cn": "壹万捌仟伍佰肆拾贰元捌角叁分"
+  },
+  "invoices/batch_01/25910000000010000124.xml": {
+    "amount": "10337.38",
+    "batch_id": "",
+    "buyer_name": "砚台文教用品有限公司",
+    "buyer_tax_id": "911101FAKE50097882",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "25910000000010000124",
+    "invoice_type": "数电普票",
+    "issue_date": "2026-06-23",
+    "items": [
+      {
+        "amount": "3974.82",
+        "name": "场地租赁费",
+        "tax_amount": "39.75",
+        "tax_rate": "0.01"
+      },
+      {
+        "amount": "6362.56",
+        "name": "安保服务费",
+        "tax_amount": "381.75",
+        "tax_rate": "0.06"
+      }
+    ],
+    "remark": "合同编号 HT-000609",
+    "seller_name": "兰台档案服务股份有限公司",
+    "seller_tax_id": "915101FAKE70154303",
+    "tax_amount": "421.50",
+    "total_with_tax": "10758.88",
+    "total_with_tax_cn": "壹万零柒佰伍拾捌元捌角捌分"
+  },
+  "invoices/batch_01/25910000000010000125.xml": {
+    "amount": "39960.66",
+    "batch_id": "",
+    "buyer_name": "照夜照明工程有限公司",
+    "buyer_tax_id": "915101FAKE07991183",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "25910000000010000125",
+    "invoice_type": "数电普票",
+    "issue_date": "2026-06-27",
+    "items": [
+      {
+        "amount": "5029.40",
+        "name": "广告服务费",
+        "tax_amount": "653.82",
+        "tax_rate": "0.13"
+      },
+      {
+        "amount": "32312.95",
+        "name": "物业管理费",
+        "tax_amount": "4200.68",
+        "tax_rate": "0.13"
+      },
+      {
+        "amount": "2152.05",
+        "name": "物业管理费",
+        "tax_amount": "21.52",
+        "tax_rate": "0.01"
+      },
+      {
+        "amount": "466.26",
+        "name": "软件维护费",
+        "tax_amount": "4.66",
+        "tax_rate": "0.01"
+      }
+    ],
+    "remark": "",
+    "seller_name": "兰台档案服务股份有限公司",
+    "seller_tax_id": "915101FAKE70154303",
+    "tax_amount": "4880.68",
+    "total_with_tax": "44841.34",
+    "total_with_tax_cn": "肆万肆仟捌佰肆拾壹元叁角肆分"
+  },
+  "invoices/batch_01/25910000000010000269.pdf": {
+    "amount": "92203.95",
+    "batch_id": "",
+    "buyer_name": "砚台文教用品股份有限公司",
+    "buyer_tax_id": "914201FAKE94406409",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "25910000000010000269",
+    "invoice_type": "数电普票",
+    "issue_date": "2026-06-09",
+    "items": [
+      {
+        "amount": "12392.97",
+        "name": "设备维修费",
+        "tax_amount": "1115.37",
+        "tax_rate": "0.09"
+      },
+      {
+        "amount": "79810.98",
+        "name": "办公耗材",
+        "tax_amount": "10375.43",
+        "tax_rate": "0.13"
+      }
+    ],
+    "remark": "办公用品采购 852",
+    "seller_name": "远航物流股份有限公司",
+    "seller_tax_id": "914403FAKE47436713",
+    "tax_amount": "11490.80",
+    "total_with_tax": "103694.75",
+    "total_with_tax_cn": "壹拾万零叁仟陆佰玖拾肆元柒角伍分"
+  },
+  "invoices/batch_01/25910000000010000289.pdf": {
+    "amount": "78391.16",
+    "batch_id": "",
+    "buyer_name": "北斗精密仪器有限公司",
+    "buyer_tax_id": "913101FAKE61796405",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "25910000000010000289",
+    "invoice_type": "数电普票",
+    "issue_date": "2026-06-20",
+    "items": [
+      {
+        "amount": "34251.33",
+        "name": "运输服务费",
+        "tax_amount": "342.51",
+        "tax_rate": "0.01"
+      },
+      {
+        "amount": "20211.82",
+        "name": "咨询服务费",
+        "tax_amount": "202.12",
+        "tax_rate": "0.01"
+      },
+      {
+        "amount": "23928.01",
+        "name": "差旅服务费",
+        "tax_amount": "1435.68",
+        "tax_rate": "0.06"
+      }
+    ],
+    "remark": "项目第 875 期结算",
+    "seller_name": "牧野农业开发有限公司",
+    "seller_tax_id": "915101FAKE38267586",
+    "tax_amount": "1980.31",
+    "total_with_tax": "80371.47",
+    "total_with_tax_cn": "捌万零叁佰柒拾壹元肆角柒分"
+  },
+  "invoices/batch_01/25910000000010000354.pdf": {
+    "amount": "88814.14",
+    "batch_id": "",
+    "buyer_name": "澄江水务有限公司",
+    "buyer_tax_id": "913101FAKE41888059",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "25910000000010000354",
+    "invoice_type": "数电普票",
+    "issue_date": "2026-07-08",
+    "items": [
+      {
+        "amount": "88814.14",
+        "name": "劳务费",
+        "tax_amount": "7993.27",
+        "tax_rate": "0.09"
+      }
+    ],
+    "remark": "",
+    "seller_name": "青云软件有限公司",
+    "seller_tax_id": "913101FAKE54235733",
+    "tax_amount": "7993.27",
+    "total_with_tax": "96807.41",
+    "total_with_tax_cn": "玖万陆仟捌佰零柒元肆角壹分"
+  },
+  "invoices/batch_01/25910000000010000362.pdf": {
+    "amount": "25585.22",
+    "batch_id": "",
+    "buyer_name": "九州测绘有限公司",
+    "buyer_tax_id": "913301FAKE95396218",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "25910000000010000362",
+    "invoice_type": "数电普票",
+    "issue_date": "2026-05-25",
+    "items": [
+      {
+        "amount": "4664.51",
+        "name": "广告服务费",
+        "tax_amount": "279.87",
+        "tax_rate": "0.06"
+      },
+      {
+        "amount": "13089.08",
+        "name": "培训服务费",
+        "tax_amount": "785.34",
+        "tax_rate": "0.06"
+      },
+      {
+        "amount": "4383.75",
+        "name": "广告服务费",
+        "tax_amount": "43.84",
+        "tax_rate": "0.01"
+      },
+      {
+        "amount": "3401.94",
+        "name": "水电费",
+        "tax_amount": "306.17",
+        "tax_rate": "0.09"
+      },
+      {
+        "amount": "45.94",
+        "name": "系统集成费",
+        "tax_amount": "5.97",
+        "tax_rate": "0.13"
+      }
+    ],
+    "remark": "服务费 519 号结算单",
+    "seller_name": "梧桐服饰有限公司",
+    "seller_tax_id": "913301FAKE79808932",
+    "tax_amount": "1421.19",
+    "total_with_tax": "27006.41",
+    "total_with_tax_cn": "贰万柒仟零陆元肆角壹分"
+  },
+  "invoices/batch_01/26910000000010000179.pdf": {
+    "amount": "74619.39",
+    "batch_id": "",
+    "buyer_name": "云图商贸有限公司",
+    "buyer_tax_id": "913101FAKE76936763",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "26910000000010000179",
+    "invoice_type": "数电专票",
+    "issue_date": "2027-01-15",
+    "items": [
+      {
+        "amount": "17927.57",
+        "name": "安保服务费",
+        "tax_amount": "1613.48",
+        "tax_rate": "0.09"
+      },
+      {
+        "amount": "24953.81",
+        "name": "加工费",
+        "tax_amount": "748.61",
+        "tax_rate": "0.03"
+      },
+      {
+        "amount": "13795.34",
+        "name": "办公耗材",
+        "tax_amount": "137.95",
+        "tax_rate": "0.01"
+      },
+      {
+        "amount": "17942.67",
+        "name": "加工费",
+        "tax_amount": "2332.55",
+        "tax_rate": "0.13"
+      }
+    ],
+    "remark": "合同编号 HT-000797",
+    "seller_name": "远航物流股份有限公司",
+    "seller_tax_id": "913101FAKE13433200",
+    "tax_amount": "4832.59",
+    "total_with_tax": "79451.98",
+    "total_with_tax_cn": "柒万玖仟肆佰伍拾壹元玖角捌分"
+  },
+  "invoices/batch_01/26910000000010000222.xml": {
+    "amount": "51212.08",
+    "batch_id": "",
+    "buyer_name": "云图商贸股份有限公司",
+    "buyer_tax_id": "914403FAKE75204711",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "26910000000010000222",
+    "invoice_type": "数电专票",
+    "issue_date": "2026-06-19",
+    "items": [
+      {
+        "amount": "51212.08",
+        "name": "运输服务费",
+        "tax_amount": "6657.57",
+        "tax_rate": "0.13"
+      }
+    ],
+    "remark": "",
+    "seller_name": "南风电气有限公司",
+    "seller_tax_id": "913301FAKE08427109",
+    "tax_amount": "6657.57",
+    "total_with_tax": "57869.65",
+    "total_with_tax_cn": "伍万柒仟捌佰陆拾玖元陆角伍分"
+  },
+  "invoices/batch_01/26910000000010000303.ofd": {
+    "amount": "5726.21",
+    "batch_id": "",
+    "buyer_name": "澄江水务股份有限公司",
+    "buyer_tax_id": "914403FAKE99856984",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "26910000000010000303",
+    "invoice_type": "数电专票",
+    "issue_date": "2026-05-27",
+    "items": [
+      {
+        "amount": "5726.21",
+        "name": "审计费",
+        "tax_amount": "515.36",
+        "tax_rate": "0.09"
+      }
+    ],
+    "remark": "",
+    "seller_name": "初阳新能源股份有限公司",
+    "seller_tax_id": "911101FAKE17711592",
+    "tax_amount": "515.36",
+    "total_with_tax": "6241.57",
+    "total_with_tax_cn": "陆仟贰佰肆拾壹元伍角柒分"
+  },
+  "invoices/batch_01/26910000000010000314.xml": {
+    "amount": "1524.38",
+    "batch_id": "",
+    "buyer_name": "白泽咨询股份有限公司",
+    "buyer_tax_id": "914201FAKE99102290",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "26910000000010000314",
+    "invoice_type": "数电专票",
+    "issue_date": "2026-05-23",
+    "items": [
+      {
+        "amount": "376.52",
+        "name": "加工费",
+        "tax_amount": "48.95",
+        "tax_rate": "0.13"
+      },
+      {
+        "amount": "1147.86",
+        "name": "会议服务费",
+        "tax_amount": "103.31",
+        "tax_rate": "0.09"
+      }
+    ],
+    "remark": "",
+    "seller_name": "澄江水务有限公司",
+    "seller_tax_id": "913301FAKE18366752",
+    "tax_amount": "152.26",
+    "total_with_tax": "1676.64",
+    "total_with_tax_cn": "壹仟陆佰柒拾陆元陆角肆分"
+  },
+  "invoices/batch_01/26910000000010000374.xml": {
+    "amount": "71990.41",
+    "batch_id": "",
+    "buyer_name": "长风医疗器械有限公司",
+    "buyer_tax_id": "914201FAKE02970213",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "26910000000010000374",
+    "invoice_type": "数电专票",
+    "issue_date": "2026-06-21",
+    "items": [
+      {
+        "amount": "57862.66",
+        "name": "设备维修费",
+        "tax_amount": "5207.64",
+        "tax_rate": "0.09"
+      },
+      {
+        "amount": "14127.75",
+        "name": "咨询服务费",
+        "tax_amount": "1271.50",
+        "tax_rate": "0.09"
+      }
+    ],
+    "remark": "服务费 033 号结算单",
+    "seller_name": "北斗精密仪器股份有限公司",
+    "seller_tax_id": "914201FAKE96401658",
+    "tax_amount": "6479.14",
+    "total_with_tax": "78469.55",
+    "total_with_tax_cn": "柒万捌仟肆佰陆拾玖元伍角伍分"
+  },
+  "invoices/batch_02/08100000000010000157.xml": {
+    "amount": "7896.53",
+    "batch_id": "",
+    "buyer_name": "澄江水务有限公司",
+    "buyer_tax_id": "913301FAKE59826204",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "08100000000010000157",
+    "invoice_type": "纸质专票",
+    "issue_date": "2026-07-02",
+    "items": [
+      {
+        "amount": "7896.53",
+        "name": "云服务费",
+        "tax_amount": "473.79",
+        "tax_rate": "0.06"
+      }
+    ],
+    "remark": "项目第 698 期结算",
+    "seller_name": "澄江水务股份有限公司",
+    "seller_tax_id": "914201FAKE27868011",
+    "tax_amount": "473.79",
+    "total_with_tax": "8380.32",
+    "total_with_tax_cn": "捌仟叁佰捌拾元叁角贰分"
+  },
+  "invoices/batch_02/08100000000010000364.xml": {
+    "amount": "85664.93",
+    "batch_id": "",
+    "buyer_name": "知行教育培训股份有限公司",
+    "buyer_tax_id": "913101FAKE22170430",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "08100000000010000364",
+    "invoice_type": "纸质专票",
+    "issue_date": "2026-07-24",
+    "items": [
+      {
+        "amount": "3412.53",
+        "name": "设备维修费",
+        "tax_amount": "307.13",
+        "tax_rate": "0.09"
+      },
+      {
+        "amount": "3892.33",
+        "name": "数据服务费",
+        "tax_amount": "233.54",
+        "tax_rate": "0.06"
+      },
+      {
+        "amount": "58203.40",
+        "name": "设备维修费",
+        "tax_amount": "582.03",
+        "tax_rate": "0.01"
+      },
+      {
+        "amount": "13368.31",
+        "name": "设备维修费",
+        "tax_amount": "133.68",
+        "tax_rate": "0.01"
+      },
+      {
+        "amount": "6788.36",
+        "name": "数据服务费",
+        "tax_amount": "203.65",
+        "tax_rate": "0.03"
+      }
+    ],
+    "remark": "差旅报销（第 527 批）",
+    "seller_name": "长风医疗器械有限公司",
+    "seller_tax_id": "914201FAKE95205852",
+    "tax_amount": "1460.03",
+    "total_with_tax": "87124.96",
+    "total_with_tax_cn": "捌万柒仟壹佰贰拾肆元玖角陆分"
+  },
+  "invoices/batch_02/08200000000010000265.pdf": {
+    "amount": "26019.03",
+    "batch_id": "",
+    "buyer_name": "梧桐服饰股份有限公司",
+    "buyer_tax_id": "913101FAKE86578091",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "08200000000010000265",
+    "invoice_type": "纸质普票",
+    "issue_date": "2026-08-02",
+    "items": [
+      {
+        "amount": "1553.71",
+        "name": "检测服务费",
+        "tax_amount": "201.98",
+        "tax_rate": "0.13"
+      },
+      {
+        "amount": "3742.44",
+        "name": "审计费",
+        "tax_amount": "37.42",
+        "tax_rate": "0.01"
+      },
+      {
+        "amount": "15772.46",
+        "name": "培训服务费",
+        "tax_amount": "1419.52",
+        "tax_rate": "0.09"
+      },
+      {
+        "amount": "4950.42",
+        "name": "系统集成费",
+        "tax_amount": "643.55",
+        "tax_rate": "0.13"
+      }
+    ],
+    "remark": "合同编号 HT-000444",
+    "seller_name": "若水环保科技有限公司",
+    "seller_tax_id": "914201FAKE62174596",
+    "tax_amount": "2302.47",
+    "total_with_tax": "28321.50",
+    "total_with_tax_cn": "贰万捌仟叁佰贰拾壹元伍角"
+  },
+  "invoices/batch_02/08200000000010000273.xml": {
+    "amount": "48515.41",
+    "batch_id": "",
+    "buyer_name": "白泽咨询股份有限公司",
+    "buyer_tax_id": "913301FAKE62328588",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "08200000000010000273",
+    "invoice_type": "纸质普票",
+    "issue_date": "2026-07-27",
+    "items": [
+      {
+        "amount": "29555.82",
+        "name": "水电费",
+        "tax_amount": "886.67",
+        "tax_rate": "0.03"
+      },
+      {
+        "amount": "18959.59",
+        "name": "物业管理费",
+        "tax_amount": "568.79",
+        "tax_rate": "0.03"
+      }
+    ],
+    "remark": "",
+    "seller_name": "南风电气有限公司",
+    "seller_tax_id": "911101FAKE10470952",
+    "tax_amount": "1455.46",
+    "total_with_tax": "49970.87",
+    "total_with_tax_cn": "肆万玖仟玖佰柒拾元捌角柒分"
+  },
+  "invoices/batch_02/14410000000010000106.xml": {
+    "amount": "1590.31",
+    "batch_id": "",
+    "buyer_name": "北斗精密仪器股份有限公司",
+    "buyer_tax_id": "915101FAKE81618495",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "14410000000010000106",
+    "invoice_type": "电子普票",
+    "issue_date": "2026-07-09",
+    "items": [
+      {
+        "amount": "1108.85",
+        "name": "办公用品",
+        "tax_amount": "66.53",
+        "tax_rate": "0.06"
+      },
+      {
+        "amount": "481.46",
+        "name": "装卸搬运费",
+        "tax_amount": "14.44",
+        "tax_rate": "0.03"
+      }
+    ],
+    "remark": "合同编号 HT-000677",
+    "seller_name": "听雨茶业股份有限公司",
+    "seller_tax_id": "911101FAKE11615594",
+    "tax_amount": "80.97",
+    "total_with_tax": "1671.28",
+    "total_with_tax_cn": "壹仟陆佰柒拾壹元贰角捌分"
+  },
+  "invoices/batch_02/14410000000010000208.xml": {
+    "amount": "56937.98",
+    "batch_id": "",
+    "buyer_name": "若水环保科技有限公司",
+    "buyer_tax_id": "914403FAKE13678377",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "14410000000010000208",
+    "invoice_type": "电子普票",
+    "issue_date": "2026-07-22",
+    "items": [
+      {
+        "amount": "56937.98",
+        "name": "审计费",
+        "tax_amount": "5124.42",
+        "tax_rate": "0.09"
+      }
+    ],
+    "remark": "",
+    "seller_name": "照夜照明工程有限公司",
+    "seller_tax_id": "915101FAKE73545494",
+    "tax_amount": "5124.42",
+    "total_with_tax": "62062.40",
+    "total_with_tax_cn": "陆万贰仟零陆拾贰元肆角"
+  },
+  "invoices/batch_02/14410000000010000225.xml": {
+    "amount": "9494.11",
+    "batch_id": "",
+    "buyer_name": "砚台文教用品股份有限公司",
+    "buyer_tax_id": "913301FAKE49909133",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "14410000000010000225",
+    "invoice_type": "电子普票",
+    "issue_date": "2026-07-22",
+    "items": [
+      {
+        "amount": "1565.45",
+        "name": "办公耗材",
+        "tax_amount": "203.51",
+        "tax_rate": "0.13"
+      },
+      {
+        "amount": "7928.66",
+        "name": "广告服务费",
+        "tax_amount": "79.29",
+        "tax_rate": "0.01"
+      }
+    ],
+    "remark": "",
+    "seller_name": "牧野农业开发股份有限公司",
+    "seller_tax_id": "913301FAKE99938677",
+    "tax_amount": "282.80",
+    "total_with_tax": "9776.91",
+    "total_with_tax_cn": "玖仟柒佰柒拾陆元玖角壹分"
+  },
+  "invoices/batch_02/14410000000010000305.xml": {
+    "amount": "92998.70",
+    "batch_id": "",
+    "buyer_name": "长风医疗器械股份有限公司",
+    "buyer_tax_id": "915101FAKE11116152",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "14410000000010000305",
+    "invoice_type": "电子普票",
+    "issue_date": "2026-07-10",
+    "items": [
+      {
+        "amount": "72154.76",
+        "name": "广告服务费",
+        "tax_amount": "6493.93",
+        "tax_rate": "0.09"
+      },
+      {
+        "amount": "20843.94",
+        "name": "检测服务费",
+        "tax_amount": "1875.95",
+        "tax_rate": "0.09"
+      }
+    ],
+    "remark": "服务费 575 号结算单",
+    "seller_name": "青竹文化传媒股份有限公司",
+    "seller_tax_id": "913101FAKE66156545",
+    "tax_amount": "8369.88",
+    "total_with_tax": "101368.58",
+    "total_with_tax_cn": "壹拾万零壹仟叁佰陆拾捌元伍角捌分"
+  },
+  "invoices/batch_02/14410000000010000319.pdf": {
+    "amount": "81980.51",
+    "batch_id": "",
+    "buyer_name": "听雨茶业股份有限公司",
+    "buyer_tax_id": "914403FAKE45107622",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "14410000000010000319",
+    "invoice_type": "电子普票",
+    "issue_date": "2026-07-06",
+    "items": [
+      {
+        "amount": "18084.23",
+        "name": "培训服务费",
+        "tax_amount": "2350.95",
+        "tax_rate": "0.13"
+      },
+      {
+        "amount": "4831.66",
+        "name": "软件维护费",
+        "tax_amount": "289.90",
+        "tax_rate": "0.06"
+      },
+      {
+        "amount": "11829.36",
+        "name": "办公耗材",
+        "tax_amount": "118.29",
+        "tax_rate": "0.01"
+      },
+      {
+        "amount": "2337.10",
+        "name": "差旅服务费",
+        "tax_amount": "303.82",
+        "tax_rate": "0.13"
+      },
+      {
+        "amount": "44898.16",
+        "name": "加工费",
+        "tax_amount": "5836.76",
+        "tax_rate": "0.13"
+      }
+    ],
+    "remark": "差旅报销（第 073 批）",
+    "seller_name": "白泽咨询有限公司",
+    "seller_tax_id": "913101FAKE36900343",
+    "tax_amount": "8899.72",
+    "total_with_tax": "90880.23",
+    "total_with_tax_cn": "玖万零捌佰捌拾元贰角叁分"
+  },
+  "invoices/batch_02/14410000000010000383.xml": {
+    "amount": "75984.48",
+    "batch_id": "",
+    "buyer_name": "南风电气股份有限公司",
+    "buyer_tax_id": "911101FAKE73947312",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "14410000000010000383",
+    "invoice_type": "电子普票",
+    "issue_date": "2026-06-27",
+    "items": [
+      {
+        "amount": "31207.74",
+        "name": "印刷费",
+        "tax_amount": "312.08",
+        "tax_rate": "0.01"
+      },
+      {
+        "amount": "6033.58",
+        "name": "劳务费",
+        "tax_amount": "181.01",
+        "tax_rate": "0.03"
+      },
+      {
+        "amount": "38743.16",
+        "name": "场地租赁费",
+        "tax_amount": "2324.59",
+        "tax_rate": "0.06"
+      }
+    ],
+    "remark": "",
+    "seller_name": "照夜照明工程股份有限公司",
+    "seller_tax_id": "911101FAKE31027868",
+    "tax_amount": "2817.68",
+    "total_with_tax": "78802.16",
+    "total_with_tax_cn": "柒万捌仟捌佰零贰元壹角陆分"
+  },
+  "invoices/batch_02/25910000000010000111.xml": {
+    "amount": "49051.24",
+    "batch_id": "",
+    "buyer_name": "长风医疗器械有限公司",
+    "buyer_tax_id": "914201FAKE92832764",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "25910000000010000111",
+    "invoice_type": "数电普票",
+    "issue_date": "2026-07-20",
+    "items": [
+      {
+        "amount": "49051.24",
+        "name": "审计费",
+        "tax_amount": "1471.54",
+        "tax_rate": "0.03"
+      }
+    ],
+    "remark": "合同编号 HT-000234",
+    "seller_name": "牧野农业开发股份有限公司",
+    "seller_tax_id": "914201FAKE47525534",
+    "tax_amount": "1471.54",
+    "total_with_tax": "50522.78",
+    "total_with_tax_cn": "伍万零伍佰贰拾贰元柒角捌分"
+  },
+  "invoices/batch_02/25910000000010000194.pdf": {
+    "amount": "39299.23",
+    "batch_id": "",
+    "buyer_name": "白泽咨询股份有限公司",
+    "buyer_tax_id": "914403FAKE68893734",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "25910000000010000194",
+    "invoice_type": "数电普票",
+    "issue_date": "2024-12-02",
+    "items": [
+      {
+        "amount": "6410.11",
+        "name": "会议服务费",
+        "tax_amount": "192.30",
+        "tax_rate": "0.03"
+      },
+      {
+        "amount": "22697.25",
+        "name": "软件维护费",
+        "tax_amount": "2042.75",
+        "tax_rate": "0.09"
+      },
+      {
+        "amount": "523.00",
+        "name": "设计服务费",
+        "tax_amount": "31.38",
+        "tax_rate": "0.06"
+      },
+      {
+        "amount": "9668.87",
+        "name": "软件维护费",
+        "tax_amount": "870.20",
+        "tax_rate": "0.09"
+      }
+    ],
+    "remark": "",
+    "seller_name": "墨白设计有限公司",
+    "seller_tax_id": "913301FAKE66909670",
+    "tax_amount": "3136.63",
+    "total_with_tax": "42435.86",
+    "total_with_tax_cn": "肆万贰仟肆佰叁拾伍元捌角陆分"
+  },
+  "invoices/batch_02/25910000000010000246.pdf": {
+    "amount": "58878.17",
+    "batch_id": "",
+    "buyer_name": "恒岳建筑工程有限公司",
+    "buyer_tax_id": "914403FAKE87603859",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "25910000000010000246",
+    "invoice_type": "数电普票",
+    "issue_date": "2026-08-11",
+    "items": [
+      {
+        "amount": "26933.31",
+        "name": "审计费",
+        "tax_amount": "269.33",
+        "tax_rate": "0.01"
+      },
+      {
+        "amount": "1027.62",
+        "name": "检测服务费",
+        "tax_amount": "30.83",
+        "tax_rate": "0.03"
+      },
+      {
+        "amount": "28254.94",
+        "name": "委托研发费",
+        "tax_amount": "2542.94",
+        "tax_rate": "0.09"
+      },
+      {
+        "amount": "2662.30",
+        "name": "办公耗材",
+        "tax_amount": "239.61",
+        "tax_rate": "0.09"
+      }
+    ],
+    "remark": "项目第 273 期结算",
+    "seller_name": "长风医疗器械股份有限公司",
+    "seller_tax_id": "914403FAKE80715451",
+    "tax_amount": "3082.71",
+    "total_with_tax": "61960.88",
+    "total_with_tax_cn": "陆万壹仟玖佰陆拾元捌角捌分"
+  },
+  "invoices/batch_02/25910000000010000357.xml": {
+    "amount": "28272.86",
+    "batch_id": "",
+    "buyer_name": "九州测绘有限公司",
+    "buyer_tax_id": "911101FAKE39240758",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "25910000000010000357",
+    "invoice_type": "数电普票",
+    "issue_date": "2026-07-20",
+    "items": [
+      {
+        "amount": "1833.59",
+        "name": "系统集成费",
+        "tax_amount": "55.01",
+        "tax_rate": "0.03"
+      },
+      {
+        "amount": "13447.23",
+        "name": "办公耗材",
+        "tax_amount": "1748.14",
+        "tax_rate": "0.13"
+      },
+      {
+        "amount": "1952.83",
+        "name": "广告服务费",
+        "tax_amount": "175.75",
+        "tax_rate": "0.09"
+      },
+      {
+        "amount": "11039.21",
+        "name": "广告服务费",
+        "tax_amount": "1435.10",
+        "tax_rate": "0.13"
+      }
+    ],
+    "remark": "",
+    "seller_name": "白泽咨询股份有限公司",
+    "seller_tax_id": "915101FAKE35977468",
+    "tax_amount": "3414.00",
+    "total_with_tax": "31686.86",
+    "total_with_tax_cn": "叁万壹仟陆佰捌拾陆元捌角陆分"
+  },
+  "invoices/batch_02/25910000000010000405.pdf": {
+    "amount": "28792.40",
+    "batch_id": "",
+    "buyer_name": "白泽咨询股份有限公司",
+    "buyer_tax_id": "914403FAKE36471027",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "25910000000010000405",
+    "invoice_type": "数电普票",
+    "issue_date": "2026-07-07",
+    "items": [
+      {
+        "amount": "6468.37",
+        "name": "数据服务费",
+        "tax_amount": "840.89",
+        "tax_rate": "0.13"
+      },
+      {
+        "amount": "713.30",
+        "name": "检测服务费",
+        "tax_amount": "92.73",
+        "tax_rate": "0.13"
+      },
+      {
+        "amount": "17173.40",
+        "name": "咨询服务费",
+        "tax_amount": "2232.54",
+        "tax_rate": "0.13"
+      },
+      {
+        "amount": "3275.18",
+        "name": "会议服务费",
+        "tax_amount": "32.75",
+        "tax_rate": "0.01"
+      },
+      {
+        "amount": "1162.15",
+        "name": "水电费",
+        "tax_amount": "11.62",
+        "tax_rate": "0.01"
+      }
+    ],
+    "remark": "差旅报销（第 621 批）",
+    "seller_name": "听雨茶业股份有限公司",
+    "seller_tax_id": "914201FAKE39690784",
+    "tax_amount": "3210.53",
+    "total_with_tax": "32002.93",
+    "total_with_tax_cn": "叁万贰仟零贰元玖角叁分"
+  },
+  "invoices/batch_02/26910000000010000155.pdf": {
+    "amount": "12041.26",
+    "batch_id": "",
+    "buyer_name": "牧野农业开发有限公司",
+    "buyer_tax_id": "914403FAKE44935348",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "26910000000010000155",
+    "invoice_type": "数电专票",
+    "issue_date": "2026-07-04",
+    "items": [
+      {
+        "amount": "7750.54",
+        "name": "仓储服务费",
+        "tax_amount": "465.03",
+        "tax_rate": "0.06"
+      },
+      {
+        "amount": "4290.72",
+        "name": "绿化养护费",
+        "tax_amount": "386.16",
+        "tax_rate": "0.09"
+      }
+    ],
+    "remark": "合同编号 HT-000094",
+    "seller_name": "山海实业股份有限公司",
+    "seller_tax_id": "911101FAKE98084124",
+    "tax_amount": "851.19",
+    "total_with_tax": "13392.45",
+    "total_with_tax_cn": "壹万叁仟叁佰玖拾贰元肆角伍分"
+  },
+  "invoices/batch_02/26910000000010000185.xml": {
+    "amount": "30008.88",
+    "batch_id": "",
+    "buyer_name": "听雨茶业有限公司",
+    "buyer_tax_id": "913101FAKE48734714",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "26910000000010000185",
+    "invoice_type": "数电专票",
+    "issue_date": "2025-10-29",
+    "items": [
+      {
+        "amount": "2107.31",
+        "name": "系统集成费",
+        "tax_amount": "21.07",
+        "tax_rate": "0.01"
+      },
+      {
+        "amount": "8345.82",
+        "name": "安保服务费",
+        "tax_amount": "250.37",
+        "tax_rate": "0.03"
+      },
+      {
+        "amount": "9032.50",
+        "name": "加工费",
+        "tax_amount": "812.93",
+        "tax_rate": "0.09"
+      },
+      {
+        "amount": "3894.66",
+        "name": "设计服务费",
+        "tax_amount": "506.31",
+        "tax_rate": "0.13"
+      },
+      {
+        "amount": "6628.59",
+        "name": "检测服务费",
+        "tax_amount": "861.72",
+        "tax_rate": "0.13"
+      }
+    ],
+    "remark": "服务费 082 号结算单",
+    "seller_name": "听雨茶业股份有限公司",
+    "seller_tax_id": "913301FAKE98687277",
+    "tax_amount": "2452.40",
+    "total_with_tax": "32461.28",
+    "total_with_tax_cn": "叁万贰仟肆佰陆拾壹元贰角捌分"
+  },
+  "invoices/batch_02/26910000000010000293.xml": {
+    "amount": "62128.57",
+    "batch_id": "",
+    "buyer_name": "青竹文化传媒有限公司",
+    "buyer_tax_id": "913301FAKE52904228",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "26910000000010000293",
+    "invoice_type": "数电专票",
+    "issue_date": "2026-07-13",
+    "items": [
+      {
+        "amount": "5080.30",
+        "name": "装卸搬运费",
+        "tax_amount": "304.82",
+        "tax_rate": "0.06"
+      },
+      {
+        "amount": "25008.44",
+        "name": "审计费",
+        "tax_amount": "250.08",
+        "tax_rate": "0.01"
+      },
+      {
+        "amount": "3310.63",
+        "name": "会议服务费",
+        "tax_amount": "297.96",
+        "tax_rate": "0.09"
+      },
+      {
+        "amount": "20693.62",
+        "name": "水电费",
+        "tax_amount": "620.81",
+        "tax_rate": "0.03"
+      },
+      {
+        "amount": "8035.58",
+        "name": "信息技术服务费",
+        "tax_amount": "1044.63",
+        "tax_rate": "0.13"
+      }
+    ],
+    "remark": "",
+    "seller_name": "墨白设计股份有限公司",
+    "seller_tax_id": "913101FAKE32931839",
+    "tax_amount": "2518.30",
+    "total_with_tax": "64646.87",
+    "total_with_tax_cn": "陆万肆仟陆佰肆拾陆元捌角柒分"
+  },
+  "invoices/batch_02/26910000000010000338.pdf": {
+    "amount": "48663.53",
+    "batch_id": "",
+    "buyer_name": "云图商贸有限公司",
+    "buyer_tax_id": "913101FAKE07151820",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "26910000000010000338",
+    "invoice_type": "数电专票",
+    "issue_date": "2026-08-07",
+    "items": [
+      {
+        "amount": "48663.53",
+        "name": "物业管理费",
+        "tax_amount": "486.64",
+        "tax_rate": "0.01"
+      }
+    ],
+    "remark": "服务费 535 号结算单",
+    "seller_name": "峻岭矿业股份有限公司",
+    "seller_tax_id": "915101FAKE79807935",
+    "tax_amount": "486.64",
+    "total_with_tax": "49150.17",
+    "total_with_tax_cn": "肆万玖仟壹佰伍拾元壹角柒分"
+  },
+  "invoices/batch_03/08100000000010000201.xml": {
+    "amount": "41987.25",
+    "batch_id": "",
+    "buyer_name": "临江建材有限公司",
+    "buyer_tax_id": "914403FAKE24190496",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "08100000000010000201",
+    "invoice_type": "纸质专票",
+    "issue_date": "2026-08-29",
+    "items": [
+      {
+        "amount": "1710.59",
+        "name": "运输服务费",
+        "tax_amount": "222.38",
+        "tax_rate": "0.13"
+      },
+      {
+        "amount": "40276.66",
+        "name": "运输服务费",
+        "tax_amount": "1208.30",
+        "tax_rate": "0.03"
+      }
+    ],
+    "remark": "",
+    "seller_name": "云图商贸有限公司",
+    "seller_tax_id": "914201FAKE93745299",
+    "tax_amount": "1430.68",
+    "total_with_tax": "43417.93",
+    "total_with_tax_cn": "肆万叁仟肆佰壹拾柒元玖角叁分"
+  },
+  "invoices/batch_03/08100000000010000280.xml": {
+    "amount": "81340.65",
+    "batch_id": "",
+    "buyer_name": "知行教育培训股份有限公司",
+    "buyer_tax_id": "915101FAKE49651370",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "08100000000010000280",
+    "invoice_type": "纸质专票",
+    "issue_date": "2026-09-10",
+    "items": [
+      {
+        "amount": "62626.93",
+        "name": "安保服务费",
+        "tax_amount": "3757.62",
+        "tax_rate": "0.06"
+      },
+      {
+        "amount": "10388.25",
+        "name": "系统集成费",
+        "tax_amount": "103.88",
+        "tax_rate": "0.01"
+      },
+      {
+        "amount": "8325.47",
+        "name": "运输服务费",
+        "tax_amount": "83.25",
+        "tax_rate": "0.01"
+      }
+    ],
+    "remark": "项目第 663 期结算",
+    "seller_name": "听雨茶业有限公司",
+    "seller_tax_id": "911101FAKE68516048",
+    "tax_amount": "3944.75",
+    "total_with_tax": "85285.40",
+    "total_with_tax_cn": "捌万伍仟贰佰捌拾伍元肆角"
+  },
+  "invoices/batch_03/08100000000010000295.pdf": {
+    "amount": "22612.91",
+    "batch_id": "",
+    "buyer_name": "牧野农业开发有限公司",
+    "buyer_tax_id": "913101FAKE77589178",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "08100000000010000295",
+    "invoice_type": "纸质专票",
+    "issue_date": "2026-08-17",
+    "items": [
+      {
+        "amount": "22612.91",
+        "name": "安保服务费",
+        "tax_amount": "1356.77",
+        "tax_rate": "0.06"
+      }
+    ],
+    "remark": "服务费 308 号结算单",
+    "seller_name": "星辰科技有限公司",
+    "seller_tax_id": "915101FAKE95024026",
+    "tax_amount": "1356.77",
+    "total_with_tax": "23969.68",
+    "total_with_tax_cn": "贰万叁仟玖佰陆拾玖元陆角捌分"
+  },
+  "invoices/batch_03/08100000000010000359.xml": {
+    "amount": "46266.78",
+    "batch_id": "",
+    "buyer_name": "远航物流股份有限公司",
+    "buyer_tax_id": "915101FAKE22047277",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "08100000000010000359",
+    "invoice_type": "纸质专票",
+    "issue_date": "2026-08-22",
+    "items": [
+      {
+        "amount": "12361.50",
+        "name": "广告服务费",
+        "tax_amount": "123.62",
+        "tax_rate": "0.01"
+      },
+      {
+        "amount": "24337.35",
+        "name": "设备维修费",
+        "tax_amount": "2190.36",
+        "tax_rate": "0.09"
+      },
+      {
+        "amount": "6365.29",
+        "name": "软件维护费",
+        "tax_amount": "63.65",
+        "tax_rate": "0.01"
+      },
+      {
+        "amount": "3202.64",
+        "name": "场地租赁费",
+        "tax_amount": "32.03",
+        "tax_rate": "0.01"
+      }
+    ],
+    "remark": "合同编号 HT-000262",
+    "seller_name": "恒岳建筑工程股份有限公司",
+    "seller_tax_id": "914201FAKE36153051",
+    "tax_amount": "2409.66",
+    "total_with_tax": "48676.44",
+    "total_with_tax_cn": "肆万捌仟陆佰柒拾陆元肆角肆分"
+  },
+  "invoices/batch_03/08200000000010000267.xml": {
+    "amount": "17362.31",
+    "batch_id": "",
+    "buyer_name": "初阳新能源有限公司",
+    "buyer_tax_id": "914201FAKE79237474",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "08200000000010000267",
+    "invoice_type": "纸质普票",
+    "issue_date": "2026-08-22",
+    "items": [
+      {
+        "amount": "3489.92",
+        "name": "咨询服务费",
+        "tax_amount": "34.90",
+        "tax_rate": "0.01"
+      },
+      {
+        "amount": "2791.33",
+        "name": "安保服务费",
+        "tax_amount": "167.48",
+        "tax_rate": "0.06"
+      },
+      {
+        "amount": "8274.00",
+        "name": "办公耗材",
+        "tax_amount": "82.74",
+        "tax_rate": "0.01"
+      },
+      {
+        "amount": "2807.06",
+        "name": "设备维修费",
+        "tax_amount": "168.42",
+        "tax_rate": "0.06"
+      }
+    ],
+    "remark": "办公用品采购 922",
+    "seller_name": "九州测绘有限公司",
+    "seller_tax_id": "915101FAKE38692221",
+    "tax_amount": "453.54",
+    "total_with_tax": "17815.85",
+    "total_with_tax_cn": "壹万柒仟捌佰壹拾伍元捌角伍分"
+  },
+  "invoices/batch_03/14410000000010000164.pdf": {
+    "amount": "59837.42",
+    "batch_id": "",
+    "buyer_name": "青云软件股份有限公司",
+    "buyer_tax_id": "913301FAKE33036541",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "14410000000010000164",
+    "invoice_type": "电子普票",
+    "issue_date": "2026-08-15",
+    "items": [
+      {
+        "amount": "12965.87",
+        "name": "安保服务费",
+        "tax_amount": "388.98",
+        "tax_rate": "0.03"
+      },
+      {
+        "amount": "6894.09",
+        "name": "软件维护费",
+        "tax_amount": "206.82",
+        "tax_rate": "0.03"
+      },
+      {
+        "amount": "14230.44",
+        "name": "仓储服务费",
+        "tax_amount": "142.30",
+        "tax_rate": "0.01"
+      },
+      {
+        "amount": "17975.46",
+        "name": "安保服务费",
+        "tax_amount": "1078.53",
+        "tax_rate": "0.06"
+      },
+      {
+        "amount": "7771.56",
+        "name": "安保服务费",
+        "tax_amount": "699.44",
+        "tax_rate": "0.09"
+      }
+    ],
+    "remark": "办公用品采购 695",
+    "seller_name": "长风医疗器械有限公司",
+    "seller_tax_id": "914403FAKE42160733",
+    "tax_amount": "2516.07",
+    "total_with_tax": "62353.49",
+    "total_with_tax_cn": "陆万贰仟叁佰伍拾捌元肆角玖分"
+  },
+  "invoices/batch_03/14410000000010000346.xml": {
+    "amount": "61551.94",
+    "batch_id": "",
+    "buyer_name": "照夜照明工程有限公司",
+    "buyer_tax_id": "913301FAKE92546291",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "14410000000010000346",
+    "invoice_type": "电子普票",
+    "issue_date": "2026-09-06",
+    "items": [
+      {
+        "amount": "23731.83",
+        "name": "云服务费",
+        "tax_amount": "2135.86",
+        "tax_rate": "0.09"
+      },
+      {
+        "amount": "8768.02",
+        "name": "加工费",
+        "tax_amount": "526.08",
+        "tax_rate": "0.06"
+      },
+      {
+        "amount": "29052.09",
+        "name": "咨询服务费",
+        "tax_amount": "3776.77",
+        "tax_rate": "0.13"
+      }
+    ],
+    "remark": "差旅报销（第 832 批）",
+    "seller_name": "星辰科技股份有限公司",
+    "seller_tax_id": "913101FAKE15186449",
+    "tax_amount": "6438.71",
+    "total_with_tax": "67990.65",
+    "total_with_tax_cn": "陆万柒仟玖佰玖拾元陆角伍分"
+  },
+  "invoices/batch_03/14410000000010000392.pdf": {
+    "amount": "15228.84",
+    "batch_id": "",
+    "buyer_name": "青云软件股份有限公司",
+    "buyer_tax_id": "914201FAKE78291146",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "14410000000010000392",
+    "invoice_type": "电子普票",
+    "issue_date": "2026-09-05",
+    "items": [
+      {
+        "amount": "7287.03",
+        "name": "设计服务费",
+        "tax_amount": "72.87",
+        "tax_rate": "0.01"
+      },
+      {
+        "amount": "6719.58",
+        "name": "办公耗材",
+        "tax_amount": "873.55",
+        "tax_rate": "0.13"
+      },
+      {
+        "amount": "1222.23",
+        "name": "审计费",
+        "tax_amount": "73.33",
+        "tax_rate": "0.06"
+      }
+    ],
+    "remark": "办公用品采购 843",
+    "seller_name": "望舒餐饮有限公司",
+    "seller_tax_id": "911101FAKE58313237",
+    "tax_amount": "1019.75",
+    "total_with_tax": "16248.59",
+    "total_with_tax_cn": "壹万陆仟贰佰肆拾捌元伍角玖分"
+  },
+  "invoices/batch_03/25910000000010000111.xml": {
+    "amount": "49051.24",
+    "batch_id": "",
+    "buyer_name": "青竹文化传媒有限公司",
+    "buyer_tax_id": "914201FAKE56413953",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "25910000000010000111",
+    "invoice_type": "数电普票",
+    "issue_date": "2026-07-20",
+    "items": [
+      {
+        "amount": "49051.24",
+        "name": "审计费",
+        "tax_amount": "1471.54",
+        "tax_rate": "0.03"
+      }
+    ],
+    "remark": "办公用品采购 146",
+    "seller_name": "牧野农业开发股份有限公司",
+    "seller_tax_id": "914201FAKE47525534",
+    "tax_amount": "1471.54",
+    "total_with_tax": "50522.78",
+    "total_with_tax_cn": "伍万零伍佰贰拾贰元柒角捌分"
+  },
+  "invoices/batch_03/25910000000010000213.pdf": {
+    "amount": "41319.83",
+    "batch_id": "",
+    "buyer_name": "牧野农业开发有限公司",
+    "buyer_tax_id": "911101FAKE33749894",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "25910000000010000213",
+    "invoice_type": "数电普票",
+    "issue_date": "2026-07-28",
+    "items": [
+      {
+        "amount": "24393.20",
+        "name": "差旅服务费",
+        "tax_amount": "1463.59",
+        "tax_rate": "0.06"
+      },
+      {
+        "amount": "3456.30",
+        "name": "劳务费",
+        "tax_amount": "449.32",
+        "tax_rate": "0.13"
+      },
+      {
+        "amount": "13470.33",
+        "name": "软件维护费",
+        "tax_amount": "808.22",
+        "tax_rate": "0.06"
+      }
+    ],
+    "remark": "",
+    "seller_name": "北斗精密仪器股份有限公司",
+    "seller_tax_id": "913301FAKE57444313",
+    "tax_amount": "2721.13",
+    "total_with_tax": "44040.96",
+    "total_with_tax_cn": "肆万肆仟零肆拾元玖角陆分"
+  },
+  "invoices/batch_03/25910000000010000229.pdf": {
+    "amount": "13093.79",
+    "batch_id": "",
+    "buyer_name": "星辰科技有限公司",
+    "buyer_tax_id": "911101FAKE61832421",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "25910000000010000229",
+    "invoice_type": "数电普票",
+    "issue_date": "2026-09-12",
+    "items": [
+      {
+        "amount": "57.11",
+        "name": "系统集成费",
+        "tax_amount": "5.14",
+        "tax_rate": "0.09"
+      },
+      {
+        "amount": "13036.68",
+        "name": "差旅服务费",
+        "tax_amount": "1694.77",
+        "tax_rate": "0.13"
+      }
+    ],
+    "remark": "服务费 766 号结算单",
+    "seller_name": "白泽咨询有限公司",
+    "seller_tax_id": "914201FAKE34471349",
+    "tax_amount": "1699.91",
+    "total_with_tax": "14793.70",
+    "total_with_tax_cn": "壹万肆仟柒佰玖拾叁元柒角"
+  },
+  "invoices/batch_03/25910000000010000414.ofd": {
+    "amount": "54072.40",
+    "batch_id": "",
+    "buyer_name": "九州测绘有限公司",
+    "buyer_tax_id": "914403FAKE25953278",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "25910000000010000414",
+    "invoice_type": "数电普票",
+    "issue_date": "2026-08-13",
+    "items": [
+      {
+        "amount": "10970.45",
+        "name": "劳务费",
+        "tax_amount": "658.23",
+        "tax_rate": "0.06"
+      },
+      {
+        "amount": "22477.32",
+        "name": "培训服务费",
+        "tax_amount": "2922.05",
+        "tax_rate": "0.13"
+      },
+      {
+        "amount": "20624.63",
+        "name": "广告服务费",
+        "tax_amount": "1237.48",
+        "tax_rate": "0.06"
+      }
+    ],
+    "remark": "办公用品采购 023",
+    "seller_name": "知行教育培训有限公司",
+    "seller_tax_id": "915101FAKE47321046",
+    "tax_amount": "4817.76",
+    "total_with_tax": "58890.16",
+    "total_with_tax_cn": "伍万捌仟捌佰玖拾元壹角陆分"
+  },
+  "invoices/batch_03/26910000000010000116.xml": {
+    "amount": "23708.21",
+    "batch_id": "",
+    "buyer_name": "望舒餐饮股份有限公司",
+    "buyer_tax_id": "915101FAKE04828148",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "26910000000010000116",
+    "invoice_type": "数电专票",
+    "issue_date": "2026-08-04",
+    "items": [
+      {
+        "amount": "1977.20",
+        "name": "水电费",
+        "tax_amount": "59.32",
+        "tax_rate": "0.03"
+      },
+      {
+        "amount": "1836.81",
+        "name": "安保服务费",
+        "tax_amount": "55.10",
+        "tax_rate": "0.03"
+      },
+      {
+        "amount": "786.00",
+        "name": "物业管理费",
+        "tax_amount": "70.74",
+        "tax_rate": "0.09"
+      },
+      {
+        "amount": "16100.54",
+        "name": "场地租赁费",
+        "tax_amount": "161.01",
+        "tax_rate": "0.01"
+      },
+      {
+        "amount": "3007.66",
+        "name": "物业管理费",
+        "tax_amount": "270.69",
+        "tax_rate": "0.09"
+      }
+    ],
+    "remark": "",
+    "seller_name": "兰台档案服务股份有限公司",
+    "seller_tax_id": "914403FAKE23884969",
+    "tax_amount": "616.86",
+    "total_with_tax": "24325.07",
+    "total_with_tax_cn": "贰万肆仟叁佰贰拾伍元零柒分"
+  },
+  "invoices/batch_03/26910000000010000120.xml": {
+    "amount": "23708.21",
+    "batch_id": "",
+    "buyer_name": "望舒餐饮股份有限公司",
+    "buyer_tax_id": "915101FAKE04828148",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "26910000000010000120",
+    "invoice_type": "数电专票",
+    "issue_date": "2026-08-05",
+    "items": [
+      {
+        "amount": "1977.20",
+        "name": "设计服务费",
+        "tax_amount": "59.32",
+        "tax_rate": "0.03"
+      },
+      {
+        "amount": "1836.81",
+        "name": "安保服务费",
+        "tax_amount": "55.10",
+        "tax_rate": "0.03"
+      },
+      {
+        "amount": "786.00",
+        "name": "物业管理费",
+        "tax_amount": "70.74",
+        "tax_rate": "0.09"
+      },
+      {
+        "amount": "16100.54",
+        "name": "场地租赁费",
+        "tax_amount": "161.01",
+        "tax_rate": "0.01"
+      },
+      {
+        "amount": "3007.66",
+        "name": "物业管理费",
+        "tax_amount": "270.69",
+        "tax_rate": "0.09"
+      }
+    ],
+    "remark": "服务费 940 号结算单",
+    "seller_name": "兰台档案服务股份有限公司",
+    "seller_tax_id": "914403FAKE23884969",
+    "tax_amount": "616.86",
+    "total_with_tax": "24325.07",
+    "total_with_tax_cn": "贰万肆仟叁佰贰拾伍元零柒分"
+  },
+  "invoices/batch_03/26910000000010000169.xml": {
+    "amount": "5130.60",
+    "batch_id": "",
+    "buyer_name": "牧野农业开发股份有限公司",
+    "buyer_tax_id": "914201FAKE93406088",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "26910000000010000169",
+    "invoice_type": "数电专票",
+    "issue_date": "2026-08-27",
+    "items": [
+      {
+        "amount": "5130.60",
+        "name": "仓储服务费",
+        "tax_amount": "307.84",
+        "tax_rate": "0.06"
+      }
+    ],
+    "remark": "合同编号 HT-000971",
+    "seller_name": "砚台文教用品股份有限公司",
+    "seller_tax_id": "915101FAKE01965569",
+    "tax_amount": "307.84",
+    "total_with_tax": "5438.44",
+    "total_with_tax_cn": "伍仟肆佰肆拾叁元肆角肆分"
+  },
+  "invoices/batch_03/26910000000010000196.ofd": {
+    "amount": "68333.08",
+    "batch_id": "",
+    "buyer_name": "光年信息技术股份有限公司",
+    "buyer_tax_id": "911101FAKE55646417",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "26910000000010000196",
+    "invoice_type": "数电专票",
+    "issue_date": "2026-09-06",
+    "items": [
+      {
+        "amount": "39208.52",
+        "name": "物业管理费",
+        "tax_amount": "1176.26",
+        "tax_rate": "0.03"
+      },
+      {
+        "amount": "29124.56",
+        "name": "信息技术服务费",
+        "tax_amount": "3786.19",
+        "tax_rate": "0.13"
+      }
+    ],
+    "remark": "",
+    "seller_name": "初阳新能源有限公司",
+    "seller_tax_id": "913301FAKE16272046",
+    "tax_amount": "4962.45",
+    "total_with_tax": "73295.53",
+    "total_with_tax_cn": "柒万叁仟贰佰玖拾伍元伍角叁分"
+  },
+  "invoices/batch_03/26910000000010000250.xml": {
+    "amount": "48823.27",
+    "batch_id": "",
+    "buyer_name": "临江建材股份有限公司",
+    "buyer_tax_id": "913101FAKE67737826",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "26910000000010000250",
+    "invoice_type": "数电专票",
+    "issue_date": "2026-08-09",
+    "items": [
+      {
+        "amount": "2422.74",
+        "name": "安保服务费",
+        "tax_amount": "314.96",
+        "tax_rate": "0.13"
+      },
+      {
+        "amount": "7764.21",
+        "name": "委托研发费",
+        "tax_amount": "232.93",
+        "tax_rate": "0.03"
+      },
+      {
+        "amount": "30474.62",
+        "name": "办公耗材",
+        "tax_amount": "914.24",
+        "tax_rate": "0.03"
+      },
+      {
+        "amount": "8161.70",
+        "name": "信息技术服务费",
+        "tax_amount": "1061.02",
+        "tax_rate": "0.13"
+      }
+    ],
+    "remark": "差旅报销（第 791 批）",
+    "seller_name": "山海实业股份有限公司",
+    "seller_tax_id": "915101FAKE13171274",
+    "tax_amount": "2523.15",
+    "total_with_tax": "51346.42",
+    "total_with_tax_cn": "伍万壹仟叁佰肆拾陆元肆角贰分"
+  },
+  "invoices/batch_03/26910000000010000311.pdf": {
+    "amount": "21007.00",
+    "batch_id": "",
+    "buyer_name": "星辰科技股份有限公司",
+    "buyer_tax_id": "913101FAKE89980940",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "26910000000010000311",
+    "invoice_type": "数电专票",
+    "issue_date": "2026-08-28",
+    "items": [
+      {
+        "amount": "2158.80",
+        "name": "物业管理费",
+        "tax_amount": "129.53",
+        "tax_rate": "0.06"
+      },
+      {
+        "amount": "12673.17",
+        "name": "设备维修费",
+        "tax_amount": "760.39",
+        "tax_rate": "0.06"
+      },
+      {
+        "amount": "2908.28",
+        "name": "印刷费",
+        "tax_amount": "29.08",
+        "tax_rate": "0.01"
+      },
+      {
+        "amount": "3266.75",
+        "name": "装卸搬运费",
+        "tax_amount": "424.68",
+        "tax_rate": "0.13"
+      }
+    ],
+    "remark": "差旅报销（第 943 批）",
+    "seller_name": "澄江水务股份有限公司",
+    "seller_tax_id": "913101FAKE31585149",
+    "tax_amount": "1343.68",
+    "total_with_tax": "22350.68",
+    "total_with_tax_cn": "贰万贰仟叁佰伍拾元陆角捌分"
+  },
+  "invoices/batch_03/26910000000010000323.xml": {
+    "amount": "7597.14",
+    "batch_id": "",
+    "buyer_name": "拾光摄影股份有限公司",
+    "buyer_tax_id": "913301FAKE96816453",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "26910000000010000323",
+    "invoice_type": "数电专票",
+    "issue_date": "2026-08-02",
+    "items": [
+      {
+        "amount": "197.51",
+        "name": "印刷费",
+        "tax_amount": "11.85",
+        "tax_rate": "0.06"
+      },
+      {
+        "amount": "619.93",
+        "name": "印刷费",
+        "tax_amount": "55.79",
+        "tax_rate": "0.09"
+      },
+      {
+        "amount": "4004.43",
+        "name": "委托研发费",
+        "tax_amount": "360.40",
+        "tax_rate": "0.09"
+      },
+      {
+        "amount": "2775.27",
+        "name": "办公耗材",
+        "tax_amount": "249.77",
+        "tax_rate": "0.09"
+      }
+    ],
+    "remark": "",
+    "seller_name": "牧野农业开发股份有限公司",
+    "seller_tax_id": "911101FAKE05297516",
+    "tax_amount": "677.81",
+    "total_with_tax": "8274.95",
+    "total_with_tax_cn": "捌仟贰佰柒拾肆元玖角伍分"
+  },
+  "invoices/batch_03/26910000000010000367.pdf": {
+    "amount": "91605.43",
+    "batch_id": "",
+    "buyer_name": "南风电气有限公司",
+    "buyer_tax_id": "911101FAKE61692845",
+    "confidence": 1.0,
+    "evidence": [],
+    "field_flags": [],
+    "invoice_number": "26910000000010000367",
+    "invoice_type": "数电专票",
+    "issue_date": "2026-08-10",
+    "items": [
+      {
+        "amount": "6144.94",
+        "name": "设备维修费",
+        "tax_amount": "368.70",
+        "tax_rate": "0.06"
+      },
+      {
+        "amount": "25917.89",
+        "name": "审计费",
+        "tax_amount": "259.18",
+        "tax_rate": "0.01"
+      },
+      {
+        "amount": "10437.16",
+        "name": "办公用品",
+        "tax_amount": "626.23",
+        "tax_rate": "0.06"
+      },
+      {
+        "amount": "49105.44",
+        "name": "安保服务费",
+        "tax_amount": "491.05",
+        "tax_rate": "0.01"
+      }
+    ],
+    "remark": "差旅报销（第 313 批）",
+    "seller_name": "青云软件股份有限公司",
+    "seller_tax_id": "915101FAKE67652775",
+    "tax_amount": "1745.16",
+    "total_with_tax": "93350.59",
+    "total_with_tax_cn": "玖万叁仟叁佰伍拾元伍角玖分"
+  }
+}

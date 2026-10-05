@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 合成测试数据：invoice-ledger-checker synthetic-v1，公司/税号/号码全虚构，与任何真实主体无关 -->
+<ElectronicInvoice version="synthetic-v1">
+  <InvoiceHeader>
+    <InvoiceNumber>26910000000010000374</InvoiceNumber>
+    <InvoiceType>数电专票</InvoiceType>
+    <IssueDate>2026-06-21</IssueDate>
+    <Buyer>
+      <Name>长风医疗器械有限公司</Name>
+      <TaxId>914201FAKE02970213</TaxId>
+    </Buyer>
+    <Seller>
+      <Name>北斗精密仪器股份有限公司</Name>
+      <TaxId>914201FAKE96401658</TaxId>
+    </Seller>
+    <Items>
+      <Item>
+        <Name>设备维修费</Name>
+        <Amount>57862.66</Amount>
+        <TaxRate>0.09</TaxRate>
+        <TaxAmount>5207.64</TaxAmount>
+      </Item>
+      <Item>
+        <Name>咨询服务费</Name>
+        <Amount>14127.75</Amount>
+        <TaxRate>0.09</TaxRate>
+        <TaxAmount>1271.50</TaxAmount>
+      </Item>
+    </Items>
+    <AmountWithoutTax>71990.41</AmountWithoutTax>
+    <TaxAmount>6479.14</TaxAmount>
+    <TotalWithTax>78469.55</TotalWithTax>
+    <TotalWithTaxCN>柒万捌仟肆佰陆拾玖元伍角伍分</TotalWithTaxCN>
+    <Remark>服务费 033 号结算单</Remark>
+  </InvoiceHeader>
+</ElectronicInvoice>

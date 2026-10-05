@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 合成测试数据：invoice-ledger-checker synthetic-v1，公司/税号/号码全虚构，与任何真实主体无关 -->
+<ElectronicInvoice version="synthetic-v1">
+  <InvoiceHeader>
+    <InvoiceNumber>25910000000010000357</InvoiceNumber>
+    <InvoiceType>数电普票</InvoiceType>
+    <IssueDate>2026-07-20</IssueDate>
+    <Buyer>
+      <Name>九州测绘有限公司</Name>
+      <TaxId>911101FAKE39240758</TaxId>
+    </Buyer>
+    <Seller>
+      <Name>白泽咨询股份有限公司</Name>
+      <TaxId>915101FAKE35977468</TaxId>
+    </Seller>
+    <Items>
+      <Item>
+        <Name>系统集成费</Name>
+        <Amount>1833.59</Amount>
+        <TaxRate>0.03</TaxRate>
+        <TaxAmount>55.01</TaxAmount>
+      </Item>
+      <Item>
+        <Name>办公耗材</Name>
+        <Amount>13447.23</Amount>
+        <TaxRate>0.13</TaxRate>
+        <TaxAmount>1748.14</TaxAmount>
+      </Item>
+      <Item>
+        <Name>广告服务费</Name>
+        <Amount>1952.83</Amount>
+        <TaxRate>0.09</TaxRate>
+        <TaxAmount>175.75</TaxAmount>
+      </Item>
+      <Item>
+        <Name>广告服务费</Name>
+        <Amount>11039.21</Amount>
+        <TaxRate>0.13</TaxRate>
+        <TaxAmount>1435.10</TaxAmount>
+      </Item>
+    </Items>
+    <AmountWithoutTax>28272.86</AmountWithoutTax>
+    <TaxAmount>3414.00</TaxAmount>
+    <TotalWithTax>31686.86</TotalWithTax>
+    <TotalWithTaxCN>叁万壹仟陆佰捌拾陆元捌角陆分</TotalWithTaxCN>
+  </InvoiceHeader>
+</ElectronicInvoice>

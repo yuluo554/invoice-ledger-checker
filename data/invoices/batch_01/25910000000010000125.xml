@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 合成测试数据：invoice-ledger-checker synthetic-v1，公司/税号/号码全虚构，与任何真实主体无关 -->
+<ElectronicInvoice version="synthetic-v1">
+  <InvoiceHeader>
+    <InvoiceNumber>25910000000010000125</InvoiceNumber>
+    <InvoiceType>数电普票</InvoiceType>
+    <IssueDate>2026-06-27</IssueDate>
+    <Buyer>
+      <Name>照夜照明工程有限公司</Name>
+      <TaxId>915101FAKE07991183</TaxId>
+    </Buyer>
+    <Seller>
+      <Name>兰台档案服务股份有限公司</Name>
+      <TaxId>915101FAKE70154303</TaxId>
+    </Seller>
+    <Items>
+      <Item>
+        <Name>广告服务费</Name>
+        <Amount>5029.40</Amount>
+        <TaxRate>0.13</TaxRate>
+        <TaxAmount>653.82</TaxAmount>
+      </Item>
+      <Item>
+        <Name>物业管理费</Name>
+        <Amount>32312.95</Amount>
+        <TaxRate>0.13</TaxRate>
+        <TaxAmount>4200.68</TaxAmount>
+      </Item>
+      <Item>
+        <Name>物业管理费</Name>
+        <Amount>2152.05</Amount>
+        <TaxRate>0.01</TaxRate>
+        <TaxAmount>21.52</TaxAmount>
+      </Item>
+      <Item>
+        <Name>软件维护费</Name>
+        <Amount>466.26</Amount>
+        <TaxRate>0.01</TaxRate>
+        <TaxAmount>4.66</TaxAmount>
+      </Item>
+    </Items>
+    <AmountWithoutTax>39960.66</AmountWithoutTax>
+    <TaxAmount>4880.68</TaxAmount>
+    <TotalWithTax>44841.34</TotalWithTax>
+    <TotalWithTaxCN>肆万肆仟捌佰肆拾壹元叁角肆分</TotalWithTaxCN>
+  </InvoiceHeader>
+</ElectronicInvoice>

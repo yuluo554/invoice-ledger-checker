@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 合成测试数据：invoice-ledger-checker synthetic-v1，公司/税号/号码全虚构，与任何真实主体无关 -->
+<ElectronicInvoice version="synthetic-v1">
+  <InvoiceHeader>
+    <InvoiceNumber>08200000000010000267</InvoiceNumber>
+    <InvoiceType>纸质普票</InvoiceType>
+    <IssueDate>2026-08-22</IssueDate>
+    <Buyer>
+      <Name>初阳新能源有限公司</Name>
+      <TaxId>914201FAKE79237474</TaxId>
+    </Buyer>
+    <Seller>
+      <Name>九州测绘有限公司</Name>
+      <TaxId>915101FAKE38692221</TaxId>
+    </Seller>
+    <Items>
+      <Item>
+        <Name>咨询服务费</Name>
+        <Amount>3489.92</Amount>
+        <TaxRate>0.01</TaxRate>
+        <TaxAmount>34.90</TaxAmount>
+      </Item>
+      <Item>
+        <Name>安保服务费</Name>
+        <Amount>2791.33</Amount>
+        <TaxRate>0.06</TaxRate>
+        <TaxAmount>167.48</TaxAmount>
+      </Item>
+      <Item>
+        <Name>办公耗材</Name>
+        <Amount>8274.00</Amount>
+        <TaxRate>0.01</TaxRate>
+        <TaxAmount>82.74</TaxAmount>
+      </Item>
+      <Item>
+        <Name>设备维修费</Name>
+        <Amount>2807.06</Amount>
+        <TaxRate>0.06</TaxRate>
+        <TaxAmount>168.42</TaxAmount>
+      </Item>
+    </Items>
+    <AmountWithoutTax>17362.31</AmountWithoutTax>
+    <TaxAmount>453.54</TaxAmount>
+    <TotalWithTax>17815.85</TotalWithTax>
+    <TotalWithTaxCN>壹万柒仟捌佰壹拾伍元捌角伍分</TotalWithTaxCN>
+    <Remark>办公用品采购 922</Remark>
+  </InvoiceHeader>
+</ElectronicInvoice>

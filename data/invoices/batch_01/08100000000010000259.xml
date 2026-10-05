@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 合成测试数据：invoice-ledger-checker synthetic-v1，公司/税号/号码全虚构，与任何真实主体无关 -->
+<ElectronicInvoice version="synthetic-v1">
+  <InvoiceHeader>
+    <InvoiceNumber>08100000000010000259</InvoiceNumber>
+    <InvoiceType>纸质专票</InvoiceType>
+    <IssueDate>2026-06-09</IssueDate>
+    <Buyer>
+      <Name>知行教育培训股份有限公司</Name>
+      <TaxId>914201FAKE33963605</TaxId>
+    </Buyer>
+    <Seller>
+      <Name>砚台文教用品股份有限公司</Name>
+      <TaxId>914403FAKE27875588</TaxId>
+    </Seller>
+    <Items>
+      <Item>
+        <Name>绿化养护费</Name>
+        <Amount>42593.12</Amount>
+        <TaxRate>0.06</TaxRate>
+        <TaxAmount>2555.59</TaxAmount>
+      </Item>
+      <Item>
+        <Name>办公耗材</Name>
+        <Amount>23486.40</Amount>
+        <TaxRate>0.01</TaxRate>
+        <TaxAmount>234.86</TaxAmount>
+      </Item>
+      <Item>
+        <Name>绿化养护费</Name>
+        <Amount>4036.26</Amount>
+        <TaxRate>0.06</TaxRate>
+        <TaxAmount>242.18</TaxAmount>
+      </Item>
+    </Items>
+    <AmountWithoutTax>70115.78</AmountWithoutTax>
+    <TaxAmount>3032.63</TaxAmount>
+    <TotalWithTax>73148.41</TotalWithTax>
+    <TotalWithTaxCN>柒万叁仟壹佰肆拾捌元肆角壹分</TotalWithTaxCN>
+    <Remark>办公用品采购 395</Remark>
+  </InvoiceHeader>
+</ElectronicInvoice>
