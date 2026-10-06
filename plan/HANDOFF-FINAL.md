@@ -35,9 +35,15 @@
   GUI 冒烟探针 2599 ms。
 - **基准不回退**：宏平均 F1=**1.0000**、检出率 **100%**、误报 **0**、判定准确率 **100%**；
   `benchmarks/report.md` 同输入重跑逐字节一致。
-- **计数对账**：dev **177 项全绿**；干净 venv（仅 dev）**168 = 149 绿 + 19 skip**；
-  干净 venv（`[all]`）**177 = 176 + 1**（与 dev 同构，CI `desktop` 作业等价）。
+- **计数对账**：dev **179 项全绿**；干净 venv（仅 dev）**170 = 151 绿 + 19 skip**；
+  干净 venv（`[all]`）**179 = 178 + 1**（与 dev 同构，CI `desktop` 作业等价）。
   **差 9 = test_app.py 模块级 importorskip 收成 1 条目**；19 skip 逐项指认（见 §3 第 12 条）。
+- **建仓、push 与 CI 首跑**（GitHub `yuluo554/invoice-ledger-checker`，public + MIT）：不带 `--push` 建仓
+  → SSH 通路一次 push → **CI 五运行全绿**（`test` 三矩阵 + `desktop` + `benchmark`，其中 desktop 与
+  benchmark 作业在发布前**从未执行过**）；topics 10 个回读生效；README 渲染核对通过。
+  首跑又暴露并修复**第三个"从未验证过"的缺陷**：`ci.yml` 的 step 名含未加引号的「冒号+空格」→
+  整份 workflow 非法 YAML → GitHub 不建任何 job（run 0 秒失败、jobs=0），已修复 + 加 YAML 守门测试
+  （见 §3 第 15 条与 §4）。
 
 ## 2. 交付物索引
 
@@ -80,8 +86,8 @@
    新增惰性依赖必须同步 spec + `tests/test_packaging.py` 断言。
 9. **exe 验证纪律（M5 假绿教训）**：关键命令**单跑取真实退出码**，绝不看 bash 管道的 `$?`
    （`| tail` 的 `$?` 是 tail 的）。M5 记录的"CLI 五连全过"即因此为假绿。
-10. **测试计数口径**：dev 全 extras = **177 项**；干净 venv（仅 `[dev]`）= **168 = 149 绿 + 19 skip**；
-    干净 venv（`[all]`）= **177 = 176 + 1**（dist 缺席）。差 9 = `test_app.py` 模块级 `importorskip`。
+10. **测试计数口径**：dev 全 extras = **179 项**；干净 venv（仅 `[dev]`）= **170 = 151 绿 + 19 skip**；
+    干净 venv（`[all]`）= **179 = 178 + 1**（dist 缺席）。差 9 = `test_app.py` 模块级 `importorskip`。
     改 extras 装机清单或新增模块级 importorskip 会改变此对账 → 须回写本速查区与 RELEASE-M6。
 11. **CI 三作业（五运行）**：`test`（win3.8/win3.12/ubuntu3.12，仅 dev）+ `desktop`（win-3.8，
     `[dev,parse,data,export,desktop]`，GUI/导出真跑）+ `benchmark`（win-3.8，`[dev,parse,data]`，门槛）。
@@ -91,8 +97,11 @@
 13. **产物形态**：onedir 双 exe（`invoice-ledger` GUI console=False / `invoice-ledger-cli` console=True）；
     `datas` 白名单为空（版权红线数据不入包）；构建通道 = **Python 3.12 干净 venv** + PyInstaller 6.22.3
     （3.8 通道构建工具级不稳定）；产物 186 MB、Release zip 83.3 MB（zip 时间戳使重打包哈希必变）。
-14. **文档计数/表述全仓同步**：README/plan/00/05/06 与 HANDOFF 的测试数（177/168/19）、命令数
+14. **文档计数/表述全仓同步**：README/plan/00/05/06 与 HANDOFF 的测试数（179/170/19）、命令数
     （八命令：demo/doctor/generate/parse/check/export/app/benchmark）、里程碑状态处统一维护，改测试必同步。
+15. **CI workflow YAML 守门**（`tests/test_ci_workflow.py`，pyyaml 已入 dev extras）：workflow 必须
+    可被 YAML 解析，且每个 job 声明 `runs-on`/`steps`（防 0 秒空跑）；`ci.yml` 作业面固化。**纯量里
+    含「冒号+空格」必须加引号**——否则整份 workflow 非法，GitHub 不建任何 job（run 0 秒失败、jobs=0）。
 
 **M0-M5 既有口径全部仍有效（速查版）**：
 
@@ -123,7 +132,11 @@
   ③ `filter-branch` 输出接管道有 SIGPIPE 写坏 ref 的风险；④ **PyInstaller 的 `hiddenimports`
   必须覆盖全部惰性导入**（本次 pdfplumber 漏声明 → 发行包残废）；⑤ 本机为**已知不稳定环境**：
   全量 pytest 偶发单条 PDF 解析失败（**每次文件不同**；660 次连续解析 0 失败可证非数据缺陷）与偶发段错误
-  （exit 139），**同命令重跑即绿**——处置 = 如实登记 + 重跑取绿，零容忍门槛不放宽。
+  （exit 139）、偶发 `XXX lineno: N, opcode: 0` 帧损坏（traceback 乱码）——**同命令重跑即绿**，
+  处置 = 如实登记 + 重跑取绿，零容忍门槛不放宽；⑥ **workflow 非法 YAML 极度隐蔽**：GitHub 端
+  `state` 仍显示 `active`、文件字节也洁净，看状态/看字节都查不出，**只有真解析或真跑才暴露**——
+  排查手段 = "最小 workflow 隔离实验"（同一次 push 下最小文件成功即证明问题在目标文件自身）；
+  CI 首跑**必须**预留"诊断 + 修复 + 再推一轮"预算。
 - **M5**：PyInstaller 在 3.8.8 通道构建工具级不稳定（5 种"不可能错误" + 段错误）→ **换 3.12 干净 venv
   构建通道**；`py -m venv` 的 ensurepip 会写坏 pyc（建完 venv **先清 `__pycache__`**）；
   `py -m PyInstaller`（**模块名大写 P**）；本机 sys.path 被多个姊妹项目 `src` 的 .pth 污染（构建务必用干净 venv）；
@@ -141,9 +154,9 @@
 
 ```bash
 # 测试（全程携带 PYTHONDONTWRITEBYTECODE=1）
-PYTHONDONTWRITEBYTECODE=1 py -X utf8 -m pytest -rs          # dev 全 extras：177 项
+PYTHONDONTWRITEBYTECODE=1 py -X utf8 -m pytest -rs          # dev 全 extras：179 项
 py -X utf8 -m pytest --co -q                                # 只数收集项（防 summary 行被吞）
-# 干净 venv（仅 dev）：168 = 149 绿 + 19 skip；[all]：177 = 176 + 1
+# 干净 venv（仅 dev）：170 = 151 绿 + 19 skip；[all]：179 = 178 + 1
 
 # CLI（未装则 PYTHONPATH=src py -X utf8 -m invoice_ledger_checker ...）
 py -X utf8 -m invoice_ledger_checker doctor|demo|generate|parse|check|export|app|benchmark

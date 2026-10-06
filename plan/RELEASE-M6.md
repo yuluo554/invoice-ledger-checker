@@ -192,16 +192,20 @@ python tools/sensitive_scan.py dist --dir dist --marker-b64 <b64> [...]   # 标�
 
 | 环境 | 收集/执行项 | passed | skipped |
 |---|---|---|---|
-| dev 全 extras（本机，dist 在场） | 177 | **177** | 0 |
-| 干净 venv（仅 `[dev]`） | 168 | 149 | **19** |
-| 干净 venv（`[all]`，CI `desktop` 作业等价） | 177 | 176 | 1 |
+| dev 全 extras（本机，dist 在场） | 179 | **179** | 0 |
+| 干净 venv（仅 `[dev]`） | 170 | 151 | **19** |
+| 干净 venv（`[all]`，CI `desktop` 作业等价） | 179 | 178 | 1 |
 
 - **差 9 项** = `tests/test_app.py` 模块级 `importorskip("PySide6")` 把 10 项收成 1 个 skip 条目
   （dev 170→160 的老口径同源）。**"全绿"不可直接比 passed 数**，故按收集项对账。
+- **M5 → M6 的测试数增量逐项列明**（170 → **179**，+9，全部是发布门带来的回归锁）：
+  test_release_scan 5（自测对照 / 跟踪内容 / 历史与提交信息 / 二进制样例 / 提交元数据）+
+  test_extras 1（reportlab 环境标记锁）+ test_packaging 1（hiddenimports 覆盖惰性依赖）+
+  test_ci_workflow 2（workflow YAML 可解析且 job 结构完整 / CI 作业面固化）。
 - **19 skip 明细**：test_app 1（模块级）+ pdfplumber 11（parsing 3 / baseline_detection 2 /
   benchmark 4 / cli 2）+ test_cli openpyxl 1 + test_export openpyxl 2 + test_extras PySide6 1 +
   test_generator reportlab 2 + test_packaging dist 1。`-rs` 每项可见，无静默少跑。
-- `[all]` 干净 venv 与 dev 完全同构（176+1 vs 177+0，唯一 skip 同为 dist 缺席）→ CI 平价成立。
+- `[all]` 干净 venv 与 dev 完全同构（178+1 vs 179+0，唯一 skip 同为 dist 缺席）→ CI 平价成立。
 
 ### 7.2 README 逐条执行结果（干净 venv，锁生效后）
 
@@ -299,17 +303,14 @@ M5 产出的发行 exe 实测：`doctor` 报 pdfplumber 未安装；`check` **�
 | 新目录 `git clone` 后 HEAD 与本机一致 | ✅ 一致（`c89e092…`）——**发布树与被干净环境验证过的树逐字节同一**，§7 的验证结论因此直接适用 |
 | `git log --format='%ae\|%ce' --all \| sort -u` | ✅ 仅 `<uid>+<user>@users.noreply.github.com` |
 | 重跑 `tools/sensitive_scan.py all`（五模式） | ✅ 全 0 命中（124 跟踪文件） |
-| 全新 venv（3.8，`[all]`）跑全量 pytest | ✅ **176 通过 + 1 skip = 177 项**（skip 为 dist 缺席，与 §7.1 完全一致） |
+| 全新 venv（3.8，`[all]`）跑全量 pytest | ✅ **178 通过 + 1 skip = 179 项**（skip 为 dist 缺席，与 §7.1 完全一致） |
 | 全新 venv CLI 冒烟：`demo` / `benchmark --no-report` | ✅ exit 0；基准门槛全过（F1≥0.95 / 检出 100% / 误报 0 / 判定 100%） |
-| `gh run list` 对账：push 数 = workflow run 数，全作业绿 | ✅（见 §9 发布动作记录） |
-| `gh api` 回读仓库元信息与 topics | ✅（见 §9） |
-| Release 资产可下载且 sha256 与 §5 表一致 | ✅（见 §9） |
+| `gh run list` 对账：push 数 = run 数，全作业绿 | ✅ **CI 五运行全绿**：`test`×3（win-3.8 / win-3.12 / ubuntu-3.12）+ `desktop`（win-3.8，1m45s）+ `benchmark`（win-3.8，1m15s） |
+| `gh api` 回读仓库元信息与 topics | ✅ public / MIT / `default_branch=main`；topics **10 个回读生效**（invoice·e-invoice·expense-audit·duplicate-detection·pyside6·sqlite·python·desktop-app·rule-engine·chinese）；README 渲染含状态行、RELEASE-M6 链接与三徽章 |
+| Release 资产可下载且 sha256 与 §5 表一致 | ✅（下载核对记录见 §9 末行） |
 
-**首跑异常与处置（如实登记）**：首次 push 触发的 workflow run **0 秒失败**，GitHub 提示
-"This run likely failed because of a workflow file issue"，且 `gh run rerun` 报
-"This workflow run cannot be retried"（该 run 未创建任何 job，无法重跑）。经查：工作流文件
-在 GitHub 端已注册为 `active`，字节洁净（LF、无 BOM、无 tab）——属"workflow 文件随首个 push
-一起引入"时的注册时序现象。处置：**再推一次**即可拿到正常 run（见 §9）。
+**首跑异常的真相（首轮判断被自己推翻，如实登记）**：首轮把 0 秒失败归因为"workflow 随首个 push
+引入的注册时序现象"——**这个判断是错的**。第二次 push 仍 0 秒失败后改做隔离实验，真因见 §7.5。
 
 ---
 
@@ -317,10 +318,53 @@ M5 产出的发行 exe 实测：`doctor` 报 pdfplumber 未安装；`check` **�
 
 | 动作 | 命令形态 | 结果 |
 |---|---|---|
-| 建仓（public，不带 `--push`） | `gh repo create <owner>/<repo> --public --description … --source . --remote origin` | ✅ 建仓成功，remote 初为 https |
-| 推送（唯一一次） | `ssh -T git@github.com` 验证 → `git remote set-url origin git@github.com:<owner>/<repo>.git` → `git push -u origin main` | ✅ 一次成功（走 SSH：HTTPS token 无 `workflow` scope，改 SSH 可正常推 workflow 文件） |
-| CI 首跑 | `gh run list` / `gh run view` | 首跑 0 秒失败（workflow 注册时序，见 §8）→ 再推一次后正常排队执行，最终全作业绿（对账见下） |
-| Release | `gh release create v0.1.0 … <zip>` | ✅ 附件 = §5 的 zip，sha256 已核对一致 |
-| topics | `gh repo edit --add-topic …` → `gh api` 回读 | ✅ 回读确认生效 |
+| 建仓（public，不带 `--push`） | `gh repo create <owner>/<repo> --public --description … --source . --remote origin` | ✅ 建仓成功；remote 初为 https（不带 `--push`，避免 workflow scope 半失败态） |
+| 推送（首次） | `ssh -T git@github.com` 验证 → `git remote set-url origin git@github.com:<owner>/<repo>.git` → `git push -u origin main` | ✅ 一次成功（走 SSH：HTTPS token 无 `workflow` scope，SSH 通路可正常推 workflow 文件） |
+| CI 首跑 | `gh run list` / `gh run view` / `gh api …/jobs` | ❌ 连续三次 push 的 run 均 **0 秒失败、jobs=0**（真因 = 非法 YAML，见 §7.5）→ 修复后 ✅ **五运行全绿** |
+| topics | `gh repo edit --add-topic …`（10 个） → `gh api repos/… --jq .topics` | ✅ 回读确认 10 个全部生效 |
+| Release | `gh release create v0.1.0 …`（附 §5 的 zip + Release notes） | ✅ 见本表末行 |
+| 标签 | `git tag v0.1.0`（annotated，打在含完整收尾回写的提交上） | ✅ 见本表末行 |
 
-（本表在发布动作当轮回填；勾选状态以 GitHub 端 `gh` 回读为准。）
+**push ↔ run 对账**：修复前三次 push 各产出 1 个 CI run（均 0 秒失败，全部定位到同一 YAML 缺陷）；
+隔离实验那次 push 因同时含临时最小 workflow 而产出 2 个 run（`CI` 失败 + `smoke` 成功，临时文件已删除）；
+修复后一次 push → 1 个 run → 五运行全绿。**每个 push 事件都有 run 与之对应，无静默丢失。**
+
+**Release 资产核对**：附件 `invoice-ledger-checker-v0.1.0-win64.zip` 从 GitHub 重新下载后与 §5 的
+sha256 比对——**一致**（`e6140c0…`）。
+
+---
+
+## 7.5 问题 3（发布期 CI 首跑暴露）：workflow 非法 YAML → GitHub 不建任何 job
+
+**现象**：建仓后每次 push 触发的 run 都在 **0 秒失败**；`gh run view` 提示
+"This run likely failed because of a workflow file issue"；`gh run rerun` 报
+"This workflow run cannot be retried"；`gh api …/runs/<id>/jobs` 返回 `total_count=0`。
+
+**排查路径（两轮假设，第二轮才对）**：
+
+1. 首轮怀疑"workflow 文件随首个 push 引入的注册时序" → 再推一次仍 0 秒失败 → **否决**。
+2. **隔离实验**：新增一个最小 workflow（单 ubuntu job + `echo`）随同一次 push 提交 →
+   最小 workflow **7 秒成功**，`ci.yml` 仍 0 秒失败 → **问题定位在 ci.yml 文件本身**（仓库级正常）。
+3. 用 PyYAML 三方复现：`yaml.safe_load(ci.yml)` 报 `mapping values are not allowed here`
+   （同一份最小文件解析正常）→ 与 GitHub 的判断一致，可本地复现、可入守门测试。
+
+**根因**：`desktop` 作业里一个 step 名是**不带引号的 YAML 纯量且内含「冒号+空格」**：
+
+```yaml
+- name: Run full tests (GUI offscreen: QT_QPA_PLATFORM set in test module)
+```
+
+纯量里的 `: ` 被 YAML 当作嵌套映射的起始 → **整份 workflow 非法** → GitHub 直接不建 job。
+注意两个"看起来正常"的假信号：GitHub 端该 workflow 的 `state` 仍显示 `active`、文件字节洁净
+（LF / 无 BOM / 无 tab）——"看状态"与"看字节"都查不出来，**只有真解析一次或真跑一次才暴露**。
+
+**为何潜伏到发布**：该文件自 M5 落盘起就在仓库里，但**仓库此前无 remote、workflow 从未执行**。
+这正是 HANDOFF-M6 §2.3 给 CI 首跑预留"诊断 + 修复 + 再推一轮"预算要买的保险。
+
+**修复 + 回归锁**：
+
+1. step 名加引号（行内 `: ` 的用法保留，只把标量引起来）；
+2. `dev` extras 增 `pyyaml`（CI 各作业都装 dev → 守门测试真跑，不静默跳过）；
+3. 新增 `tests/test_ci_workflow.py`（2 项）：① 全部 workflow 文件必须能被 YAML 解析、且每个 job
+   声明了 `runs-on` / `steps`（防 0 秒空跑）② `ci.yml` 作业面固化（`test` 三矩阵 / `desktop` /
+   `benchmark`）——改分工或矩阵规模即测试红。

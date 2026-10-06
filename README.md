@@ -49,7 +49,7 @@ cd invoice-ledger-checker
 py -m pip install -U pip
 py -m pip install -e ".[dev]"
 
-# 冒烟：全量 177 项测试（核心逻辑零第三方依赖；GUI/PDF/导出相关测试缺依赖时自动 skip 并计数）
+# 冒烟：全量 179 项测试（核心逻辑零第三方依赖；GUI/PDF/导出相关测试缺依赖时自动 skip 并计数）
 py -m pytest
 
 # 发布脱敏门（可复跑）：跟踪内容/历史/提交信息/元数据/二进制样例五模式 + 自测对照
