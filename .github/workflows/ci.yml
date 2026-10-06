@@ -42,7 +42,9 @@ jobs:
         run: |
           python -m pip install -U pip
           python -m pip install -e ".[dev,parse,data,export,desktop]"
-      - name: Run full tests (GUI offscreen: QT_QPA_PLATFORM set in test module)
+      # 纯量里含「冒号+空格」必须加引号，否则整份 workflow 是非法 YAML → GitHub
+      # 不建任何 job（实测：run 0 秒失败、jobs=0）。守门见 tests/test_ci_workflow.py
+      - name: "Run full tests (GUI offscreen: QT_QPA_PLATFORM set in test module)"
         run: python -m pytest
 
   benchmark:

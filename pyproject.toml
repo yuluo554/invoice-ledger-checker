@@ -25,7 +25,10 @@ classifiers = [
 dependencies = []
 
 [project.optional-dependencies]
-dev = ["pytest>=7.0"]
+# pyyaml：CI workflow YAML 守门（tests/test_ci_workflow.py）——发布期实测：
+# workflow 里一个不带引号且含「冒号+空格」的 step 名会让整份文件非法，
+# GitHub 直接不建 job（run 0 秒失败、jobs=0），红都看不见
+dev = ["pytest>=7.0", "pyyaml>=6"]
 parse = ["pdfplumber>=0.10"]
 # reportlab 版本策略（M6 干净环境实测，两个方向都踩过）：
 #   py<3.9 锁 <4 —— 4.x 的 hashlib.md5(usedforsecurity=False) 是 py3.9 才有的参数，
