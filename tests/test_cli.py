@@ -6,6 +6,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 SRC = Path(__file__).resolve().parents[1] / "src"
 
 
@@ -59,7 +61,6 @@ def test_doctor_reports_optional_deps():
 
 def test_stub_commands_exit_two_with_milestone_hint():
     for command, milestone in [
-        ("parse", "M2"),
         ("check", "M3"),
         ("export", "M5"),
         ("app", "M5"),
@@ -67,6 +68,45 @@ def test_stub_commands_exit_two_with_milestone_hint():
         result = run_cli(command)
         assert result.returncode == 2, command
         assert milestone in result.stdout, command
+
+
+def test_parse_missing_dir_exits_two():
+    result = run_cli("parse", "definitely/not/a/dir")
+    assert result.returncode == 2
+    assert "目录不存在" in result.stdout
+
+
+def test_parse_xml_dataset_with_bad_file(tmp_path):
+    """XML 数据集全解析 + 坏文件记拒绝清单不崩溃（退出码 0）。"""
+    out_dir = tmp_path / "data"
+    gen = run_cli("generate", "--out", str(out_dir), "--seed", "7",
+                  "--n", "8", "--formats", "xml")
+    assert gen.returncode == 0, gen.stderr
+    invoices = out_dir / "invoices"
+    (invoices / "batch_01" / "99900000000000000000.xml").write_bytes(
+        b"<not-an-invoice/>")
+
+    result = run_cli("parse", str(invoices), "--report")
+    assert result.returncode == 0, result.stderr
+    assert "成功解析 8 张卡" in result.stdout
+    assert "99900000000000000000.xml" in result.stdout
+    assert "拒绝清单: 1 个" in result.stdout
+
+
+def test_parse_frozen_data_full_report():
+    """冻结 60 份全量解析：57 成功 + OFD 3 顺延登记（CI 无 pdfplumber 时跳过）。"""
+    if importlib.util.find_spec("pdfplumber") is None:
+        pytest.skip("pdfplumber 未安装（CI 无重依赖路径）")
+    invoices = Path(__file__).resolve().parents[1] / "data" / "invoices"
+    if not invoices.is_dir():
+        pytest.skip("data/invoices 冻结数据不在仓")
+    result = run_cli("parse", str(invoices), "--report")
+    assert result.returncode == 0, result.stderr
+    assert "成功解析 57 张卡" in result.stdout
+    assert "xml 成功 35" in result.stdout
+    assert "pdf 成功 22" in result.stdout
+    assert "OFD 顺延登记: 3 个文件未解析" in result.stdout
+    assert "拒绝清单: 无" in result.stdout
 
 
 def test_generate_produces_dataset(tmp_path):

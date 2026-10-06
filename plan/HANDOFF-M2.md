@@ -1,5 +1,9 @@
 # HANDOFF-M2（M1 收尾 → M2 解析层 续接快照）
 
+> **【已过时，仅作历史】M2 已于 2026-10-06 完成**：解析层交付、60 份冻结数据对账 F1=1.0、
+> pytest 95 项全绿，DoD 逐项打勾见 §5。续接请读 [HANDOFF-M3.md](HANDOFF-M3.md)。
+> 本文其余内容定格在 M1 收尾时点，不再更新。
+
 > 用法：新对话启动命令 `/goal 读取 plan/HANDOFF-M2.md 继续完成任务`（相对路径；启动命令由用户侧拼绝对路径）。
 > 本快照落盘于 2026-10-06，M1（数据先行）收尾时。方法论：ai-tool-project-sprint。
 
@@ -41,15 +45,15 @@
 
 ## 5. M2 DoD checklist（收尾逐项打勾，没做到的写偏差说明）
 
-- [ ] `py -m invoice_ledger_checker parse data/invoices --report` 一键全量解析，产出报告（各批次/格式成功数、坏文件清单）
-- [ ] XML 解析器：60 份 XML 全解析成功，字段与 cards.json 对账 F1 初测 ≥0.95
-- [ ] PDF 解析器：22 份 PDF 全解析成功（pdfplumber label-slot），同一 F1 门槛
-- [ ] OFD：P2 顺延可接受，但 stub 状态在报告中显式登记
-- [ ] 坏文件路径有测试（空 XML/无号码/垃圾字节 → ParserError 或日志拒绝，不崩溃）
-- [ ] 解析层对同号双文件（EXACT/JOINT 副本）不报错，批次语义 = 目录名
-- [ ] pytest 全绿且收集数与 M1 的 65 项对账清楚（新增多少、为何）
-- [ ] plan/00、05 状态回写；HANDOFF-M3.md 落盘；本文件标注已过时
-- [ ] （顺带）11号公告/56号令补核：fgk.chinatax.gov.cn 检索原文，knowledge JSON status 更新
+- [x] `py -m invoice_ledger_checker parse data/invoices --report` 一键全量解析，产出报告（各批次/格式成功数、坏文件清单）——实测 57 成功 + OFD 3 顺延登记，拒绝清单为无；缺依赖 exit 2、坏目录 exit 2
+- [x] XML 解析器：60 份 XML 全解析成功，字段与 cards.json 对账 F1 初测 ≥0.95——35 份 XML 全部 F1=1.0
+- [x] PDF 解析器：22 份 PDF 全解析成功（pdfplumber label-slot），同一 F1 门槛——22 份全部 F1=1.0
+- [x] OFD：P2 顺延可接受，但 stub 状态在报告中显式登记——报告含"OFD 顺延登记： 3 个文件未解析"
+- [x] 坏文件路径有测试（空 XML/无号码/垃圾字节 → ParserError 或日志拒绝，不崩溃）——7 项测试 + PDF 手工极简 PDF/垃圾字节 2 项
+- [x] 解析层对同号双文件（EXACT/JOINT 副本）不报错，批次语义 = 目录名——冻结测试断言 EXACT 副本字段全等
+- [x] pytest 全绿且收集数与 M1 的 65 项对账清楚（新增多少、为何）——95 项 = 65 + test_parsing.py 27（冻结对账×2/同号双文件/清洗×13 参数化/XML 单元×4/坏文件×7/OFD stub×1）+ CLI parse 3；干净 venv（无 pdfplumber/reportlab）89 绿/6 skip 验证 CI 平价
+- [x] plan/00、05 状态回写；HANDOFF-M3.md 落盘；本文件标注已过时
+- [x] （顺带）11号公告/56号令补核：fgk.chinatax.gov.cn 检索原文，knowledge JSON status 更新——**偏差说明**：补核已执行并登记（fgk 当日恢复可达但为动态加载站点，静态抓取无条目；上海局官方解读页二次直连复核要点一致；多引擎未获官方原文直链），原文全文仍未直连取得，两条 status 维持"待核对"，渠道明细与下轮建议已回填 knowledge JSON 与 knowledge/README.md
 
 ## 6. 关键命令速查
 

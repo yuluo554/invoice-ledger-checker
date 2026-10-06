@@ -7,13 +7,15 @@
   },
   "verification": {
     "status": "待核对",
-    "checked_at": "2026-10-06",
+    "checked_at": "2026-10-06（M1 初查；M2 当日补核一次仍未取得原文全文）",
     "channels": [
-      "http://beijing.chinatax.gov.cn/bjswj/sszc/zxwj/202411/3d8fe2dcfe48405f8307b63138ce2c30.shtml（北京税务局公告原文页，直连 2 次连接超时，未取得原文）",
-      "https://shanghai.chinatax.gov.cn/zcfw/zcjd/202411/t474124.html（上海税务局官方解读页，直连成功；确认 XML/OFD/PDF 格式要点，属解读性表述）",
-      "fgk.chinatax.gov.cn 税务总局法规库（查证当日配额受限未取得页面）"
+      "http://beijing.chinatax.gov.cn/bjswj/sszc/zxwj/202411/3d8fe2dcfe48405f8307b63138ce2c30.shtml（北京税务局公告原文页，M1 直连 2 次连接超时；M2 未再试）",
+      "https://shanghai.chinatax.gov.cn/zcfw/zcjd/202411/t474124.html（上海税务局官方解读页，M1 与 M2 补核均直连成功；确认数电发票'取消特定版式，增加 XML 数据电文格式便利交付，同时保留 PDF、OFD 等格式'与'赋码制…系统自动分配唯一的发票号码'表述；页面未挂原文链接）",
+      "https://guangdong.chinatax.gov.cn（M2 补核：检索命中该局 2024-11-25 全文页线索'国家税务总局决定…现将有关事项公告如下'，但搜索引擎未给出具体 URL，站内未定位到）",
+      "fgk.chinatax.gov.cn 税务总局法规库（M1 配额受限；M2 补核当日可直连，但列表/检索页为动态加载，静态抓取仅有表头无条目，未取得公告链接；内容页 URL 无规律不可猜测）",
+      "cn.bing.com 等多引擎检索（M2 补核：均未返回 chinatax.gov.cn 域内原文页直链）"
     ],
-    "method": "以下条目为搜索要点+官方解读页佐证的要点摘录，未完成原文逐字核对——status 一律待核对，禁止以确定语气引用；后续会话优先补核"
+    "method": "以下条目为搜索要点+官方解读页佐证的要点摘录，未完成原文逐字核对——status 一律待核对，禁止以确定语气引用。M2 补核新增结论：fgk 已恢复可达但为动态渲染站点，需执行 JS 才能取得条目（后续可换带 JS 的抓取手段或省级局全文页直链）；官方解读页要点二次复核一致，未发现与已入库要点矛盾之处"
   },
   "entries": [
     {

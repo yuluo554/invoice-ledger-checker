@@ -4,13 +4,15 @@
 - demo      内置合成演示数据走通 解析外全链路（台账入库 -> 规则引擎 -> 异常清单）
 - doctor    可选依赖体检（extras 覆盖自检）
 - generate  合成发票数据集 + 真值 JSON（M1 交付；数据全虚构）
+- parse     批量解析发票文件为发票参数卡并出导入报告（M2 交付）
 - --version
 
-未交付命令（parse/check/export/app）打印所属里程碑后退出码 2，
+未交付命令（check/export/app）打印所属里程碑后退出码 2，
 不做半成品假实现。设计契约：plan/03 §2 目录结构、plan/05 §2 里程碑。
 """
 
 import argparse
+import os
 import sys
 from typing import List, Optional
 
@@ -21,7 +23,6 @@ from .utils import OptionalDependencyError, force_utf8_stdio
 
 # 未交付命令 -> (所属里程碑, 一句话说明)
 _STUB_COMMANDS = {
-    "parse": ("M2 解析层", "数电票 XML / 版式 PDF 批量解析为发票参数卡"),
     "check": ("M3 规则引擎", "对台账执行八类异常检测规则"),
     "export": ("M5 桌面交付", "Excel 台账导出（openpyxl，条件格式标红）"),
     "app": ("M5 桌面交付", "PySide6 桌面应用（导入/台账/看板/异常清单）"),
@@ -48,6 +49,11 @@ def build_parser() -> argparse.ArgumentParser:
                      help="注入异常的文件占比（默认 0.35）")
     gen.add_argument("--formats", default="xml,pdf,ofd",
                      help="输出格式逗号分隔，须含 xml（默认 xml,pdf,ofd）")
+    par = sub.add_parser(
+        "parse", help="批量解析发票文件为发票参数卡（M2 交付；批次=一级子目录名）")
+    par.add_argument("directory", help="发票文件根目录（递归扫描）")
+    par.add_argument("--report", action="store_true",
+                     help="输出详细报告（批次/格式成功数、坏文件清单、OFD 顺延登记）")
     for name, (milestone, desc) in sorted(_STUB_COMMANDS.items()):
         sub.add_parser(name, help="[%s 未交付] %s" % (milestone, desc))
     return parser
@@ -67,6 +73,8 @@ def main(argv: Optional[List[str]] = None) -> int:
             return _cmd_doctor()
         if args.command == "generate":
             return _cmd_generate(args)
+        if args.command == "parse":
+            return _cmd_parse(args)
         return _cmd_stub(args.command)
     except OptionalDependencyError as exc:
         print("[缺少依赖] %s" % exc)
@@ -81,6 +89,96 @@ def _cmd_stub(command: str) -> int:
     print("命令 %r 尚未实现：%s" % (command, desc))
     print("所属里程碑：%s（路线图见 plan/05-数据计划与里程碑.md）" % milestone)
     return 2
+
+
+def _cmd_parse(args) -> int:
+    """批量解析：递归扫描目录，批次=一级子目录名；坏文件记拒绝日志不中断。
+
+    退出码契约（plan/03）：目录不存在/无可解析文件/有文件因缺依赖未解析=2；
+    命令跑通（坏文件属数据条件，报告登记后照常）=0。OFD 为 P2 顺延项，
+    报告显式登记不计失败。同号多文件正常各出各卡（判重交台账主键/规则层）。
+    """
+    from .parsing import SUPPORTED_SUFFIXES, ParserError, parser_for
+
+    root = args.directory
+    if not os.path.isdir(root):
+        print("[参数错误] 目录不存在: %s" % root)
+        return 2
+
+    files: List[str] = []
+    for dirpath, dirnames, filenames in os.walk(root):
+        dirnames.sort()
+        for name in sorted(filenames):
+            if os.path.splitext(name)[1].lower() in SUPPORTED_SUFFIXES:
+                files.append(os.path.join(dirpath, name))
+    if not files:
+        print("[参数错误] 目录内无可解析发票文件（支持 %s）: %s"
+              % ("/".join(SUPPORTED_SUFFIXES), root))
+        return 2
+
+    ok_by_format: dict = {}
+    rejected: List[tuple] = []      # (relpath, 原因)——内容级坏文件
+    deferred_ofd: List[str] = []    # P2 顺延登记
+    dep_blocked: List[str] = []     # 缺依赖未解析
+    batches: dict = {}
+    cards_total = 0
+    for abs_path in files:
+        rel_path = os.path.relpath(abs_path, root).replace(os.sep, "/")
+        parts = rel_path.split("/")
+        batch_id = parts[0] if len(parts) > 1 \
+            else os.path.basename(os.path.abspath(root))
+        fmt = parts[-1].rsplit(".", 1)[-1].lower()
+        batches.setdefault(batch_id, {"ok": 0, "rejected": 0, "deferred": 0})
+        if fmt == "ofd":
+            deferred_ofd.append(rel_path)
+            batches[batch_id]["deferred"] += 1
+            continue
+        parser = parser_for("." + fmt)
+        if parser is None:
+            rejected.append((rel_path, "不支持的格式 .%s" % fmt))
+            batches[batch_id]["rejected"] += 1
+            continue
+        try:
+            parser(abs_path)
+        except ParserError as exc:
+            rejected.append((rel_path, str(exc)))
+            batches[batch_id]["rejected"] += 1
+            continue
+        except OptionalDependencyError:
+            dep_blocked.append(rel_path)
+            batches[batch_id]["rejected"] += 1
+            continue
+        ok_by_format[fmt] = ok_by_format.get(fmt, 0) + 1
+        batches[batch_id]["ok"] += 1
+        cards_total += 1
+
+    print("invoice-ledger parse（解析报告）")
+    print("-" * 56)
+    print("输入: %s（批次=一级子目录名）" % root)
+    print("扫描: %d 个发票文件，成功解析 %d 张卡" % (len(files), cards_total))
+    for fmt in sorted(ok_by_format):
+        print("  %s 成功 %d" % (fmt, ok_by_format[fmt]))
+    for batch_id in sorted(batches):
+        stat = batches[batch_id]
+        print("  批次 %s: 成功 %d / 失败 %d / OFD 顺延 %d"
+              % (batch_id, stat["ok"], stat["rejected"], stat["deferred"]))
+    if deferred_ofd:
+        print("OFD 顺延登记: %d 个文件未解析（OFD 解析器为 P2 加分项，"
+              "当前版本未交付）" % len(deferred_ofd))
+    if rejected:
+        print("拒绝清单: %d 个" % len(rejected))
+        for rel_path, reason in rejected:
+            print("  %s — %s" % (rel_path, reason))
+    else:
+        print("拒绝清单: 无")
+    print("-" * 56)
+    if dep_blocked:
+        print("[缺少依赖] %d 个文件因缺少 pdfplumber 未解析，"
+              "请安装后重跑：py -m pip install -e \".[parse]\"" % len(dep_blocked))
+        return 2
+    if args.report:
+        print("详细报告已输出（--report）。M3 起本命令将接通台账入库。")
+    return 0
 
 
 def _cmd_generate(args) -> int:
