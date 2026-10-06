@@ -19,7 +19,9 @@
 | [HANDOFF-M3.md](HANDOFF-M3.md) | 交接快照：M2 收尾 → M3 规则引擎续接（已过时留档） | ✅ 2026-10-06 |
 | [HANDOFF-M4.md](HANDOFF-M4.md) | 交接快照：M3 收尾 → M4 内置基准续接（已过时留档） | ✅ 2026-10-06 |
 | [HANDOFF-M5.md](HANDOFF-M5.md) | 交接快照：M4 收尾 → M5 桌面交付续接（已过时留档） | ✅ 2026-10-06 |
-| [HANDOFF-M6.md](HANDOFF-M6.md) | 交接快照：M5 收尾 → M6 脱敏发布续接（含既定口径清单速查区） | ✅ 2026-10-06 |
+| [HANDOFF-M6.md](HANDOFF-M6.md) | 交接快照：M5 收尾 → M6 脱敏发布续接（含既定口径清单速查区）（已过时留档） | ✅ 2026-10-06 |
+| [HANDOFF-FINAL.md](HANDOFF-FINAL.md) | 终版收官快照：M6 完成态 + 全量既定口径速查区 + 后续可捡起项 | ✅ 2026-10-06 |
+| [RELEASE-M6.md](RELEASE-M6.md) | M6 脱敏发布留档：脱敏四步/产物本体扫描/元数据邮箱改写/干净环境验证逐项命令与结论 | ✅ 2026-10-06 |
 
 ## 附：M5 交付物索引（plan 外）
 
@@ -46,6 +48,9 @@
 | 2026-10-06 | M5 打包构建解释器通道 | 本机唯一解释器 3.8.8 跑 PyInstaller 构建出现构建工具级不稳定（modulegraph 字节码扫描层 re.error / Instruction not iterable / Constant 缺 value / SubprocessDied 0xC0000005 / 段错误 139，清 pyc + 换 venv 均不解，与项目代码零关联）→ 改用 **Python 3.12.10 干净 venv**（PyInstaller 6.22.3 + PySide6 6.11）构建一次成功。**冻结产物与构建解释器绑定，与项目源码运行时底线 3.8 无关**——源码 3.8 兼容性由 CI win-3.8 矩阵继续守 |
 | 2026-10-06 | M5 GUI 单一事实源纪律 | GUI 只消费既有 CLI/引擎 API（cli._scan_and_parse / _run_check_pipeline + storage.Ledger 查询），不另起第二套行为；检测参数默认值单一来源 = 各规则模块 `DEFAULT_*` 常量（GUI 设置页 `_reset_params` 反向 import 该常量）；引擎参数经 `_run_check_pipeline(engine_params=)` 注入 |
 | 2026-10-06 | M5 CI 作业分工 | `test`（win3.8/win3.12/ubuntu3.12，仅 dev extras，GUI/PDF 用例声明式跳过）+ `desktop`（win-3.8，装 desktop+export extras 使 GUI/导出测试真正执行，防"双绿但悄悄少跑"）+ `benchmark`（win-3.8，基准门槛）。改 CI 装机清单会改变 skip 计数口径 |
+| 2026-10-06 | **M6 脱敏发布** | 脱敏四步 + 产物本体扫描 + 提交元数据邮箱改写（真实个人邮箱全历史 → GitHub noreply）逐项留档 `plan/RELEASE-M6.md`；扫描器 `tools/sensitive_scan.py` 入仓（五模式 + dist 产物模式 + selftest 阳性/阴性双对照 + 输出掩码化）。**第 0 步结论：前作五题全部 public → 保留系列表述、不做掩码** |
+| 2026-10-06 | **M6 干净环境门抓出的两个真问题（均已修复 + 回归锁）** | ① `data` extras 未锁 reportlab 上界 → 3.8 上 `generate` TypeError（`usedforsecurity` 是 py3.9 参数），且会打挂**从未跑过**的 CI win-3.8 作业 → 改**双向环境标记**（py<3.9 锁 <4、py≥3.9 放开；统一锁 <4 会打挂 3.12，实测 3.6.13 无 wheel）② 冻结 exe 缺 pdfplumber（`utils.import_optional` 惰性导入对 PyInstaller 静态分析不可见，spec 只声明了 openpyxl）→ 发行包解析不了 PDF（`check` 退出码 2、GUI 导入通路同坏）→ spec `hiddenimports` 补齐。**方法论收获**：M5 记录的"CLI 五连全过"是把**管道退出码**当成了 exe 退出码（假绿），关键命令必须单跑取真实退出码 |
+| 2026-10-06 | M6 产物扫描形态 | `dist` 模式只跑**强标记**（个人标记/姊妹词，以 `--marker-b64` 现场传入、字面值不入仓）+ 禁区成分复核；刻意不跑邮箱/手机号宽正则（上游厂商 DLL/SBOM 公共串与二进制噪声非本项目泄漏面）。产物与发布源码同基线以 `git diff <里程碑>..HEAD -- src/` 为空为据 |
 
 ## 里程碑
 
@@ -55,4 +60,4 @@
 - **M3 规则引擎 ✅（2026-10-06）**：八规则全量（DUP-01/02/03、SEQ-01、ARITH-01/02、TIME-01/02，三级语义 + 门控互斥：DUP-03 排除 DUP-01/02 命中号、DUP-02 排除纯复制件）；入库与判重分离（被拒副本仍参与判定）；R-TIME 双通路（manifest 批次 anchor / 导入时刻）；`check --db` 一键解析→入库→检测→findings 落库 + 三级清单；demo 升级端到端；冻结 60 份对拍 expect∪also_expect 全集：检出率 100%、误报 0、级别全对（13 findings）；pytest 138 全绿（干净 venv 129 绿/9 skip CI 平价）；M3 语义定稿回写 plan/04 §3/§3.1
 - **M4 内置基准 ✅（2026-10-06）**：benchmarks/benchmark.py 双基准（字段级解析 P/R/F1 复用 field_match.py + 异常检测检出率/误报率/判定准确率按 expect∪also_expect 全集对拍）+ 门槛断言 + 确定性报告；`benchmark` 一条命令出指标表（退出码 0/1/2 契约）；冻结 60 份实测宏平均 F1=1.0000、检出率 100%（18/18）、误报 0、判定准确率 100%（13 findings 形态同 M3 锚点）；报告落 benchmarks/report.md（同输入重跑逐字节一致，OFD 3 份顺延显式登记）；README 回填指标表；CI 增 benchmark 作业；pytest 144 绿（干净 venv 131 绿/13 skip）；既定口径清单收口入 HANDOFF-M5
 - **M5 桌面交付 ✅（2026-10-06）**：PySide6 6.6.3.1（cp38-abi3 wheel 实测复核回写 plan/03 §3）六页签桌面应用（导入向导/台账多维筛选分页+增删改查/异常清单级别着色+证据面板/看板 QtCharts 三图/Excel 导出对话框/设置参数+状态栏免责声明常驻）；Excel 导出 `export` 命令（openpyxl 双 sheet + 三级条件格式标红，样式用例断言）；CLI `export`/`app` 双命令接通（stub 清零）；extras 覆盖运行期 import 静态+动态断言测试 6 项；PyInstaller onedir **双 exe**（GUI console=False 双击即用 + CLI console=True 无 Python 机器脚本化通路）主 spec 入仓，**3.12 干净 venv 构建通道**（3.8 构建工具级不稳定 7 种"不可能错误"连崩，与项目代码无关，详见 HANDOFF-M6 §4）；干净环境（中立目录 + `env -i` 剥离 PATH）CLI 五连（doctor/demo/generate/check/export）+ GUI 冒烟探针（2.2s）实测通过；技术报告 docs/技术报告.md + docx 生成器脚本（程序化生成禁手改，产物不入仓）；CI 增 `desktop` 作业（装 desktop+export extras 使 GUI/导出测试真正执行）；pytest **170 全绿**（=M4 144 + 26：export 4/app 10/extras 6/packaging 5/cli 净 +1），干净 venv 160 收集/143 绿/18 skip（差 10 = test_app.py 模块级 skip 收成 1 条目，逐项归因）；benchmark 门槛全过不回退；演示 GIF 顺延 M6 初
-- M6 脱敏发布 GitHub + Release（exe）+ 收尾固化
+- **M6 脱敏发布 ✅（2026-10-06）**：脱敏四步（第 0 步姊妹表述核实——前作五题**全部 public** → 无需掩码；第 1 步密钥/凭据扫描为空；第 2 步内容级扫描工具化 `tools/sensitive_scan.py`——tracked/history/binaries/messages/metadata 五模式 + 产物树 `dist` 模式 + selftest 阳性/15 阴性双对照 + 掩码化输出 + 正则片段拼接，自测抓出并修掉 4 处检测器缺陷）+ 二进制样例单独扫（PDF Info 元数据域：Author=anonymous / Producer 厂商串 / **CreationDate 固定 2000-01-01**；OFD zip 条目 + 固定 1980 时间戳 + 空 comment）+ 产物本体扫描（378 文件/184.3 MB，4 强标记 + 禁区成分 0 命中；产物与发布源码同基线 `git diff src/` 为空；Release zip sha256 留档）+ **提交元数据邮箱全历史改写** GitHub noreply（含个人目录字面量同改；全对象库深度扫描 0 命中；fsck 干净；`data/` 树哈希不变）；**干净环境验证为发布门核心**（新 clone + 新 venv 逐条跑通 README，**抓出 2 个发布阻断缺陷**：① `data` extras 未锁 reportlab 上界 → 3.8 上 `generate` TypeError（并会打挂从未跑过的 CI win-3.8 作业），修成双向环境标记 + 分层位级守门；② 冻结 exe 缺 pdfplumber（惰性导入未进 hiddenimports）→ 发行包 `check` 退出码 2、台账不生成、GUI 导入通路同坏，修复后六命令真实退出码全 0）；计数对账 dev **177** = 干净 venv 168 + 9（test_app 模块级 skip 收成 1 条目，19 skip 逐项指认）；基准不回退（F1=1.0000 / 检出 100% / 误报 0）；逐项证据留档 [RELEASE-M6.md](RELEASE-M6.md)、交接见 [HANDOFF-FINAL.md](HANDOFF-FINAL.md)

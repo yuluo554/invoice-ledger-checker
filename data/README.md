@@ -24,3 +24,17 @@
 - 纳税人识别号为 18 位假格式统一社会信用代码：`91 + 4位虚构地区码 + FAKE + 8位数字`——**含 FAKE 字样自证合成**，构成脱敏审查白名单标识；
 - 发票号码 20 位 = 12 位虚构类型前缀 + 8 位后缀（前缀为虚构排版，不对应真实发票代码规则，见生成器 TYPE_PREFIX 注释）；
 - 生成器唯一随机源 `random.Random(seed)`，同 seed+参数输出逐字节一致（tests/test_generator.py 守门断言，含入仓数据回归）。
+
+## 收尾段（M6 2026-10-06，发布前复核）
+
+- **数据本体脱敏复核**：`tools/sensitive_scan.py binaries` 单独扫二进制样例（文本扫描对二进制的盲区）——
+  PDF Info 元数据域仅 `anonymous` / 厂商串 / 合成标题，`/CreationDate` **固定 2000-01-01**（无构建墙钟泄漏）；
+  OFD zip 条目时间戳**固定 1980**、`comment` 空、逐条目解压 0 命中。**结论：数据本体无个人痕迹。**
+- **位级不变守门**：M6 全历史邮箱改写前后 `git ls-tree -r HEAD -- data | md5sum` 一致 → 历史改写未动冻结数据一个字节；
+  干净环境（新 clone + 新 venv）重跑 `generate --out data --seed 42 --n 60` 后 **`git status` 无 data 差异**
+  → 生成器可复现性经发布门复验，与入仓冻结数据逐字节一致。
+- **依据查证最终态**：三部法规原文**全部逐字核对完成**（764号令 / 11号公告 / 56号令，M5 收口）；
+  补核渠道与逐字条文见 `data/knowledge/*.json` 的 `verification` 段与 [knowledge/README.md](knowledge/README.md) 补核履历。
+- **可复现性边界**：PDF 字节依赖生成库 reportlab 主版本（冻结数据由 3.6.13 产出）——`pyproject.toml` 的
+  `data` extra 已按 Python 版本双向约束（见 README 限制节）；位级复现门在 XML/OFD/真值上全环境生效、
+  PDF 字节在 reportlab 3.x 环境生效。

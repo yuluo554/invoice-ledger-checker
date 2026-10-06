@@ -2,7 +2,13 @@
 
 **电子发票智能台账与重复报销检测桌面应用**——全离线、规则引擎为主、零 API 依赖的发票台账与异常检测工具。
 
-> 🚧 **状态：v0.1.0，按里程碑交付中（M0-M5 已完成，M6 脱敏发布进行中）**。路线图见下。
+[![CI](https://github.com/yuluo554/invoice-ledger-checker/actions/workflows/ci.yml/badge.svg)](https://github.com/yuluo554/invoice-ledger-checker/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/yuluo554/invoice-ledger-checker)](https://github.com/yuluo554/invoice-ledger-checker/releases/latest)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+> ✅ **状态：v0.1.0 已发布（M0-M6 全部完成）**。Windows 免安装产物见
+> [Releases](https://github.com/yuluo554/invoice-ledger-checker/releases/latest)；路线图见下，
+> 发布留档（脱敏四步 + 干净环境验证逐项证据）见 [plan/RELEASE-M6.md](plan/RELEASE-M6.md)。
 
 ## 它解决什么问题
 
@@ -31,6 +37,7 @@
 | Excel 台账导出（openpyxl，发票+异常双 sheet，按级别条件格式标红） | ✅ M5 |
 | PyInstaller onedir 双 exe 打包（GUI 双击即用 + CLI 控制台通路），干净环境实测通过 | ✅ M5 |
 | 技术报告（解析方案/检测算法/打包与离线设计）+ docx 生成器脚本 | ✅ M5 |
+| 发布脱敏门：脱敏扫描器（五模式 + 产物树干扫 + 阳性/阴性双对照）+ 提交元数据邮箱改写 + 干净环境验证 | ✅ M6 |
 
 ## 快速开始（开发态）
 
@@ -42,8 +49,11 @@ cd invoice-ledger-checker
 py -m pip install -U pip
 py -m pip install -e ".[dev]"
 
-# 冒烟：全量 170 项测试（核心逻辑零第三方依赖；GUI/PDF/导出相关测试缺依赖时自动 skip 并计数）
+# 冒烟：全量 177 项测试（核心逻辑零第三方依赖；GUI/PDF/导出相关测试缺依赖时自动 skip 并计数）
 py -m pytest
+
+# 发布脱敏门（可复跑）：跟踪内容/历史/提交信息/元数据/二进制样例五模式 + 自测对照
+py -X utf8 tools/sensitive_scan.py all        # 退出码 0=干净；selftest 子命令跑阳性+阴性对照
 
 # 端到端演示：合成数据 -> 解析 -> 台账入库 -> 八规则检测 -> 三级异常清单
 py -m invoice_ledger_checker demo
@@ -83,6 +93,11 @@ pyinstaller packaging/invoice_ledger_checker.spec
 #                                   + invoice-ledger-cli.exe（控制台，脚本化验证通路）
 # 无人值守 GUI 冒烟：设 INVOICE_LEDGER_GUI_SMOKE=1 启动 exe，1.5s 后自动退出
 ```
+
+已发布的 exe 为**自包含**：版式 PDF 解析所需的 pdfplumber（含 pdfminer.six/PIL/pypdfium2）
+与 Excel 导出所需的 openpyxl 均已入包，双击即用、无需 Python 环境。
+注意这些包经 `utils.import_optional` **惰性导入**，PyInstaller 静态分析看不见——
+新增惰性依赖必须同步 `spec` 的 `hiddenimports`（有测试守门），否则产物会静默缺能力。
 
 ## 架构
 
@@ -157,7 +172,7 @@ flowchart LR
 | M3 | SQLite 台账 + 规则引擎八规则全量 | ✅ 2026-10-06 |
 | M4 | 内置基准达标（F1≥0.95 / 检出 100% / 误报 0） | ✅ 2026-10-06 |
 | M5 | PySide6 桌面交付 + Excel 导出 + PyInstaller exe | ✅ 2026-10-06 |
-| M6 | 脱敏发布 GitHub + Release（exe） | ⬜ |
+| M6 | 脱敏发布 GitHub + Release（exe + sha256） | ✅ 2026-10-06 |
 
 ## 边界与免责声明
 
@@ -171,6 +186,7 @@ flowchart LR
 - **OFD 格式为加分项顺延（P2）**：OFD 文件导入时显式登记顺延清单、不参与解析对账（冻结数据中 OFD 3 份无对应期望，无结构性缺口）。XML / 版式 PDF 为完整支持路径。
 - **版式 PDF 依赖文本层**：解析面向程序生成的可抽取版式文件；扫描件（图片型 PDF）不在支持范围（不做 OCR）。
 - **GUI 依赖 PySide6 6.x + QtCharts（PySide6-Addons）**：Python 3.8 下 extras 锁 `>=6.5,<6.7`（6.7+ 不提供 cp38 wheel，实测 6.6.3.1 为可用档）；Python ≥3.9 放开。
+- **生成器依赖 reportlab 双向约束（实测踩坑，如实记录）**：Python <3.9 锁 `reportlab<4`（4.x 的 `hashlib.md5(usedforsecurity=)` 是 3.9 才有的参数，3.8 上 `generate` 直接 TypeError）；Python ≥3.9 放开（3.6.13 在 3.12 装不起来）。入仓冻结数据的 PDF 字节由 3.6.13 产出，故"同 seed 逐字节一致"的 PDF 字节比对只在 reportlab 3.x 环境断言（XML/OFD 与真值任何环境全量断言）。
 - **PyInstaller 打包解释器通道（实测偏差，如实记录）**：本机唯一解释器 3.8.8 跑 PyInstaller 构建出现构建工具级不稳定（modulegraph 字节码扫描层多种报错 + 段错误，清 pyc、换 venv 均不解，与项目代码无关）；改用 **Python 3.12 干净 venv 构建**一次成功（PyInstaller 6.22.3 + PySide6 6.11）。这与项目**源码运行时底线 3.8 无关**——源码 3.8 兼容性由 CI 的 win-3.8 矩阵继续守（构建产物与构建解释器绑定，运行时无需 Python）。
 - **CI 作业分工**：`test`（win3.8/win3.12/ubuntu3.12，仅 dev extras，GUI/PDF 用例声明式跳过）+ `desktop`（win-3.8，装 desktop+export extras 使 GUI/导出测试真正执行）+ `benchmark`（win-3.8，基准门槛断言）。改装机清单会改变 skip 计数口径。
 
