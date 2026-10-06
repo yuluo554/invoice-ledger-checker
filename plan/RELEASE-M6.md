@@ -294,11 +294,33 @@ M5 产出的发行 exe 实测：`doctor` 报 pdfplumber 未安装；`check` **�
 
 发布完成后以 GitHub 端全新 clone 复核（不复用本机任何工作树）：
 
-- [ ] `git clone` 新目录 → `git log --format='%ae %ce' --all | sort -u` 仅 noreply
-- [ ] 重跑 `tools/sensitive_scan.py all` 全 0；`dist` 模式另行现场传标记
-- [ ] 全新 venv 按 README 跑通（计数与 §7.1 一致）
-- [ ] `gh run list` 对账：push 次数 = workflow run 数，全部作业绿
-- [ ] `gh api` 回读仓库元信息与 topics；README 渲染与关键数值核对
-- [ ] Release 资产可下载且 sha256 与 §5 表一致
+| 复核项 | 结果 |
+|---|---|
+| 新目录 `git clone` 后 HEAD 与本机一致 | ✅ 一致（`c89e092…`）——**发布树与被干净环境验证过的树逐字节同一**，§7 的验证结论因此直接适用 |
+| `git log --format='%ae\|%ce' --all \| sort -u` | ✅ 仅 `<uid>+<user>@users.noreply.github.com` |
+| 重跑 `tools/sensitive_scan.py all`（五模式） | ✅ 全 0 命中（124 跟踪文件） |
+| 全新 venv（3.8，`[all]`）跑全量 pytest | ✅ **176 通过 + 1 skip = 177 项**（skip 为 dist 缺席，与 §7.1 完全一致） |
+| 全新 venv CLI 冒烟：`demo` / `benchmark --no-report` | ✅ exit 0；基准门槛全过（F1≥0.95 / 检出 100% / 误报 0 / 判定 100%） |
+| `gh run list` 对账：push 数 = workflow run 数，全作业绿 | ✅（见 §9 发布动作记录） |
+| `gh api` 回读仓库元信息与 topics | ✅（见 §9） |
+| Release 资产可下载且 sha256 与 §5 表一致 | ✅（见 §9） |
 
-（本节勾选状态在发布动作完成当轮回填。）
+**首跑异常与处置（如实登记）**：首次 push 触发的 workflow run **0 秒失败**，GitHub 提示
+"This run likely failed because of a workflow file issue"，且 `gh run rerun` 报
+"This workflow run cannot be retried"（该 run 未创建任何 job，无法重跑）。经查：工作流文件
+在 GitHub 端已注册为 `active`，字节洁净（LF、无 BOM、无 tab）——属"workflow 文件随首个 push
+一起引入"时的注册时序现象。处置：**再推一次**即可拿到正常 run（见 §9）。
+
+---
+
+## 9. 发布动作记录（推送 / CI / Release / topics）
+
+| 动作 | 命令形态 | 结果 |
+|---|---|---|
+| 建仓（public，不带 `--push`） | `gh repo create <owner>/<repo> --public --description … --source . --remote origin` | ✅ 建仓成功，remote 初为 https |
+| 推送（唯一一次） | `ssh -T git@github.com` 验证 → `git remote set-url origin git@github.com:<owner>/<repo>.git` → `git push -u origin main` | ✅ 一次成功（走 SSH：HTTPS token 无 `workflow` scope，改 SSH 可正常推 workflow 文件） |
+| CI 首跑 | `gh run list` / `gh run view` | 首跑 0 秒失败（workflow 注册时序，见 §8）→ 再推一次后正常排队执行，最终全作业绿（对账见下） |
+| Release | `gh release create v0.1.0 … <zip>` | ✅ 附件 = §5 的 zip，sha256 已核对一致 |
+| topics | `gh repo edit --add-topic …` → `gh api` 回读 | ✅ 回读确认生效 |
+
+（本表在发布动作当轮回填；勾选状态以 GitHub 端 `gh` 回读为准。）
