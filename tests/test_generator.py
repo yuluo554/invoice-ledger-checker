@@ -33,6 +33,18 @@ def _has_module(name):
     return importlib.util.find_spec(name) is not None
 
 
+def _reportlab_major():
+    """已安装 reportlab 的主版本号；未安装返回 None。"""
+    if not _has_module("reportlab"):
+        return None
+    import reportlab
+
+    try:
+        return int(str(reportlab.Version).split(".")[0])
+    except (AttributeError, ValueError):
+        return None
+
+
 def _tree_bytes(root):
     """目录 -> {posix 相对路径: bytes}。"""
     snapshot = {}
@@ -93,8 +105,9 @@ def test_outputs_contain_no_cr(dataset):
 def test_frozen_data_matches_generator(tmp_path):
     """冻结入仓数据 == 生成器默认参数输出（回归锚；改生成器必须重冻结）。
 
-    PDF 字节依赖 reportlab 版本：无 reportlab 的环境（CI）跳过，由本机
-    与 M6 干净环境验证。
+    PDF 字节依赖 reportlab 的**主版本**（冻结数据由 3.6.13 产出，见 pyproject
+    data extras 的环境标记）：非 3.x 环境只跳过 .pdf 的字节比对，XML/OFD 与
+    ground_truth 仍在同一方法里全量守门——不做"整块 skip"（防静默少跑）。
     """
     if not (DATA_DIR / "ground_truth" / "manifest.json").exists():
         pytest.skip("data/ 尚未冻结生成数据")
@@ -103,7 +116,14 @@ def test_frozen_data_matches_generator(tmp_path):
     out = tmp_path / "frozen_check"
     generate(str(out), seed=42, n=60, anomaly_rate=0.35,
              formats=["xml", "pdf", "ofd"])
-    assert _tree_bytes(out / "invoices") == _tree_bytes(DATA_DIR / "invoices")
+    frozen = _tree_bytes(DATA_DIR / "invoices")
+    produced = _tree_bytes(out / "invoices")
+    assert set(produced) == set(frozen), "生成物文件集合与冻结数据不一致"
+    same_pdf_bytes = _reportlab_major() == 3
+    for rel, expected in frozen.items():
+        if rel.lower().endswith(".pdf") and not same_pdf_bytes:
+            continue
+        assert produced[rel] == expected, rel
     assert _tree_bytes(out / "ground_truth") == _tree_bytes(DATA_DIR / "ground_truth")
 
 
