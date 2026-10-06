@@ -7,9 +7,11 @@
 - parse     批量解析发票文件为发票参数卡并出导入报告（M2 交付）
 - check     解析 -> SQLite 台账入库 -> 八规则检测 -> 三级异常清单（M3 交付）
 - benchmark 内置评测基准：字段解析 F1 + 异常检测指标 + 门槛断言（M4 交付）
+- export    SQLite 台账 -> Excel 双 sheet 导出，条件格式标红（M5 交付）
+- app       PySide6 桌面应用：导入/台账/异常清单/看板/导出/设置（M5 交付）
 - --version
 
-未交付命令（export/app）打印所属里程碑后退出码 2，不做半成品假实现。
+所有命令均已交付；未交付路径不存在半成品假实现。
 设计契约：plan/03 §2 目录结构、plan/05 §2 里程碑。
 """
 
@@ -24,13 +26,14 @@ from typing import Any, Dict, List, Optional, Tuple
 from . import __version__
 from .models import InvoiceCard
 from .storage import Ledger
-from .utils import OptionalDependencyError, force_utf8_stdio
+from .utils import (
+    OptionalDependencyError,
+    force_utf8_stdio,
+    import_optional,
+)
 
 # 未交付命令 -> (所属里程碑, 一句话说明)
-_STUB_COMMANDS = {
-    "export": ("M5 桌面交付", "Excel 台账导出（openpyxl，条件格式标红）"),
-    "app": ("M5 桌面交付", "PySide6 桌面应用（导入/台账/看板/异常清单）"),
-}
+_STUB_COMMANDS = {}
 
 _LEVEL_ORDER = ("error", "suspicious", "review")
 
@@ -75,6 +78,15 @@ def build_parser() -> argparse.ArgumentParser:
                        help="报告输出路径（默认 benchmarks/report.md；生成物，README 引用）")
     bench.add_argument("--no-report", action="store_true",
                        help="只打印指标表，不写报告文件")
+    exp = sub.add_parser(
+        "export", help="SQLite 台账 -> Excel（发票台账+异常清单双 sheet，条件格式标红；M5 交付）")
+    exp.add_argument("db", help="SQLite 台账路径（check 产物，如 ledger.db）")
+    exp.add_argument("--out", default="",
+                     help="输出 xlsx 路径（默认与台账同目录同名 .xlsx）")
+    app_cmd = sub.add_parser(
+        "app", help="PySide6 桌面应用：导入/台账/异常清单/看板/导出/设置（M5 交付）")
+    app_cmd.add_argument("--db", default="ledger.db",
+                         help="SQLite 台账路径（默认 ledger.db，不存在则新建）")
     for name, (milestone, desc) in sorted(_STUB_COMMANDS.items()):
         sub.add_parser(name, help="[%s 未交付] %s" % (milestone, desc))
     return parser
@@ -100,6 +112,10 @@ def main(argv: Optional[List[str]] = None) -> int:
             return _cmd_check(args)
         if args.command == "benchmark":
             return _cmd_benchmark(args)
+        if args.command == "export":
+            return _cmd_export(args)
+        if args.command == "app":
+            return _cmd_app(args)
         return _cmd_stub(args.command)
     except OptionalDependencyError as exc:
         print("[缺少依赖] %s" % exc)
@@ -264,13 +280,15 @@ def _load_anchor_manifest(path: str) -> Dict[str, str]:
 
 def _run_check_pipeline(result: Dict[str, Any], ledger: Ledger,
                         batch_anchors: Dict[str, str],
-                        default_anchor: str
+                        default_anchor: str,
+                        engine_params: Optional[Dict[str, Any]] = None
                         ) -> Tuple[int, List[str], List[Any]]:
     """入库 -> 引擎检测（M3 定稿：入库与判重分离，plan/04 §3.1）。
 
     返回 (入库成功数, 主键拒收号码, findings)。引擎输入 = 全部解析卡
     （含即将被主键拒收的同号副本）；existing_numbers 取入库前台账既有
-    号码集，保证跨批次/跨运行重复同样被 R-DUP-01 命中。
+    号码集，保证跨批次/跨运行重复同样被 R-DUP-01 命中。engine_params
+    供 GUI 设置页传入检测参数（M5；缺省 = 引擎默认值）。
     """
     from .rules import DetectionEngine, register_builtin
 
@@ -283,7 +301,7 @@ def _run_check_pipeline(result: Dict[str, Any], ledger: Ledger,
         else:
             pk_rejected.append(card.invoice_number)
 
-    engine = DetectionEngine()
+    engine = DetectionEngine(params=engine_params)
     register_builtin(engine)
     findings = engine.run(result["cards"], {
         "existing_numbers": existing,
@@ -321,6 +339,30 @@ def _print_findings(findings) -> None:
                      ",".join(finding.invoice_numbers), finding.message))
 
 
+def _register_batches(result: Dict[str, Any], ledger: Ledger,
+                      source_desc: str = "") -> None:
+    """扫描结果批次登记（含坏文件/顺延日志，幂等）；check 命令与 GUI 导入共用。"""
+    for batch_id in sorted(result["batches"]):
+        stat = result["batches"][batch_id]
+        log = {
+            "rejected": [{"path": p, "reason": r}
+                         for p, r in result["rejected"]
+                         if p.split("/")[0] == batch_id],
+            "deferred_ofd": [p for p in result["deferred_ofd"]
+                             if p.split("/")[0] == batch_id],
+        }
+        ledger.create_batch(
+            batch_id,
+            source_desc=source_desc or result["root"],
+            file_count=sum(stat.values()),
+        )
+        ledger.conn.execute(
+            "UPDATE batches SET log_json = ? WHERE batch_id = ?",
+            (json.dumps(log, ensure_ascii=False), batch_id),
+        )
+        ledger.conn.commit()
+
+
 def _cmd_check(args) -> int:
     """解析 -> 台账入库 -> 八规则检测 -> 三级异常清单落库 + stdout。
 
@@ -351,26 +393,7 @@ def _cmd_check(args) -> int:
 
     ledger = Ledger(args.db)
     try:
-        for batch_id in sorted(result["batches"]):
-            stat = result["batches"][batch_id]
-            log = {
-                "rejected": [{"path": p, "reason": r}
-                             for p, r in result["rejected"]
-                             if p.split("/")[0] == batch_id],
-                "deferred_ofd": [p for p in result["deferred_ofd"]
-                                 if p.split("/")[0] == batch_id],
-            }
-            ledger.create_batch(
-                batch_id,
-                source_desc=result["root"],
-                file_count=sum(stat.values()),
-            )
-            ledger.conn.execute(
-                "UPDATE batches SET log_json = ? WHERE batch_id = ?",
-                (json.dumps(log, ensure_ascii=False), batch_id),
-            )
-            ledger.conn.commit()
-
+        _register_batches(result, ledger)
         accepted, pk_rejected, findings = _run_check_pipeline(
             result, ledger, batch_anchors, default_anchor)
     finally:
@@ -485,6 +508,60 @@ def _cmd_benchmark(args) -> int:
         return 1
     print("门槛断言: 全部通过（解析 F1>=0.95；检出率=100%；误报=0；判定准确率=100%）")
     return 0
+
+
+# ---------------------------------------------------------------- export
+
+
+def _cmd_export(args) -> int:
+    """Excel 台账导出（M5，FR-20）：发票台账 + 异常清单双 sheet。
+
+    退出码契约：台账不存在=2（参数错误）；缺 openpyxl=2（缺依赖，main
+    统一捕获 OptionalDependencyError）；成功=0。输出默认与台账同目录
+    同名 .xlsx（ledger.db -> ledger.xlsx）。
+    """
+    from .export.excel import export_ledger
+
+    if not os.path.isfile(args.db):
+        print("[参数错误] 台账数据库不存在: %s（请先 check --db 生成）" % args.db)
+        return 2
+    out_path = args.out or os.path.splitext(args.db)[0] + ".xlsx"
+    summary = export_ledger(args.db, out_path)
+    print("invoice-ledger export（Excel 台账导出）")
+    print("-" * 56)
+    print("台账: %s" % args.db)
+    print("输出: %s（sheets: %s）" % (summary["out_path"], " / ".join(summary["sheets"])))
+    print("发票台账: %d 张" % summary["invoice_count"])
+    levels = summary["levels"]
+    print("异常清单: %d 条（%s）" % (
+        summary["finding_count"],
+        " / ".join("%s %d" % (level, count)
+                   for level, count in sorted(levels.items())) or "无异常",
+    ))
+    if summary["finding_count"]:
+        print("条件格式: 确认异常=红 / 疑似=黄 / 待人工确认=蓝（整行着色）")
+    print("-" * 56)
+    print("打开即读；导出文件可直接作为附件归档（合成数据不含真实主体）。")
+    return 0
+
+
+# ---------------------------------------------------------------- app
+
+
+def _cmd_app(args) -> int:
+    """PySide6 桌面应用（M5，FR-01/07/09/18/19/20 + 边界声明）。
+
+    依赖门：PySide6/QtCharts（PySide6-Addons）缺失 -> exit 2 带安装提示
+    （extras: desktop）。QtCharts 单独再门一次，报错定位更准。
+    """
+    import_optional("PySide6", "desktop")
+    import_optional("PySide6.QtCharts", "desktop")
+    from .app.main import run_app
+
+    return run_app(db_path=args.db)
+
+
+# ---------------------------------------------------------------- generate
 
 
 def _cmd_generate(args) -> int:

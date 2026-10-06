@@ -157,7 +157,7 @@ class Ledger:
     def list_findings(self) -> List[Dict[str, Any]]:
         rows = self.conn.execute(
             "SELECT finding_id, rule_id, level, invoice_numbers, message, evidence_json,"
-            " batch_id, status FROM findings ORDER BY created_at, finding_id"
+            " batch_id, status, created_at FROM findings ORDER BY created_at, finding_id"
         ).fetchall()
         return [
             {
@@ -169,9 +169,147 @@ class Ledger:
                 "evidence": json.loads(r[5]),
                 "batch_id": r[6],
                 "status": r[7],
+                "created_at": r[8],
             }
             for r in rows
         ]
+
+    def set_finding_status(self, finding_id: str, status: str) -> bool:
+        """人工复核动作（M5 GUI）：open/confirmed/dismissed。"""
+        if status not in ("open", "confirmed", "dismissed"):
+            raise ValueError("非法 finding 状态: %r" % status)
+        cur = self.conn.execute(
+            "UPDATE findings SET status = ? WHERE finding_id = ?",
+            (status, finding_id),
+        )
+        self.conn.commit()
+        return cur.rowcount > 0
+
+    # ---- 台账查询/筛选/CRUD（M5 GUI 数据源；FR-07/08） ----
+
+    @staticmethod
+    def _invoice_filters(month=None, seller_like=None, invoice_type=None,
+                         amount_min=None, amount_max=None):
+        """参数化 WHERE 组装（plan/04 §4：维度固定，无需 ORM）。"""
+        clauses, params = [], []
+        if month:
+            clauses.append("substr(issue_date, 1, 7) = ?")
+            params.append(str(month))
+        if seller_like:
+            clauses.append("(seller_name LIKE ? OR seller_tax_id LIKE ?)")
+            like = "%" + str(seller_like) + "%"
+            params.extend([like, like])
+        if invoice_type:
+            clauses.append("invoice_type = ?")
+            params.append(str(invoice_type))
+        if amount_min not in (None, ""):
+            clauses.append("CAST(total_with_tax AS REAL) >= ?")
+            params.append(float(amount_min))
+        if amount_max not in (None, ""):
+            clauses.append("CAST(total_with_tax AS REAL) <= ?")
+            params.append(float(amount_max))
+        return (" WHERE " + " AND ".join(clauses)) if clauses else "", params
+
+    _INVOICE_PAGE_SQL = (
+        "SELECT invoice_number, invoice_type, issue_date, buyer_name, seller_name,"
+        " amount, tax_amount, total_with_tax, batch_id FROM invoices"
+    )
+
+    def query_invoices(self, month=None, seller_like=None, invoice_type=None,
+                       amount_min=None, amount_max=None,
+                       page: int = 1, page_size: int = 50):
+        """多维筛选 + 分页（排序=开票日期,号码，稳定序）。返回 (rows, total)。"""
+        where_sql, params = self._invoice_filters(
+            month, seller_like, invoice_type, amount_min, amount_max)
+        total = self.conn.execute(
+            "SELECT COUNT(*) FROM invoices" + where_sql, params).fetchone()[0]
+        rows = self.conn.execute(
+            self._INVOICE_PAGE_SQL + where_sql
+            + " ORDER BY issue_date, invoice_number LIMIT ? OFFSET ?",
+            params + [int(page_size), (int(page) - 1) * int(page_size)],
+        ).fetchall()
+        keys = ("invoice_number", "invoice_type", "issue_date", "buyer_name",
+                "seller_name", "amount", "tax_amount", "total_with_tax", "batch_id")
+        return [dict(zip(keys, r)) for r in rows], int(total)
+
+    def distinct_months(self) -> List[str]:
+        return [r[0] for r in self.conn.execute(
+            "SELECT DISTINCT substr(issue_date, 1, 7) AS m FROM invoices"
+            " ORDER BY m") if r[0]]
+
+    def distinct_invoice_types(self) -> List[str]:
+        return [r[0] for r in self.conn.execute(
+            "SELECT DISTINCT invoice_type FROM invoices ORDER BY invoice_type")
+            if r[0]]
+
+    def get_invoice(self, invoice_number: str) -> Optional[InvoiceCard]:
+        row = self.conn.execute(
+            "SELECT card_json FROM invoices WHERE invoice_number = ?",
+            (invoice_number,),
+        ).fetchone()
+        if row is None:
+            return None
+        return InvoiceCard.from_dict(json.loads(row[0]))
+
+    def delete_invoice(self, invoice_number: str) -> bool:
+        cur = self.conn.execute(
+            "DELETE FROM invoices WHERE invoice_number = ?", (invoice_number,))
+        self.conn.commit()
+        return cur.rowcount > 0
+
+    def update_invoice_fields(self, invoice_number: str,
+                              buyer_name: Optional[str] = None,
+                              seller_name: Optional[str] = None,
+                              remark: Optional[str] = None) -> bool:
+        """台账维护编辑（FR-08）：仅联系人字段可改，金额/号码/日期只读
+        （财务字段改动破坏对账链）；card_json 同步重写保持一致。"""
+        card = self.get_invoice(invoice_number)
+        if card is None:
+            return False
+        if buyer_name is not None:
+            card.buyer_name = buyer_name
+        if seller_name is not None:
+            card.seller_name = seller_name
+        if remark is not None:
+            card.remark = remark
+        cur = self.conn.execute(
+            "UPDATE invoices SET buyer_name = ?, seller_name = ?, remark = ?,"
+            " card_json = ? WHERE invoice_number = ?",
+            (card.buyer_name, card.seller_name, card.remark,
+             json.dumps(card.to_dict(), ensure_ascii=False), invoice_number),
+        )
+        self.conn.commit()
+        return cur.rowcount > 0
+
+    # ---- 看板聚合（M5 GUI；显示层 SUM 用 REAL 近似，账面值仍以 Decimal 文本为准） ----
+
+    def monthly_stats(self) -> List[Dict[str, Any]]:
+        rows = self.conn.execute(
+            "SELECT substr(issue_date, 1, 7) AS m, COUNT(*),"
+            " SUM(CAST(total_with_tax AS REAL)) FROM invoices"
+            " WHERE issue_date != '' GROUP BY m ORDER BY m"
+        ).fetchall()
+        return [{"month": r[0], "count": int(r[1]), "total": float(r[2] or 0)}
+                for r in rows]
+
+    def top_sellers(self, n: int = 10) -> List[Dict[str, Any]]:
+        rows = self.conn.execute(
+            "SELECT seller_name, seller_tax_id, COUNT(*),"
+            " SUM(CAST(total_with_tax AS REAL)) FROM invoices"
+            " GROUP BY seller_tax_id, seller_name"
+            " ORDER BY COUNT(*) DESC, seller_name LIMIT ?",
+            (int(n),),
+        ).fetchall()
+        return [{"seller_name": r[0] or "(未知)", "seller_tax_id": r[1],
+                 "count": int(r[2]), "total": float(r[3] or 0)}
+                for r in rows]
+
+    def type_distribution(self) -> List[Dict[str, Any]]:
+        rows = self.conn.execute(
+            "SELECT invoice_type, COUNT(*) FROM invoices"
+            " GROUP BY invoice_type ORDER BY COUNT(*) DESC"
+        ).fetchall()
+        return [{"invoice_type": r[0], "count": int(r[1])} for r in rows]
 
 
 def _now_iso() -> str:

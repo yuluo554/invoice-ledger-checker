@@ -15,6 +15,11 @@ dist/
 output/
 reports/
 *.log
+# 技术报告 docx 为生成物（docs/make_report_docx.py 生成，禁止手改产物，不入仓）
+docs/*.docx
+# 干净构建 venv（3.8/3.12 两条构建通道）
+build-venv/
+build-venv312/
 
 # 环境与密钥
 .env

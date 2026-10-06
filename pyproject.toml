@@ -31,13 +31,15 @@ data = ["reportlab>=3.6"]
 export = ["openpyxl>=3.1"]
 report = ["python-docx>=0.8.11"]
 # QtCharts 位于 PySide6-Addons，必须显式声明（extras 覆盖真实 import 纪律）
-# 6.7 起 py3.8 无 cp38 wheel（待 M5 以 PyPI 实际 wheel 复核，见 plan/06）
+# M5 实测复核（2026-10-06）：6.6.3.1 发 cp38-abi3 wheel 且为 <6.7 内最新可解析版（6.7+ requires-python>=3.9）
 desktop = [
     "PySide6>=6.5,<6.7; python_version < '3.9'",
     "PySide6>=6.5; python_version >= '3.9'",
     "PySide6-Addons>=6.5,<6.7; python_version < '3.9'",
     "PySide6-Addons>=6.5; python_version >= '3.9'",
 ]
+# 打包子集：独立 extra（不进 all），仅打包机/发布环境安装（CI 测试矩阵保持精简）
+pack = ["pyinstaller>=6,<7"]
 all = [
     "invoice-ledger-checker[dev,parse,data,export,report,desktop]",
 ]

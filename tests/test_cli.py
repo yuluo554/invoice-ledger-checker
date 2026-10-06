@@ -64,14 +64,38 @@ def test_doctor_reports_optional_deps():
     assert "PySide6" in result.stdout
 
 
-def test_stub_commands_exit_two_with_milestone_hint():
-    for command, milestone in [
-        ("export", "M5"),
-        ("app", "M5"),
-    ]:
-        result = run_cli(command)
-        assert result.returncode == 2, command
-        assert milestone in result.stdout, command
+def test_export_missing_db_exits_two():
+    result = run_cli("export", "definitely/not/a/ledger.db")
+    assert result.returncode == 2
+    assert "台账数据库不存在" in result.stdout
+
+
+def test_export_pipeline_generates_xlsx(tmp_path):
+    """generate -> check -> export 一键出 Excel（exit 0 + 摘要行）。"""
+    if importlib.util.find_spec("openpyxl") is None:
+        pytest.skip("openpyxl 未安装（无 export extras 路径）")
+    out_dir = tmp_path / "data"
+    gen = run_cli("generate", "--out", str(out_dir), "--seed", "7",
+                  "--n", "12", "--formats", "xml")
+    assert gen.returncode == 0, gen.stderr
+    db_path = tmp_path / "ledger.db"
+    chk = run_cli(
+        "check", str(out_dir / "invoices"), "--db", str(db_path),
+        "--anchor-manifest", str(out_dir / "ground_truth" / "manifest.json"),
+    )
+    assert chk.returncode == 0, chk.stderr
+    result = run_cli("export", str(db_path))
+    assert result.returncode == 0, result.stderr
+    assert "发票台账:" in result.stdout
+    assert "异常清单:" in result.stdout
+    xlsx = tmp_path / "ledger.xlsx"
+    assert xlsx.is_file()
+
+    # --out 自定义路径
+    custom = tmp_path / "自定义 台账.xlsx"
+    result2 = run_cli("export", str(db_path), "--out", str(custom))
+    assert result2.returncode == 0, result2.stderr
+    assert custom.is_file()
 
 
 def test_check_missing_dir_exits_two():

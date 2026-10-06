@@ -28,6 +28,23 @@ jobs:
       - name: Run tests
         run: python -m pytest
 
+  desktop:
+    # M5 桌面交付回归门：本作业显式装 desktop+export extras，使 GUI（offscreen）
+    # 与 Excel 导出测试**真正执行**而非模块级跳过——主 test 作业只装 dev，
+    # test_app.py 会整体 skip（收集数 -10）。两作业职责分离（同 benchmark 作业）。
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.8"
+      - name: Install package with desktop+export extras
+        run: |
+          python -m pip install -U pip
+          python -m pip install -e ".[dev,parse,data,export,desktop]"
+      - name: Run full tests (GUI offscreen: QT_QPA_PLATFORM set in test module)
+        run: python -m pytest
+
   benchmark:
     # M4 回归纪律：改数据/改规则/改接口 -> 基准门槛不回退（F1>=0.95、检出率
     # 100%、误报 0）。win-3.8 镜像开发机同环境；需 parse+data extras 解析

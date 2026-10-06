@@ -18,7 +18,15 @@
 | [HANDOFF-M2.md](HANDOFF-M2.md) | 交接快照：M1 收尾 → M2 解析层续接（已过时留档） | ✅ 2026-10-06 |
 | [HANDOFF-M3.md](HANDOFF-M3.md) | 交接快照：M2 收尾 → M3 规则引擎续接（已过时留档） | ✅ 2026-10-06 |
 | [HANDOFF-M4.md](HANDOFF-M4.md) | 交接快照：M3 收尾 → M4 内置基准续接（已过时留档） | ✅ 2026-10-06 |
-| [HANDOFF-M5.md](HANDOFF-M5.md) | 交接快照：M4 收尾 → M5 桌面交付续接（含既定口径清单速查区） | ✅ 2026-10-06 |
+| [HANDOFF-M5.md](HANDOFF-M5.md) | 交接快照：M4 收尾 → M5 桌面交付续接（已过时留档） | ✅ 2026-10-06 |
+| [HANDOFF-M6.md](HANDOFF-M6.md) | 交接快照：M5 收尾 → M6 脱敏发布续接（含既定口径清单速查区） | ✅ 2026-10-06 |
+
+## 附：M5 交付物索引（plan 外）
+
+| 交付物 | 位置 |
+|---|---|
+| 技术报告（提交材料之一） | [docs/技术报告.md](../docs/技术报告.md) + [docs/make_report_docx.py](../docs/make_report_docx.py)（docx 生成器，产物不入仓） |
+| PyInstaller 打包 | [packaging/invoice_ledger_checker.spec](../packaging/invoice_ledger_checker.spec) + entry_gui.py / entry_cli.py |
 
 ## 决策记录
 
@@ -30,9 +38,14 @@
 | 2026-10-05 | 政策依据 | 11号公告/764号令/56号令已查证（见 01 §五），条文入库时逐条挂出处 |
 | 2026-10-06 | 真值语义定稿 | 双键真值（cards 按文件路径、expectations 按号码）；基准按全部非 pass 集合对账；R-DUP-02 排除纯复制件（只报 R-DUP-01）；R-TIME 基准通路取批次 expense_anchor（与墙钟无关）；权威出处 = generator/synthetic.py 模块注释 |
 | 2026-10-06 | 法规查证收口 | 764号令/《发票管理办法》修订原文已直连核对入库；11号公告/56号令原文未直连成功 → 条文标"待核对"+登记渠道，不空转（M2+ 补核） |
+| 2026-10-06 | **M5 法规补核突破（收口）** | 11号公告/56号令**原文全文取得并逐字核对，status 转「已核对」**：11 号公告 = fgk `content.html` 后缀 + 浏览器 UA/Accept-Language 直连（HTTP 200）→ 本地剥 HTML 提取，核对第一/二/三/四/十一/十二条；56 号令 = fgk **PDF 附件直链**（HTTP 200 / 17 页）→ pdfplumber 本地提取，核对新增第三/四/五条 + 原第四条改第七条。**两处订正**：①11 号公告官方标题无「的」字；②11 号公告正文与附件**不含 XML 格式条款**（此前表述实出自上海局解读页，引用不得挂条号）。**经验固化**：fgk 的 `content.html` 后缀与 PDF 附件直链是该域最可靠可达形态（无后缀内容页仍被 WAF 挑战页拦截）；检索摘要仅用于定位候选直链，可达性与条文一律 curl 落盘+本地提取。11 号公告新增入库 20 位号码法定分段（2+2+1+15，与生成器号码布局一致） |
 | 2026-10-06 | 解析层映射与实现定稿 | 字段映射权威 = TEMPLATE_REFERENCE（synthetic-v1）；PDF label-slot 实测固化三条口径：双栏版式 value 词以同线下一标签 x0 为右边界、`价税合计（大写）：` 与值同词合并取冒号后文本、明细四列按表头 x0 锚点最近列归并；对账器落 benchmarks/field_match.py（M4 基准同源复用） |
 | 2026-10-06 | M3 规则语义定稿 | 入库与判重分离（引擎输入=全部解析卡含被拒副本，R-DUP-01=批内重复+台账既有号码）；R-DUP-02 纯复制件判定=语义字段全等（evidence/confidence/field_flags/batch_id 不参与）；R-TIME-02 仅追溯方向（未来票 R-TIME-01 全覆盖防双报）；R-SEQ-01 跨前缀不产出 finding；R-TIME 双通路（基准=manifest 批次 anchor / 常规=导入时刻）；详见 plan/04 §3/§3.1 |
 | 2026-10-06 | M4 基准定稿 | 基准模块 benchmarks/benchmark.py（复用 field_match.py 同口径，逐文件与 compare 一致性内部断言）；指标语义：检出率=TP/真值异常、误报率=FP/全部告警、判定准确率=级别一致三元组/真值异常（对账键=(号码,rule_id)，级别并入三元组）；门槛=F1≥0.95、检出率 100%、误报 0、判定准确率 100% + 零容忍项（冻结数据解析失败/未知号码告警/批次锚点缺失）；`benchmark` 退出码 0/1（门槛未达）/2（参数或缺依赖）；报告 benchmarks/report.md 无墙钟（无时间戳/路径/环境，同输入逐字节一致，守门测试断言）；R-TIME 基准只走 manifest 批次 anchor（禁 default_anchor 墙钟兜底，缺映射列为门槛失败）；CI 增 benchmark 作业（win-3.8 + parse/data extras） |
+| 2026-10-06 | M5 桌面交付选型复核 | PySide6 6.6.3.1 cp38-abi3 wheel 实测可用（`>=6.5,<6.7` 解析命中；6.7+ requires-python≥3.9），QtCharts 在 PySide6-Addons 离屏冒烟通过；PyInstaller `>=6,<7`（实测 6.22.3）——plan/03 §3 待核对标注消除 |
+| 2026-10-06 | M5 打包构建解释器通道 | 本机唯一解释器 3.8.8 跑 PyInstaller 构建出现构建工具级不稳定（modulegraph 字节码扫描层 re.error / Instruction not iterable / Constant 缺 value / SubprocessDied 0xC0000005 / 段错误 139，清 pyc + 换 venv 均不解，与项目代码零关联）→ 改用 **Python 3.12.10 干净 venv**（PyInstaller 6.22.3 + PySide6 6.11）构建一次成功。**冻结产物与构建解释器绑定，与项目源码运行时底线 3.8 无关**——源码 3.8 兼容性由 CI win-3.8 矩阵继续守 |
+| 2026-10-06 | M5 GUI 单一事实源纪律 | GUI 只消费既有 CLI/引擎 API（cli._scan_and_parse / _run_check_pipeline + storage.Ledger 查询），不另起第二套行为；检测参数默认值单一来源 = 各规则模块 `DEFAULT_*` 常量（GUI 设置页 `_reset_params` 反向 import 该常量）；引擎参数经 `_run_check_pipeline(engine_params=)` 注入 |
+| 2026-10-06 | M5 CI 作业分工 | `test`（win3.8/win3.12/ubuntu3.12，仅 dev extras，GUI/PDF 用例声明式跳过）+ `desktop`（win-3.8，装 desktop+export extras 使 GUI/导出测试真正执行，防"双绿但悄悄少跑"）+ `benchmark`（win-3.8，基准门槛）。改 CI 装机清单会改变 skip 计数口径 |
 
 ## 里程碑
 
@@ -41,5 +54,5 @@
 - **M2 解析层 ✅（2026-10-06）**：XML 解析器（FIELD_MAP localname 路径映射 + 命名空间降级 + 数值清洗丢值降置信）+ PDF 解析器（pdfplumber 词级 label-slot，双栏截断/大写合并词/明细 x 列聚类）→ InvoiceCard；`parse data/invoices --report` 一键全量（57 成功 + OFD 3 顺延登记，坏文件拒绝清单，缺依赖 exit 2）；冻结 60 份对账 XML 35/35、PDF 22/22 字段级 F1=1.0（门槛 0.95）；坏文件路径 7 项测试；pytest 95 项全绿（干净 venv 89 绿/6 skip = CI 平价）
 - **M3 规则引擎 ✅（2026-10-06）**：八规则全量（DUP-01/02/03、SEQ-01、ARITH-01/02、TIME-01/02，三级语义 + 门控互斥：DUP-03 排除 DUP-01/02 命中号、DUP-02 排除纯复制件）；入库与判重分离（被拒副本仍参与判定）；R-TIME 双通路（manifest 批次 anchor / 导入时刻）；`check --db` 一键解析→入库→检测→findings 落库 + 三级清单；demo 升级端到端；冻结 60 份对拍 expect∪also_expect 全集：检出率 100%、误报 0、级别全对（13 findings）；pytest 138 全绿（干净 venv 129 绿/9 skip CI 平价）；M3 语义定稿回写 plan/04 §3/§3.1
 - **M4 内置基准 ✅（2026-10-06）**：benchmarks/benchmark.py 双基准（字段级解析 P/R/F1 复用 field_match.py + 异常检测检出率/误报率/判定准确率按 expect∪also_expect 全集对拍）+ 门槛断言 + 确定性报告；`benchmark` 一条命令出指标表（退出码 0/1/2 契约）；冻结 60 份实测宏平均 F1=1.0000、检出率 100%（18/18）、误报 0、判定准确率 100%（13 findings 形态同 M3 锚点）；报告落 benchmarks/report.md（同输入重跑逐字节一致，OFD 3 份顺延显式登记）；README 回填指标表；CI 增 benchmark 作业；pytest 144 绿（干净 venv 131 绿/13 skip）；既定口径清单收口入 HANDOFF-M5
-- M5 桌面交付：PySide6 界面（导入/台账/看板/异常清单）+ Excel 导出 + PyInstaller 打包
+- **M5 桌面交付 ✅（2026-10-06）**：PySide6 6.6.3.1（cp38-abi3 wheel 实测复核回写 plan/03 §3）六页签桌面应用（导入向导/台账多维筛选分页+增删改查/异常清单级别着色+证据面板/看板 QtCharts 三图/Excel 导出对话框/设置参数+状态栏免责声明常驻）；Excel 导出 `export` 命令（openpyxl 双 sheet + 三级条件格式标红，样式用例断言）；CLI `export`/`app` 双命令接通（stub 清零）；extras 覆盖运行期 import 静态+动态断言测试 6 项；PyInstaller onedir **双 exe**（GUI console=False 双击即用 + CLI console=True 无 Python 机器脚本化通路）主 spec 入仓，**3.12 干净 venv 构建通道**（3.8 构建工具级不稳定 7 种"不可能错误"连崩，与项目代码无关，详见 HANDOFF-M6 §4）；干净环境（中立目录 + `env -i` 剥离 PATH）CLI 五连（doctor/demo/generate/check/export）+ GUI 冒烟探针（2.2s）实测通过；技术报告 docs/技术报告.md + docx 生成器脚本（程序化生成禁手改，产物不入仓）；CI 增 `desktop` 作业（装 desktop+export extras 使 GUI/导出测试真正执行）；pytest **170 全绿**（=M4 144 + 26：export 4/app 10/extras 6/packaging 5/cli 净 +1），干净 venv 160 收集/143 绿/18 skip（差 10 = test_app.py 模块级 skip 收成 1 条目，逐项归因）；benchmark 门槛全过不回退；演示 GIF 顺延 M6 初
 - M6 脱敏发布 GitHub + Release（exe）+ 收尾固化
