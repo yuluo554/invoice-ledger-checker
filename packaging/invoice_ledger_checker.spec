@@ -5,11 +5,18 @@
   6.22.3）+ PySide6 6.6.3.1（cp38-abi3，plan/03 §3 已复核）；
 - onedir 双 exe：invoice-ledger（GUI，console=False，双击即用）+
   invoice-ledger-cli（console=True，无 Python 机器的脚本化验证通路：
-  doctor/demo/generate/check/export/benchmark 全可跑）；
+  doctor/demo/generate/check/export/benchmark 全可跑——前提是 hiddenimports
+  声明齐全，见下）；
 - datas 白名单为空：运行期不需要仓库内数据（demo 自含合成数据、
   check/export 消费用户输入）—— 版权红线数据一律不入包；
-- hiddenimports：openpyxl 经 utils.import_optional 动态导入，静态分析
-  不可见，必须显式声明；
+- hiddenimports：这些包都经 utils.import_optional 在**函数体内惰性导入**，
+  PyInstaller 的静态分析看不见 → 必须显式声明，漏一个就静默缺能力：
+    openpyxl   → export 命令（Excel 导出）
+    pdfplumber → parse/check/demo 的版式 PDF 文本层解析（核心能力）
+  M6 实测教训：只声明 openpyxl 时，冻结 exe 里 `check` 因缺 pdfplumber 退出码 2、
+  台账不生成，`export` 随之级联失败——而 M5 记录的"五连全过"是把管道退出码
+  （tail/head 的 $?）当成了 exe 的退出码，属误读非真过。凡新增惰性依赖，
+  必须同步本列表 + tests/test_packaging.py 的断言。
 - 构建命令（仓库根）：pyinstaller packaging/invoice_ledger_checker.spec
   （需 extras: pack；dev 环境另装 parse/data/export/desktop 供分析捕获）。
 """
@@ -26,7 +33,7 @@ a = Analysis(
     pathex=[SRC],
     binaries=[],
     datas=[],
-    hiddenimports=["openpyxl"],
+    hiddenimports=["openpyxl", "pdfplumber"],
     hookspath=[],
     runtime_hooks=[],
     excludes=[],

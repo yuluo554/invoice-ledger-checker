@@ -48,6 +48,13 @@ def test_history_and_commit_messages_are_clean(scan):
     assert scan.scan_messages()[0] == []
 
 
+def test_binary_samples_have_no_sensitive_metadata(scan):
+    """二进制样例本体：PDF Info 元数据域（构建机路径/真实姓名邮箱的藏点）
+    与 OFD·ZIP 逐条目解压内容——文本扫描对二进制是盲区，必须单独扫。"""
+    findings, _ = scan.scan_binaries()
+    assert findings == [], findings
+
+
 def test_commit_metadata_has_no_personal_email(scan):
     """提交作者/提交者邮箱只允许 GitHub 系统地址（含 bot/merge），不得出现真实个人邮箱。"""
     findings, _ = scan.scan_metadata()

@@ -7,9 +7,13 @@
     python tools/sensitive_scan.py selftest   # 阳性+阴性对照：构造样本断言各类别可命中、易误报样本不命中
     python tools/sensitive_scan.py tracked    # 全部跟踪文件内容（工作树）
     python tools/sensitive_scan.py history    # 全部历史提交引入过的每一行（git log --all -p，扫描 + 行）
+    python tools/sensitive_scan.py binaries   # 二进制样例本体（PDF Info 元数据域 / ZIP·OFD 逐条目解压）
     python tools/sensitive_scan.py messages   # 全部提交信息
     python tools/sensitive_scan.py metadata   # 提交作者/提交者姓名与邮箱（内容扫描覆盖不到，必须单独查）
-    python tools/sensitive_scan.py all        # 四模式连跑（release 门形态）
+    python tools/sensitive_scan.py all        # 五模式连跑（仓库树 release 门形态）
+    python tools/sensitive_scan.py dist --dir dist --marker-b64 <b64> [...]
+                                              # 构建产物本体扫描（强标记+禁区成分；
+                                              # 标记以 base64 传入，字面值不入仓库）
 
 退出码：0=无命中 / 1=有命中 / 2=环境或用法错误。
 
@@ -24,11 +28,13 @@
   这类"文档里的模式占位"必须**不**命中——扫描器的假阳性同样是要防的回归。
 """
 
+import base64
 import io
 import os
 import re
 import subprocess
 import sys
+import zipfile
 
 # --------------------------------------------------------------------------- #
 # 类目正则：片段拼接构造（本文件不留敏感字面值）
@@ -43,6 +49,10 @@ _HOME = "home"
 # 二进制容器后缀：逐字节文本扫描无意义（内容由生成器源码程序化产出，源码已入扫描面）
 _BINARY_EXTS = (".pdf", ".ofd", ".zip", ".png", ".jpg", ".jpeg", ".gif",
                 ".webp", ".ico", ".gz", ".7z", ".exe", ".dll", ".whl")
+
+# 产物树禁区成分：仓库数据集不得进入冻结产物（spec 的 datas 白名单为空）
+_FORBIDDEN_OUTPUT_NAMES = ("cards.json", "expectations.json", "manifest.json")
+_FORBIDDEN_OUTPUT_EXTS = (".pdf", ".ofd", ".xlsx")
 
 _SECRET_TOKENS = [
     "gh" + "o_",                   # GitHub OAuth token
@@ -231,6 +241,99 @@ def scan_history():
     return findings, "%d 个提交的全量补丁（+ 行）" % n_commits
 
 
+def scan_binaries():
+    """二进制样例单独扫（内容级文本扫描跳过二进制，这是盲区）。
+
+    两项分开处理：
+    * **PDF**：只抽 Info 字典的元数据域（Author/Creator/Producer/Title/Subject/
+      Keywords）逐值过分类器——构建机路径、真实姓名/邮箱最爱藏在这里；不扫
+      ASCII85/Flate 压缩流（随机字节会撞上邮箱正则，是已知噪声源）。
+    * **OFD/ZIP**：按条目解压后逐行扫描（压缩流必须解压才看得见），并复核
+      zip 注释与条目名。
+    """
+    raw = _run(["git", "ls-files", "-z"])
+    paths = [p for p in raw.decode("utf-8", "surrogateescape").split("\x00") if p]
+    findings = []
+    n_pdf = n_zip = 0
+    for path in sorted(paths):
+        ext = os.path.splitext(path)[1].lower()
+        if ext == ".pdf":
+            n_pdf += 1
+            try:
+                blob = io.open(path, "rb").read()
+            except OSError:
+                continue
+            for key, value in _pdf_info_values(blob):
+                for name in sorted(classify(value)):
+                    findings.append(("%s#/%s" % (path, key), name))
+        elif ext in (".ofd", ".zip"):
+            n_zip += 1
+            try:
+                with zipfile.ZipFile(path) as zf:
+                    if zf.comment:
+                        for name in sorted(classify(zf.comment.decode("utf-8", "replace"))):
+                            findings.append(("%s#zip-comment" % path, name))
+                    for info in zf.infolist():
+                        if info.is_dir():
+                            continue
+                        for name in sorted(classify(info.filename)):
+                            findings.append(("%s#entries" % path, name))
+                        data = zf.read(info)
+                        if _is_binary(data, info.filename):
+                            continue
+                        for lineno, line in enumerate(
+                                data.decode("utf-8", "replace").splitlines(), 1):
+                            for name in sorted(classify(line)):
+                                findings.append(
+                                    ("%s#%s:%d" % (path, info.filename, lineno), name))
+            except (zipfile.BadZipFile, OSError):
+                continue
+    return findings, "PDF %d 份（Info 元数据域）+ ZIP/OFD %d 份（逐条目解压）" % (n_pdf, n_zip)
+
+
+def _pdf_info_values(blob):
+    """抽取 PDF Info 字典的元数据域值（未压缩，可安全正则）。"""
+    values = []
+    for key in ("Author", "Creator", "Producer", "Title", "Subject", "Keywords"):
+        pattern = (r"/" + key + r"\s*\(([^)]*)\)").encode("ascii")
+        for match in re.finditer(pattern, blob):
+            values.append((key, match.group(1).decode("latin-1")))
+    return values
+
+
+def scan_dist(root="dist", markers=()):
+    """构建产物本体扫描（仓库树干净 ≠ 冻结产物干净，这是第 5 步单独的扫描面）。
+
+    只跑**强标记**（个人标记/姊妹词），由调用方经 ``--marker-b64`` 传入——
+    字面值不入仓库。刻意**不跑**邮箱/手机号等宽正则：上游厂商 SBOM/LICENSE 的
+    公共邮箱与二进制噪声不是本项目泄漏面，跑必刷屏（系列纪律）。
+    另复核产物树无仓库数据集成分（spec 的 datas 白名单为空，属设计断言）。
+    """
+    if not os.path.isdir(root):
+        raise SystemExit("ERROR: 产物目录不存在：%s（先构建再扫）" % root)
+    findings = []
+    n_files = 0
+    n_bytes = 0
+    for dirpath, _dirs, files in os.walk(root):
+        for name in sorted(files):
+            path = os.path.join(dirpath, name)
+            try:
+                blob = io.open(path, "rb").read()
+            except OSError:
+                continue
+            n_files += 1
+            n_bytes += len(blob)
+            rel = os.path.relpath(path, root).replace(os.sep, "/")
+            for index, marker in enumerate(markers, 1):
+                if marker and marker in blob:
+                    findings.append((rel, "marker#%d x%d" % (index, blob.count(marker))))
+            if (name.lower() in _FORBIDDEN_OUTPUT_NAMES
+                    or os.path.splitext(name)[1].lower() in _FORBIDDEN_OUTPUT_EXTS):
+                findings.append((rel, "forbidden-data"))
+    return findings, ("%d 个产物文件 / %.1f MB（强标记 %d 个 + 禁区成分复核）"
+                      % (n_files, n_bytes / 1048576.0, len(markers)))
+
+
 def scan_messages():
     """扫描全部提交信息。"""
     raw = _run(["git", "log", "--all", "--format=%H%x00%B%x01"])
@@ -359,6 +462,7 @@ def _emit(mode, findings, scope):
 
 def main(argv):
     modes = {"tracked": scan_tracked, "history": scan_history,
+             "binaries": scan_binaries,
              "messages": scan_messages, "metadata": scan_metadata}
     usage = ("用法：python tools/sensitive_scan.py "
              "{[selftest|all|" + "|".join(sorted(modes)) + "]}")
@@ -375,6 +479,19 @@ def main(argv):
         return 0 if ok else 1
     if mode == "all":
         selected = sorted(modes)
+    elif mode == "dist":
+        root, markers, rest = "dist", [], args[1:]
+        while rest:
+            if rest[0] == "--dir" and len(rest) > 1:
+                root, rest = rest[1], rest[2:]
+            elif rest[0] == "--marker-b64" and len(rest) > 1:
+                markers.append(base64.b64decode(rest[1]))
+                rest = rest[2:]
+            else:
+                print(usage)
+                return 2
+        findings, scope = scan_dist(root, markers)
+        return 0 if _emit("dist", findings, scope) == 0 else 1
     elif mode in modes:
         selected = [mode]
     else:

@@ -37,6 +37,19 @@ def test_spec_declares_dual_exe_onedir():
     assert not datas_block.strip()
 
 
+def test_spec_hiddenimports_cover_lazy_optional_deps():
+    """惰性导入的可选依赖必须进 hiddenimports，漏一个就静默缺能力。
+
+    经 utils.import_optional 在函数体内导入的包，PyInstaller 静态分析看不见。
+    M6 实测：只声明 openpyxl 时冻结 exe 的 check 因缺 pdfplumber 退出码 2、
+    台账不生成，export 级联失败（且 M5 记录的"五连全过"是管道退出码误读）。
+    """
+    text = SPEC.read_text(encoding="utf-8")
+    hidden = re.search(r"hiddenimports=\[(.*?)\]", text, re.S).group(1)
+    for package in ("openpyxl", "pdfplumber"):
+        assert package in hidden, "hiddenimports 缺 %s（惰性导入，静态分析不可见）" % package
+
+
 def test_entry_gui_has_crash_guard():
     text = ENTRY_GUI.read_text(encoding="utf-8")
     assert "MessageBoxW" in text  # 原生消息框兜底，不闪退
