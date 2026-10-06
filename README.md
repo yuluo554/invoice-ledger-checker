@@ -40,14 +40,18 @@ cd invoice-ledger-checker
 py -m pip install -U pip
 py -m pip install -e ".[dev]"
 
-# 冒烟：65 项测试全绿（核心逻辑零第三方依赖；PDF 相关测试缺 reportlab 时自动 skip）
+# 冒烟：138 项测试全绿（核心逻辑零第三方依赖；PDF 相关测试缺 reportlab/pdfplumber 时自动 skip）
 py -m pytest
 
-# 命令行演示：三张合成票入库 -> 查重 -> 算术复核 -> 异常清单
+# 端到端演示：合成数据 -> 解析 -> 台账入库 -> 八规则检测 -> 三级异常清单
 py -m invoice_ledger_checker demo
 
 # 合成发票数据集 + 真值 JSON（同 seed 重跑逐字节一致；PDF 输出需 `pip install -e ".[data]"`）
 py -m invoice_ledger_checker generate --out data --seed 42 --n 60
+
+# 解析冻结样例出导入报告；check 一键解析->SQLite 入库->八规则检测（M3）
+py -m invoice_ledger_checker parse data/invoices --report
+py -m invoice_ledger_checker check data/invoices --db ledger.db --anchor-manifest data/ground_truth/manifest.json
 
 # 可选依赖体检（pdfplumber/PySide6/openpyxl 等 extras 可用性）
 py -m invoice_ledger_checker doctor

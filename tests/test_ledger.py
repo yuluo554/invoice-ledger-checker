@@ -42,6 +42,29 @@ def test_duplicate_number_is_rejected_not_overwritten(tmp_path):
     ledger.close()
 
 
+def test_create_batch_idempotent_on_rerun(tmp_path):
+    """重跑 check 不崩：同批次重复登记保持首次记录（M3 幂等语义）。"""
+    ledger = Ledger(str(tmp_path / "ledger.db"))
+    assert ledger.create_batch("b1", source_desc="首次", file_count=3) == "b1"
+    assert ledger.create_batch("b1", source_desc="重跑", file_count=5) == "b1"
+    row = ledger.conn.execute(
+        "SELECT source_desc, file_count FROM batches WHERE batch_id='b1'").fetchone()
+    assert row == ("首次", 3)
+    ledger.close()
+
+
+def test_existing_numbers_for_persistent_dup_detection(tmp_path):
+    """R-DUP-01 持久判重输入：入库前台账既有号码集（plan/04 §3.1）。"""
+    ledger = Ledger(str(tmp_path / "ledger.db"))
+    ledger.create_batch("b1")
+    assert ledger.existing_numbers() == set()
+    ledger.add_invoice(make_card(), "b1")
+    ledger.add_invoice(make_card("25910000000000123457"), "b1")
+    assert ledger.existing_numbers() == {
+        "25910000000000123456", "25910000000000123457"}
+    ledger.close()
+
+
 def test_findings_roundtrip(tmp_path):
     ledger = Ledger(str(tmp_path / "ledger.db"))
     finding = {

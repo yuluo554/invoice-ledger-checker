@@ -1,32 +1,37 @@
 """invoice-ledger 命令行入口。
 
 可用命令：
-- demo      内置合成演示数据走通 解析外全链路（台账入库 -> 规则引擎 -> 异常清单）
+- demo      端到端演示：合成数据 -> 解析 -> 入库 -> 八规则检测（M3 起）
 - doctor    可选依赖体检（extras 覆盖自检）
 - generate  合成发票数据集 + 真值 JSON（M1 交付；数据全虚构）
 - parse     批量解析发票文件为发票参数卡并出导入报告（M2 交付）
+- check     解析 -> SQLite 台账入库 -> 八规则检测 -> 三级异常清单（M3 交付）
 - --version
 
-未交付命令（check/export/app）打印所属里程碑后退出码 2，
-不做半成品假实现。设计契约：plan/03 §2 目录结构、plan/05 §2 里程碑。
+未交付命令（export/app）打印所属里程碑后退出码 2，不做半成品假实现。
+设计契约：plan/03 §2 目录结构、plan/05 §2 里程碑。
 """
 
 import argparse
+import json
 import os
+import shutil
 import sys
-from typing import List, Optional
+import tempfile
+from typing import Any, Dict, List, Optional, Tuple
 
 from . import __version__
-from .models import Evidence, InvoiceCard, LineItem
+from .models import InvoiceCard
 from .storage import Ledger
 from .utils import OptionalDependencyError, force_utf8_stdio
 
 # 未交付命令 -> (所属里程碑, 一句话说明)
 _STUB_COMMANDS = {
-    "check": ("M3 规则引擎", "对台账执行八类异常检测规则"),
     "export": ("M5 桌面交付", "Excel 台账导出（openpyxl，条件格式标红）"),
     "app": ("M5 桌面交付", "PySide6 桌面应用（导入/台账/看板/异常清单）"),
 }
+
+_LEVEL_ORDER = ("error", "suspicious", "review")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -38,7 +43,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--version", action="version", version="invoice-ledger " + __version__
     )
     sub = parser.add_subparsers(dest="command", metavar="command")
-    sub.add_parser("demo", help="内置合成演示：入库+查重+算术复核全链路（骨架可用）")
+    sub.add_parser("demo", help="端到端演示：合成数据->解析->入库->八规则检测（M3）")
     sub.add_parser("doctor", help="可选依赖体检：报告各 extras 组件可用性")
     gen = sub.add_parser(
         "generate", help="合成发票数据集 + 真值 JSON（M1 交付；数据全虚构）")
@@ -54,6 +59,13 @@ def build_parser() -> argparse.ArgumentParser:
     par.add_argument("directory", help="发票文件根目录（递归扫描）")
     par.add_argument("--report", action="store_true",
                      help="输出详细报告（批次/格式成功数、坏文件清单、OFD 顺延登记）")
+    chk = sub.add_parser(
+        "check", help="解析->台账入库->八规则检测->三级异常清单（M3 交付）")
+    chk.add_argument("directory", help="发票文件根目录（递归扫描，批次=一级子目录名）")
+    chk.add_argument("--db", default="ledger.db", help="SQLite 台账路径（默认 ledger.db）")
+    chk.add_argument("--anchor-manifest", dest="anchor_manifest", default="",
+                     help="基准通路：manifest.json 路径，批次报销基准日取 expense_anchor；"
+                          "缺省为常规通路（anchor=导入时刻）")
     for name, (milestone, desc) in sorted(_STUB_COMMANDS.items()):
         sub.add_parser(name, help="[%s 未交付] %s" % (milestone, desc))
     return parser
@@ -75,6 +87,8 @@ def main(argv: Optional[List[str]] = None) -> int:
             return _cmd_generate(args)
         if args.command == "parse":
             return _cmd_parse(args)
+        if args.command == "check":
+            return _cmd_check(args)
         return _cmd_stub(args.command)
     except OptionalDependencyError as exc:
         print("[缺少依赖] %s" % exc)
@@ -91,19 +105,17 @@ def _cmd_stub(command: str) -> int:
     return 2
 
 
-def _cmd_parse(args) -> int:
-    """批量解析：递归扫描目录，批次=一级子目录名；坏文件记拒绝日志不中断。
+# ---------------------------------------------------------------- 扫描与解析
 
-    退出码契约（plan/03）：目录不存在/无可解析文件/有文件因缺依赖未解析=2；
-    命令跑通（坏文件属数据条件，报告登记后照常）=0。OFD 为 P2 顺延项，
-    报告显式登记不计失败。同号多文件正常各出各卡（判重交台账主键/规则层）。
+
+def _scan_and_parse(root: str) -> Dict[str, Any]:
+    """递归扫描目录并逐文件解析（parse/check 共用，M3 抽取）。
+
+    批次 = 一级子目录名（根级文件批次 = 根目录名）。坏文件记拒绝清单不
+    中断；OFD 顺延登记（P2）；缺依赖文件单列。返回结构化结果，卡片已填
+    batch_id（入库与判重分离的前提，plan/04 §3.1）。
     """
     from .parsing import SUPPORTED_SUFFIXES, ParserError, parser_for
-
-    root = args.directory
-    if not os.path.isdir(root):
-        print("[参数错误] 目录不存在: %s" % root)
-        return 2
 
     files: List[str] = []
     for dirpath, dirnames, filenames in os.walk(root):
@@ -111,17 +123,13 @@ def _cmd_parse(args) -> int:
         for name in sorted(filenames):
             if os.path.splitext(name)[1].lower() in SUPPORTED_SUFFIXES:
                 files.append(os.path.join(dirpath, name))
-    if not files:
-        print("[参数错误] 目录内无可解析发票文件（支持 %s）: %s"
-              % ("/".join(SUPPORTED_SUFFIXES), root))
-        return 2
 
-    ok_by_format: dict = {}
-    rejected: List[tuple] = []      # (relpath, 原因)——内容级坏文件
-    deferred_ofd: List[str] = []    # P2 顺延登记
-    dep_blocked: List[str] = []     # 缺依赖未解析
-    batches: dict = {}
-    cards_total = 0
+    ok_by_format: Dict[str, int] = {}
+    rejected: List[Tuple[str, str]] = []   # (relpath, 原因)——内容级坏文件
+    deferred_ofd: List[str] = []           # P2 顺延登记
+    dep_blocked: List[str] = []            # 缺依赖未解析
+    batches: Dict[str, Dict[str, int]] = {}
+    cards: List[InvoiceCard] = []
     for abs_path in files:
         rel_path = os.path.relpath(abs_path, root).replace(os.sep, "/")
         parts = rel_path.split("/")
@@ -139,7 +147,7 @@ def _cmd_parse(args) -> int:
             batches[batch_id]["rejected"] += 1
             continue
         try:
-            parser(abs_path)
+            card = parser(abs_path)
         except ParserError as exc:
             rejected.append((rel_path, str(exc)))
             batches[batch_id]["rejected"] += 1
@@ -148,36 +156,228 @@ def _cmd_parse(args) -> int:
             dep_blocked.append(rel_path)
             batches[batch_id]["rejected"] += 1
             continue
+        card.batch_id = batch_id
         ok_by_format[fmt] = ok_by_format.get(fmt, 0) + 1
         batches[batch_id]["ok"] += 1
-        cards_total += 1
+        cards.append(card)
 
-    print("invoice-ledger parse（解析报告）")
-    print("-" * 56)
+    return {
+        "root": root,
+        "files": files,
+        "cards": cards,
+        "ok_by_format": ok_by_format,
+        "batches": batches,
+        "rejected": rejected,
+        "deferred_ofd": deferred_ofd,
+        "dep_blocked": dep_blocked,
+    }
+
+
+def _print_scan_report(result: Dict[str, Any]) -> None:
+    root = result["root"]
     print("输入: %s（批次=一级子目录名）" % root)
-    print("扫描: %d 个发票文件，成功解析 %d 张卡" % (len(files), cards_total))
-    for fmt in sorted(ok_by_format):
-        print("  %s 成功 %d" % (fmt, ok_by_format[fmt]))
-    for batch_id in sorted(batches):
-        stat = batches[batch_id]
+    print("扫描: %d 个发票文件，成功解析 %d 张卡"
+          % (len(result["files"]), len(result["cards"])))
+    for fmt in sorted(result["ok_by_format"]):
+        print("  %s 成功 %d" % (fmt, result["ok_by_format"][fmt]))
+    for batch_id in sorted(result["batches"]):
+        stat = result["batches"][batch_id]
         print("  批次 %s: 成功 %d / 失败 %d / OFD 顺延 %d"
               % (batch_id, stat["ok"], stat["rejected"], stat["deferred"]))
-    if deferred_ofd:
+    if result["deferred_ofd"]:
         print("OFD 顺延登记: %d 个文件未解析（OFD 解析器为 P2 加分项，"
-              "当前版本未交付）" % len(deferred_ofd))
-    if rejected:
-        print("拒绝清单: %d 个" % len(rejected))
-        for rel_path, reason in rejected:
+              "当前版本未交付）" % len(result["deferred_ofd"]))
+    if result["rejected"]:
+        print("拒绝清单: %d 个" % len(result["rejected"]))
+        for rel_path, reason in result["rejected"]:
             print("  %s — %s" % (rel_path, reason))
     else:
         print("拒绝清单: 无")
-    print("-" * 56)
-    if dep_blocked:
+
+
+def _require_scannable(args) -> Optional[Dict[str, Any]]:
+    """parse/check 共用的目录前置校验 + 解析；不满足契约时打印并返回 None。"""
+    root = args.directory
+    if not os.path.isdir(root):
+        print("[参数错误] 目录不存在: %s" % root)
+        return None
+    result = _scan_and_parse(root)
+    if not result["files"]:
+        from .parsing import SUPPORTED_SUFFIXES
+
+        print("[参数错误] 目录内无可解析发票文件（支持 %s）: %s"
+              % ("/".join(SUPPORTED_SUFFIXES), root))
+        return None
+    if result["dep_blocked"]:
+        _print_scan_report(result)
         print("[缺少依赖] %d 个文件因缺少 pdfplumber 未解析，"
-              "请安装后重跑：py -m pip install -e \".[parse]\"" % len(dep_blocked))
+              "请安装后重跑：py -m pip install -e \".[parse]\""
+              % len(result["dep_blocked"]))
+        return None
+    return result
+
+
+def _cmd_parse(args) -> int:
+    """批量解析：递归扫描目录，批次=一级子目录名；坏文件记拒绝日志不中断。
+
+    退出码契约（plan/03）：目录不存在/无可解析文件/有文件因缺依赖未解析=2；
+    命令跑通（坏文件属数据条件，报告登记后照常）=0。OFD 为 P2 顺延项，
+    报告显式登记不计失败。同号多文件正常各出各卡（判重交台账主键/规则层）。
+    入库+检测由 check 命令承接（M3）。
+    """
+    result = _require_scannable(args)
+    if result is None:
         return 2
+    print("invoice-ledger parse（解析报告）")
+    print("-" * 56)
+    _print_scan_report(result)
+    print("-" * 56)
     if args.report:
-        print("详细报告已输出（--report）。M3 起本命令将接通台账入库。")
+        print("详细报告已输出（--report）。入库+八规则检测请用 check 命令。")
+    return 0
+
+
+# ---------------------------------------------------------------- check
+
+
+def _load_anchor_manifest(path: str) -> Dict[str, str]:
+    """基准通路：读生成器 manifest，取批次 -> expense_anchor 映射。"""
+    with open(path, encoding="utf-8") as fh:
+        manifest = json.load(fh)
+    anchors = {}
+    for batch in manifest.get("batches", []):
+        if batch.get("batch_id") and batch.get("expense_anchor"):
+            anchors[batch["batch_id"]] = batch["expense_anchor"]
+    return anchors
+
+
+def _run_check_pipeline(result: Dict[str, Any], ledger: Ledger,
+                        batch_anchors: Dict[str, str],
+                        default_anchor: str
+                        ) -> Tuple[int, List[str], List[Any]]:
+    """入库 -> 引擎检测（M3 定稿：入库与判重分离，plan/04 §3.1）。
+
+    返回 (入库成功数, 主键拒收号码, findings)。引擎输入 = 全部解析卡
+    （含即将被主键拒收的同号副本）；existing_numbers 取入库前台账既有
+    号码集，保证跨批次/跨运行重复同样被 R-DUP-01 命中。
+    """
+    from .rules import DetectionEngine, register_builtin
+
+    existing = ledger.existing_numbers()
+    accepted = 0
+    pk_rejected: List[str] = []
+    for card in result["cards"]:
+        if ledger.add_invoice(card, card.batch_id):
+            accepted += 1
+        else:
+            pk_rejected.append(card.invoice_number)
+
+    engine = DetectionEngine()
+    register_builtin(engine)
+    findings = engine.run(result["cards"], {
+        "existing_numbers": existing,
+        "batch_anchors": batch_anchors,
+        "default_anchor": default_anchor,
+    })
+
+    batch_of: Dict[str, set] = {}
+    for card in result["cards"]:
+        batch_of.setdefault(card.invoice_number, set()).add(card.batch_id)
+    for finding in findings:
+        finding_batches: set = set()
+        for number in finding.invoice_numbers:
+            finding_batches.update(batch_of.get(number, ()))
+        finding_batch = finding_batches.pop() if len(finding_batches) == 1 else None
+        ledger.add_finding(finding.to_dict(), batch_id=finding_batch)
+    return accepted, pk_rejected, findings
+
+
+def _print_findings(findings) -> None:
+    by_level: Dict[str, List[Any]] = {level: [] for level in _LEVEL_ORDER}
+    for finding in findings:
+        by_level.setdefault(finding.level, []).append(finding)
+    counts = " / ".join("%s %d" % (level, len(by_level[level]))
+                        for level in _LEVEL_ORDER if by_level.get(level))
+    if not findings:
+        print("异常清单: 无（全部规则通过）")
+        return
+    print("异常清单（%s）:" % counts)
+    for level in _LEVEL_ORDER:
+        for finding in sorted(by_level.get(level, []),
+                              key=lambda f: (f.rule_id, f.invoice_numbers)):
+            print("  [%s] %s %s | %s"
+                  % (level, finding.rule_id,
+                     ",".join(finding.invoice_numbers), finding.message))
+
+
+def _cmd_check(args) -> int:
+    """解析 -> 台账入库 -> 八规则检测 -> 三级异常清单落库 + stdout。
+
+    退出码契约同 parse：目录不存在/无可解析文件/缺依赖=2；坏文件属数据
+    条件照常跑通=0。R-TIME 双通路（plan/04 §3.1）：--anchor-manifest 读
+    批次 expense_anchor（基准可复现）；缺省 anchor=导入时刻（当天）。
+    重复检测请用新 --db 或先删旧库——重复导入本身是 R-DUP-01 异常信号，
+    findings 按 finding_id 幂等拒收，不重复落库。
+    """
+    result = _require_scannable(args)
+    if result is None:
+        return 2
+
+    import datetime
+
+    if args.anchor_manifest:
+        try:
+            batch_anchors = _load_anchor_manifest(args.anchor_manifest)
+        except (OSError, ValueError) as exc:
+            print("[参数错误] anchor manifest 不可读: %s（%s）"
+                  % (args.anchor_manifest, exc))
+            return 2
+        anchor_desc = "批次 expense_anchor（--anchor-manifest 基准通路）"
+    else:
+        batch_anchors = {}
+        anchor_desc = "导入时刻（常规通路）"
+    default_anchor = datetime.date.today().isoformat()
+
+    ledger = Ledger(args.db)
+    try:
+        for batch_id in sorted(result["batches"]):
+            stat = result["batches"][batch_id]
+            log = {
+                "rejected": [{"path": p, "reason": r}
+                             for p, r in result["rejected"]
+                             if p.split("/")[0] == batch_id],
+                "deferred_ofd": [p for p in result["deferred_ofd"]
+                                 if p.split("/")[0] == batch_id],
+            }
+            ledger.create_batch(
+                batch_id,
+                source_desc=result["root"],
+                file_count=sum(stat.values()),
+            )
+            ledger.conn.execute(
+                "UPDATE batches SET log_json = ? WHERE batch_id = ?",
+                (json.dumps(log, ensure_ascii=False), batch_id),
+            )
+            ledger.conn.commit()
+
+        accepted, pk_rejected, findings = _run_check_pipeline(
+            result, ledger, batch_anchors, default_anchor)
+    finally:
+        ledger.close()
+
+    print("invoice-ledger check（入库+八规则检测；合成数据不含任何真实主体）")
+    print("-" * 56)
+    _print_scan_report(result)
+    print("台账: %s（批次 %d 个；入库 %d 张，主键拒收同号副本 %d 张）"
+          % (args.db, len(result["batches"]), accepted, len(pk_rejected)))
+    if pk_rejected:
+        print("  主键拒收: %s" % "、".join(sorted(pk_rejected)))
+    print("时间基准: %s，无映射批次回退 %s" % (anchor_desc, default_anchor))
+    print("检测: 八规则全量（R-DUP-01/02/03 R-SEQ-01 R-ARITH-01/02 R-TIME-01/02），"
+          "异常 %d 条" % len(findings))
+    _print_findings(findings)
+    print("-" * 56)
+    print("findings 已落库（幂等）；台账查询/筛选与 GUI 见 M5。")
     return 0
 
 
@@ -216,84 +416,54 @@ def _cmd_generate(args) -> int:
 
 
 def _cmd_demo() -> int:
-    """内置演示：三张合成卡入库（一张重复）+ 引擎检测出 2 条异常。
+    """端到端演示（M3）：合成数据 -> 解析 -> 入库 -> 八规则检测全链路。
 
-    全部数据为程序合成虚构，无任何真实主体；种子规则 R-ARITH-01/R-DUP-01
-    为骨架交付，M3 全量八规则后本命令同步升级为端到端演示。
+    临时目录生成 60 张 XML 合成票（9 类注入全触发），随后走与 check 命令
+    完全相同的解析+入库+检测流水线（内存库）；时间基准取生成 manifest 的
+    批次 expense_anchor（基准通路）。全部数据程序合成虚构，结束后即清理。
     """
-    from .rules import DetectionEngine, register_builtin
+    from .generator import generate
 
-    cards = _demo_cards()
-    ledger = Ledger(":memory:")
-    ledger.create_batch("batch-demo-001", source_desc="内置演示", file_count=3)
-    accepted, rejected = 0, []
-    for card in cards:
-        if ledger.add_invoice(card, "batch-demo-001"):
-            accepted += 1
-        else:
-            rejected.append(card.invoice_number)
+    tmp_dir = tempfile.mkdtemp(prefix="invoice-ledger-demo-")
+    try:
+        generate(tmp_dir, seed=42, n=60, formats=["xml"])
+        demo_args = argparse.Namespace(
+            directory=os.path.join(tmp_dir, "invoices"),
+            db=":memory:",
+            anchor_manifest=os.path.join(tmp_dir, "ground_truth", "manifest.json"),
+        )
+        result = _require_scannable(demo_args)
+        if result is None:
+            return 2
+        batch_anchors = _load_anchor_manifest(demo_args.anchor_manifest)
+        ledger = Ledger(":memory:")
+        try:
+            for batch_id in sorted(result["batches"]):
+                ledger.create_batch(
+                    batch_id,
+                    source_desc="内置演示（合成数据）",
+                    file_count=sum(result["batches"][batch_id].values()),
+                )
+            import datetime
 
-    engine = DetectionEngine()
-    register_builtin(engine)
-    findings = engine.run(cards)
-    for finding in findings:
-        ledger.add_finding(finding.to_dict(), batch_id="batch-demo-001")
+            accepted, pk_rejected, findings = _run_check_pipeline(
+                result, ledger, batch_anchors, datetime.date.today().isoformat())
+        finally:
+            ledger.close()
 
-    print("invoice-ledger demo（数据全部为合成虚构）")
-    print("-" * 56)
-    print("导入：3 张合成发票 -> 台账入库 %d 张，重复拒收 %d 张 %s"
-          % (accepted, len(rejected), rejected or ""))
-    print("台账总数：%d（SQLite 内存库）" % ledger.count_invoices())
-    print("规则引擎：注册 %s，产出异常 %d 条"
-          % ("/".join(engine.rule_ids), len(findings)))
-    for finding in findings:
-        print("  [%s] %s %s" % (finding.level, finding.rule_id, finding.message))
-    print("findings 持久化：%d 条" % len(ledger.list_findings()))
-    print("-" * 56)
-    print("下一步：parse(M2) -> check(M3) 全量规则；合成数据用 generate 命令；见 plan/05 里程碑")
-    return 0
-
-
-def _demo_cards() -> List[InvoiceCard]:
-    """演示用合成发票卡（税号为 DEMO 假格式，与真实统一社会信用代码无涉）。"""
-    common = dict(
-        buyer_name="星辰科技有限公司",
-        buyer_tax_id="91330100DEMOFAKE01",
-        confidence=1.0,
-    )
-    card1 = InvoiceCard(
-        invoice_number="25910000000000123456",
-        invoice_type="数电普票",
-        issue_date="2026-01-05",
-        seller_name="云图商贸有限公司",
-        seller_tax_id="91330100DEMOFAKE02",
-        items=[LineItem(name="会议服务费", amount="1000.00", tax_rate="0.13", tax_amount="130.00")],
-        amount="1000.00",
-        tax_amount="130.00",
-        total_with_tax="1130.00",
-        total_with_tax_cn="壹仟壹佰叁拾元整",
-        evidence=[Evidence(source_file="demo/25910000000000123456.xml", quote="<TotalAmount>1130.00", location="/Invoice/TotalAmount")],
-        **common,
-    )
-    card2 = InvoiceCard(
-        invoice_number="25910000000000123457",
-        invoice_type="数电专票",
-        issue_date="2026-01-06",
-        buyer_name="云图商贸有限公司",
-        buyer_tax_id="91330100DEMOFAKE02",
-        seller_name="星辰科技有限公司",
-        seller_tax_id="91330100DEMOFAKE01",
-        items=[LineItem(name="咨询服务费", amount="2000.00", tax_rate="0.06", tax_amount="120.00")],
-        amount="2000.00",
-        tax_amount="120.00",
-        total_with_tax="2180.00",  # 注入算术错误：应为 2120.00
-        total_with_tax_cn="贰仟壹佰贰拾元整",
-        evidence=[Evidence(source_file="demo/25910000000000123457.xml", quote="<TotalAmount>2180.00", location="/Invoice/TotalAmount")],
-        confidence=1.0,
-    )
-    card3 = InvoiceCard.from_dict(card1.to_dict())  # 与 card1 同号：模拟跨批次重复报销
-    card3.evidence = [Evidence(source_file="demo_retry/25910000000000123456.xml", quote="<TotalAmount>1130.00", location="/Invoice/TotalAmount")]
-    return [card1, card2, card3]
+        print("invoice-ledger demo（端到端：数据全部为合成虚构）")
+        print("-" * 56)
+        _print_scan_report(result)
+        print("台账: SQLite 内存库（批次 %d 个；入库 %d 张，主键拒收同号副本 %d 张）"
+              % (len(result["batches"]), accepted, len(pk_rejected)))
+        print("时间基准: 生成 manifest 批次 expense_anchor（基准通路）")
+        print("检测: 八规则全量，异常 %d 条" % len(findings))
+        _print_findings(findings)
+        print("-" * 56)
+        print("对应正式命令：generate -> parse -> check；GUI 见 M5。")
+        return 0
+    finally:
+        shutil.rmtree(tmp_dir, ignore_errors=True)
 
 
 # extras 体检表：(import 模块名, extra 组名, 用途, 交付里程碑)

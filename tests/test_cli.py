@@ -21,7 +21,7 @@ def run_cli(*args):
         capture_output=True,
         encoding="utf-8",
         env=env,
-        timeout=120,
+        timeout=180,
     )
 
 
@@ -43,13 +43,18 @@ def test_version_flag():
     assert "0.1.0" in result.stdout
 
 
-def test_demo_full_pipeline():
+def test_demo_end_to_end_all_rules():
+    """demo 端到端（M3）：合成数据 -> 解析 -> 入库 -> 八规则检测。"""
     result = run_cli("demo")
-    assert result.returncode == 0
-    # 演示叙事：3 张合成票入库 2 张（同号拒收 1）+ 2 条异常
-    assert "入库 2 张" in result.stdout
+    assert result.returncode == 0, result.stderr
+    assert "端到端" in result.stdout
+    assert "入库 58 张，主键拒收同号副本 2 张" in result.stdout
+    assert "八规则全量" in result.stdout
+    # 三级语义各举其一（error/suspicious/review 均有产出）
     assert "R-DUP-01" in result.stdout
     assert "R-ARITH-01" in result.stdout
+    assert "R-SEQ-01" in result.stdout
+    assert "R-TIME-02" in result.stdout
 
 
 def test_doctor_reports_optional_deps():
@@ -61,13 +66,77 @@ def test_doctor_reports_optional_deps():
 
 def test_stub_commands_exit_two_with_milestone_hint():
     for command, milestone in [
-        ("check", "M3"),
         ("export", "M5"),
         ("app", "M5"),
     ]:
         result = run_cli(command)
         assert result.returncode == 2, command
         assert milestone in result.stdout, command
+
+
+def test_check_missing_dir_exits_two():
+    result = run_cli("check", "definitely/not/a/dir")
+    assert result.returncode == 2
+    assert "目录不存在" in result.stdout
+
+
+def test_check_generated_dataset(tmp_path):
+    """generate -> check 一键入库+检测（基准通路 anchor manifest；XML 免重依赖）。"""
+    out_dir = tmp_path / "data"
+    gen = run_cli("generate", "--out", str(out_dir), "--seed", "7",
+                  "--n", "30", "--formats", "xml")
+    assert gen.returncode == 0, gen.stderr
+    db_path = tmp_path / "ledger.db"
+    result = run_cli(
+        "check", str(out_dir / "invoices"), "--db", str(db_path),
+        "--anchor-manifest", str(out_dir / "ground_truth" / "manifest.json"),
+    )
+    assert result.returncode == 0, result.stderr
+    assert "成功解析 30 张卡" in result.stdout
+    assert "主键拒收同号副本 2 张" in result.stdout
+    assert "expense_anchor" in result.stdout        # 基准通路生效
+    assert "R-DUP-01" in result.stdout              # 副本事件必触发
+    assert "R-DUP-02" in result.stdout
+    assert "R-SEQ-01" in result.stdout
+    assert "findings 已落库" in result.stdout
+    assert db_path.exists()
+
+
+def test_check_rejects_bad_manifest(tmp_path):
+    out_dir = tmp_path / "data"
+    gen = run_cli("generate", "--out", str(out_dir), "--seed", "7",
+                  "--n", "8", "--formats", "xml")
+    assert gen.returncode == 0, gen.stderr
+    bad_manifest = tmp_path / "broken.json"
+    bad_manifest.write_text("{not json", encoding="utf-8")
+    result = run_cli(
+        "check", str(out_dir / "invoices"), "--db", str(tmp_path / "l.db"),
+        "--anchor-manifest", str(bad_manifest),
+    )
+    assert result.returncode == 2
+    assert "anchor manifest 不可读" in result.stdout
+
+
+def test_check_frozen_data_full_pipeline(tmp_path):
+    """DoD 命令实测：冻结 60 份 -> 入库 55 + 拒收 2 -> 13 条三级异常
+    （CI 无 pdfplumber 时跳过）。"""
+    if importlib.util.find_spec("pdfplumber") is None:
+        pytest.skip("pdfplumber 未安装（CI 无重依赖路径）")
+    invoices = Path(__file__).resolve().parents[1] / "data" / "invoices"
+    if not invoices.is_dir():
+        pytest.skip("data/invoices 冻结数据不在仓")
+    result = run_cli(
+        "check", str(invoices), "--db", str(tmp_path / "ledger.db"),
+        "--anchor-manifest",
+        str(Path(__file__).resolve().parents[1] / "data" / "ground_truth" / "manifest.json"),
+    )
+    assert result.returncode == 0, result.stderr
+    assert "成功解析 57 张卡" in result.stdout
+    assert "入库 55 张，主键拒收同号副本 2 张" in result.stdout
+    assert "异常 13 条" in result.stdout
+    assert "[error]" in result.stdout
+    assert "[suspicious]" in result.stdout
+    assert "[review]" in result.stdout
 
 
 def test_parse_missing_dir_exits_two():

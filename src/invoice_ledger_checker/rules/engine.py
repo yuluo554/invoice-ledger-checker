@@ -75,8 +75,17 @@ class DetectionEngine:
         """按注册顺序的规则 ID（报告/演示展示用）。"""
         return [r.rule_id for r in self._rules]
 
-    def run(self, cards: List[InvoiceCard]) -> List[Finding]:
+    def run(self, cards: List[InvoiceCard],
+            ctx_extra: Optional[Dict[str, Any]] = None) -> List[Finding]:
+        """执行全部规则；ctx_extra 合入规则上下文（契约见 plan/04 §3.1）。
+
+        可用键：batch_anchors（batch_id -> ISO 日期，R-TIME 基准通路）、
+        default_anchor（无批次映射时的导入日期）、existing_numbers（台账
+        既有号码集，R-DUP-01 持久判重输入）。
+        """
         ctx: Dict[str, Any] = {"params": self.params, "findings": []}
+        if ctx_extra:
+            ctx.update(ctx_extra)
         results: List[Finding] = []
         seen = set()
         for rule in self._rules:
@@ -94,9 +103,10 @@ class DetectionEngine:
                 if finding.level not in LEVELS:
                     raise ValueError("finding 非法级别: %r" % finding.level)
                 if not finding.finding_id:
+                    # 多号码 finding 号码全集入 ID，保证 findings 表主键唯一
                     finding.finding_id = "%s:%s" % (
                         finding.rule_id,
-                        finding.invoice_numbers[0] if finding.invoice_numbers else "-",
+                        "|".join(finding.invoice_numbers) if finding.invoice_numbers else "-",
                     )
                 key = (finding.finding_id, finding.message)
                 if key in seen:
@@ -108,7 +118,7 @@ class DetectionEngine:
 
 
 def register_builtin(engine: DetectionEngine) -> None:
-    """注册内置规则。骨架期交付 R-DUP-01 与 R-ARITH-01 种子；M3 全量（plan/05）。"""
+    """注册内置八规则（plan/04 §3.1 固定顺序；语义权威 generator/synthetic.py 模块注释）。"""
     from . import checks
 
     for rule in checks.builtin_rules():

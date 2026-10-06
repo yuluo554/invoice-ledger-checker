@@ -69,9 +69,10 @@ class Ledger:
     # ---- 批次 ----
 
     def create_batch(self, batch_id: str, source_desc: str = "", file_count: int = 0) -> str:
+        """登记批次；已存在时保持原记录（重跑 check 幂等，不覆盖首次导入时间）。"""
         self.conn.execute(
-            "INSERT INTO batches (batch_id, imported_at, source_desc, file_count, log_json)"
-            " VALUES (?, ?, ?, ?, ?)",
+            "INSERT OR IGNORE INTO batches (batch_id, imported_at, source_desc,"
+            " file_count, log_json) VALUES (?, ?, ?, ?, ?)",
             (batch_id, _now_iso(), source_desc, file_count, ""),
         )
         self.conn.commit()
@@ -116,6 +117,10 @@ class Ledger:
 
     def count_invoices(self) -> int:
         return int(self.conn.execute("SELECT COUNT(*) FROM invoices").fetchone()[0])
+
+    def existing_numbers(self) -> set:
+        """台账既有发票号码全集（check 命令入库前查询，R-DUP-01 持久判重输入）。"""
+        return {row[0] for row in self.conn.execute("SELECT invoice_number FROM invoices")}
 
     def iter_cards(self) -> Iterator[InvoiceCard]:
         for (card_json,) in self.conn.execute("SELECT card_json FROM invoices"):

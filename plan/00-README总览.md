@@ -16,7 +16,8 @@
 | [06-决策记录.md](06-决策记录.md) | 重大决策表（已定+待定+缓议清零区） | ✅ 独立成文 2026-10-05 |
 | [HANDOFF-M1.md](HANDOFF-M1.md) | 交接快照：M0 收尾 → M1 数据先行续接（已过时留档） | ✅ 2026-10-05 |
 | [HANDOFF-M2.md](HANDOFF-M2.md) | 交接快照：M1 收尾 → M2 解析层续接（已过时留档） | ✅ 2026-10-06 |
-| [HANDOFF-M3.md](HANDOFF-M3.md) | 交接快照：M2 收尾 → M3 规则引擎续接 | ✅ 2026-10-06 |
+| [HANDOFF-M3.md](HANDOFF-M3.md) | 交接快照：M2 收尾 → M3 规则引擎续接（已过时留档） | ✅ 2026-10-06 |
+| [HANDOFF-M4.md](HANDOFF-M4.md) | 交接快照：M3 收尾 → M4 内置基准续接 | ✅ 2026-10-06 |
 
 ## 决策记录
 
@@ -29,13 +30,14 @@
 | 2026-10-06 | 真值语义定稿 | 双键真值（cards 按文件路径、expectations 按号码）；基准按全部非 pass 集合对账；R-DUP-02 排除纯复制件（只报 R-DUP-01）；R-TIME 基准通路取批次 expense_anchor（与墙钟无关）；权威出处 = generator/synthetic.py 模块注释 |
 | 2026-10-06 | 法规查证收口 | 764号令/《发票管理办法》修订原文已直连核对入库；11号公告/56号令原文未直连成功 → 条文标"待核对"+登记渠道，不空转（M2+ 补核） |
 | 2026-10-06 | 解析层映射与实现定稿 | 字段映射权威 = TEMPLATE_REFERENCE（synthetic-v1）；PDF label-slot 实测固化三条口径：双栏版式 value 词以同线下一标签 x0 为右边界、`价税合计（大写）：` 与值同词合并取冒号后文本、明细四列按表头 x0 锚点最近列归并；对账器落 benchmarks/field_match.py（M4 基准同源复用） |
+| 2026-10-06 | M3 规则语义定稿 | 入库与判重分离（引擎输入=全部解析卡含被拒副本，R-DUP-01=批内重复+台账既有号码）；R-DUP-02 纯复制件判定=语义字段全等（evidence/confidence/field_flags/batch_id 不参与）；R-TIME-02 仅追溯方向（未来票 R-TIME-01 全覆盖防双报）；R-SEQ-01 跨前缀不产出 finding；R-TIME 双通路（基准=manifest 批次 anchor / 常规=导入时刻）；详见 plan/04 §3/§3.1 |
 
 ## 里程碑
 
 - **M0 计划+骨架 ✅（2026-10-05）**：plan 02-06 定稿；src 布局骨架（models/parsing/storage/rules/generator/benchmarks/export/app + CLI）；种子规则 R-ARITH-01/R-DUP-01；25 项测试全绿；`py -m invoice_ledger_checker demo/doctor` 可用；CI（win 3.8/3.12 + ubuntu 3.12）；MIT + README + .gitattributes(EOL 门)
 - **M1 数据先行 ✅（2026-10-06）**：合成发票生成器（5 类型 × XML/PDF/OFD 三格式，seed 可复现位级一致）；9 类注入 + 基线全落地，真值 JSON（cards/expectations/manifest）语义定稿；`generate --out data --seed 42 --n 60` 冻结 60 份入仓；法规知识库（764号令已核对、11号公告/56号令待核对挂渠道）；数据台账四行登记齐；65 项测试全绿
 - **M2 解析层 ✅（2026-10-06）**：XML 解析器（FIELD_MAP localname 路径映射 + 命名空间降级 + 数值清洗丢值降置信）+ PDF 解析器（pdfplumber 词级 label-slot，双栏截断/大写合并词/明细 x 列聚类）→ InvoiceCard；`parse data/invoices --report` 一键全量（57 成功 + OFD 3 顺延登记，坏文件拒绝清单，缺依赖 exit 2）；冻结 60 份对账 XML 35/35、PDF 22/22 字段级 F1=1.0（门槛 0.95）；坏文件路径 7 项测试；pytest 95 项全绿（干净 venv 89 绿/6 skip = CI 平价）
-- M3 规则引擎：重复报销/连号簇/时间逻辑/算术复核四类检测 + 三级判定
+- **M3 规则引擎 ✅（2026-10-06）**：八规则全量（DUP-01/02/03、SEQ-01、ARITH-01/02、TIME-01/02，三级语义 + 门控互斥：DUP-03 排除 DUP-01/02 命中号、DUP-02 排除纯复制件）；入库与判重分离（被拒副本仍参与判定）；R-TIME 双通路（manifest 批次 anchor / 导入时刻）；`check --db` 一键解析→入库→检测→findings 落库 + 三级清单；demo 升级端到端；冻结 60 份对拍 expect∪also_expect 全集：检出率 100%、误报 0、级别全对（13 findings）；pytest 138 全绿（干净 venv 129 绿/9 skip CI 平价）；M3 语义定稿回写 plan/04 §3/§3.1
 - M4 内置基准：解析 F1 ≥0.95、检出率 100%、误报 0
 - M5 桌面交付：PySide6 界面（导入/台账/看板/异常清单）+ Excel 导出 + PyInstaller 打包
 - M6 脱敏发布 GitHub + Release（exe）+ 收尾固化
