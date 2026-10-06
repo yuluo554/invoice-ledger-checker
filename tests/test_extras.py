@@ -83,6 +83,20 @@ def test_desktop_locked_below_67_on_py38():
     assert all("<6.7" in line for line in py38_lines)
 
 
+def test_reportlab_locked_below_4():
+    """data extras 锁 reportlab <4。
+
+    两个理由（M6 干净环境实测）：
+    ① 4.x 调用 hashlib.md5(usedforsecurity=False)，该参数 py3.9 才有——在 3.8 上
+       generate 直接 TypeError 崩（README 的 generate 步骤与 CI 的 win-3.8 作业同挂）；
+    ② 入仓冻结数据集由 3.6.13 产出，生成器有位级复现门（tests/test_generator.py），
+       产出库版本属契约的一部分——放开上界会让"同 seed 逐字节一致"失守。
+    """
+    data_section = re.search(r"^data\s*=\s*\[(.*?)\]", PYPROJECT,
+                             re.S | re.M).group(1)
+    assert "<4" in data_section, "data extras 的 reportlab 未锁 <4（3.8 运行时崩溃）"
+
+
 def test_missing_openpyxl_raises_install_hint(tmp_path, monkeypatch):
     """动态层：缺 openpyxl 时导出组件抛带安装提示的异常（不裸 ImportError）。"""
     real_import = importlib.import_module

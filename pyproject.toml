@@ -27,7 +27,10 @@ dependencies = []
 [project.optional-dependencies]
 dev = ["pytest>=7.0"]
 parse = ["pdfplumber>=0.10"]
-data = ["reportlab>=3.6"]
+# reportlab 锁 <4：4.x 的 hashlib.md5(usedforsecurity=False) 是 py3.9+ 才有的参数，
+# 在 3.8 上 generate 直接 TypeError（M6 干净环境实测，同时会打挂 CI 的 win-3.8 作业）；
+# 且入仓冻结数据集由 3.6.13 产出、生成器有位级复现门——产出库版本属契约的一部分
+data = ["reportlab>=3.6,<4"]
 export = ["openpyxl>=3.1"]
 report = ["python-docx>=0.8.11"]
 # QtCharts 位于 PySide6-Addons，必须显式声明（extras 覆盖真实 import 纪律）
