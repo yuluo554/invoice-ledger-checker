@@ -44,6 +44,9 @@
   首跑又暴露并修复**第三个"从未验证过"的缺陷**：`ci.yml` 的 step 名含未加引号的「冒号+空格」→
   整份 workflow 非法 YAML → GitHub 不建任何 job（run 0 秒失败、jobs=0），已修复 + 加 YAML 守门测试
   （见 §3 第 15 条与 §4）。
+- **Release v0.1.0 已发布**：https://github.com/yuluo554/invoice-ledger-checker/releases/tag/v0.1.0——附件 `invoice-ledger-checker-v0.1.0-win64.zip`
+  （87,377,464 B，sha256 `e6140c0f…`，下载复核一致）+ 6 张界面截图（离屏真实渲染，替代无法录制的交互 GIF，
+  见 §6 第 2 条与 RELEASE-M6 §9.1）。
 
 ## 2. 交付物索引
 
@@ -186,7 +189,8 @@ py -X utf8 docs/make_report_docx.py
 ## 6. 后续可捡起项（非阻塞，按价值排序）
 
 1. **OFD 解析（P2）**：补 OFD 解析器即可让 3 份顺延样本入对账，属唯一明确的加分空缺。
-2. **演示 GIF**：本机 Chrome 崩溃下未录；若要补，用另一台健康机器录 GUI 交互，或直接补更多截图。
+2. **演示 GIF**：本机 Chrome 崩溃下未录（已用 6 张离屏真实渲染截图替代并作 Release 附件）；
+   若要补 GIF，用另一台健康机器录 GUI 交互即可（脚本形态参考 RELEASE-M6 §9.1 的离屏渲染写法）。
 3. **仓库 topics 扩充**：现有一批主题标签，可按传播需要增补（如 `pyside6`、`e-invoice`）。
 4. **LLM 兜底（llm）**：extras 预留未实现——默认路径零 LLM 是全离线纪律的组成部分，若做须保持默认关闭。
 5. **PDF 解析对扫描件的边界**：README 已声明不做 OCR；若要扩展须连真值一起扩展（数据先行的前提）。

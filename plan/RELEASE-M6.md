@@ -322,8 +322,21 @@ M5 产出的发行 exe 实测：`doctor` 报 pdfplumber 未安装；`check` **�
 | 推送（首次） | `ssh -T git@github.com` 验证 → `git remote set-url origin git@github.com:<owner>/<repo>.git` → `git push -u origin main` | ✅ 一次成功（走 SSH：HTTPS token 无 `workflow` scope，SSH 通路可正常推 workflow 文件） |
 | CI 首跑 | `gh run list` / `gh run view` / `gh api …/jobs` | ❌ 连续三次 push 的 run 均 **0 秒失败、jobs=0**（真因 = 非法 YAML，见 §7.5）→ 修复后 ✅ **五运行全绿** |
 | topics | `gh repo edit --add-topic …`（10 个） → `gh api repos/… --jq .topics` | ✅ 回读确认 10 个全部生效 |
-| Release | `gh release create v0.1.0 …`（附 §5 的 zip + Release notes） | ✅ 见本表末行 |
-| 标签 | `git tag v0.1.0`（annotated，打在含完整收尾回写的提交上） | ✅ 见本表末行 |
+| 标签 | `git tag -a v0.1.0 -m …`（annotated，打在含完整收尾回写的提交上）→ `git push origin v0.1.0` | ✅ 标签已推送 |
+| Release | `gh release create v0.1.0 --title … --notes-file … --verify-tag <zip> <png…>` | ✅ 发布页 https://github.com/yuluo554/invoice-ledger-checker/releases/tag/v0.1.0 ；**7 个附件**：`invoice-ledger-checker-v0.1.0-win64.zip`（87,377,464 B）+ 6 张界面截图 |
+| Release 资产复核 | `gh release download v0.1.0 --pattern "*win64.zip"` → sha256 比对 | ✅ 下载件 sha256 = `e6140c0f…`，与 §5 表**一致** |
+| 演示材料（GIF 顺延的替代） | 离屏渲染真实 GUI（`QWidget.grab` + `QFontDatabase.addApplicationFont` 挂系统 CJK 字体）→ 六页签 PNG 入 Release 附件 | ✅ 见下 |
+
+### 9.1 演示 GIF 顺延的处置（如实登记，替代方案已落地）
+
+- **顺延原因**：本机 Chrome 启动崩溃 → 浏览器自动化不可用，无法录制交互演示 GIF（HANDOFF-M6 §2.6 的顺延项）。
+- **替代方案 = 真实渲染的 GUI 截图**：用 Qt 离屏平台（`QT_QPA_PLATFORM=offscreen`）实例化 `app.main.MainWindow`
+  并逐页签 `grab()` 落 PNG。**同一套 Qt 代码路径**、同一份合成数据（`check` 出来的台账），非示意图。
+- **两处离屏坑（记录以便复现）**：① 离屏平台**不带字体**，不挂字体时所有文字渲染成方块（▯）；
+  ② 仅设 `QT_QPA_FONTDIR` 指向系统字体目录会挑到非预期字形（数字/字母出现替换），
+  **正解 = `QFontDatabase.addApplicationFont("<系统 CJK 字体>")` + `app.setFont(...)`**。
+- **隐私**：截图素材全为合成数据；状态栏显示的是**相对路径**台账名，无个人目录信息。
+- **落位**：6 张截图作为 Release 附件，notes 内嵌「异常清单 / 看板 / 台账」三张，其余四张以附件形式给到。
 
 **push ↔ run 对账**：修复前三次 push 各产出 1 个 CI run（均 0 秒失败，全部定位到同一 YAML 缺陷）；
 隔离实验那次 push 因同时含临时最小 workflow 而产出 2 个 run（`CI` 失败 + `smoke` 成功，临时文件已删除）；
