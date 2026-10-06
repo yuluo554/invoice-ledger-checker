@@ -27,3 +27,20 @@ jobs:
           python -m pip install -e ".[dev]"
       - name: Run tests
         run: python -m pytest
+
+  benchmark:
+    # M4 回归纪律：改数据/改规则/改接口 -> 基准门槛不回退（F1>=0.95、检出率
+    # 100%、误报 0）。win-3.8 镜像开发机同环境；需 parse+data extras 解析
+    # 冻结 PDF 样本（门槛未达退出码 1 即失败）。
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.8"
+      - name: Install package with parse+data extras
+        run: |
+          python -m pip install -U pip
+          python -m pip install -e ".[dev,parse,data]"
+      - name: Run benchmark gates
+        run: python -m invoice_ledger_checker benchmark --no-report

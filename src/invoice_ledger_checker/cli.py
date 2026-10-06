@@ -6,6 +6,7 @@
 - generate  合成发票数据集 + 真值 JSON（M1 交付；数据全虚构）
 - parse     批量解析发票文件为发票参数卡并出导入报告（M2 交付）
 - check     解析 -> SQLite 台账入库 -> 八规则检测 -> 三级异常清单（M3 交付）
+- benchmark 内置评测基准：字段解析 F1 + 异常检测指标 + 门槛断言（M4 交付）
 - --version
 
 未交付命令（export/app）打印所属里程碑后退出码 2，不做半成品假实现。
@@ -66,6 +67,14 @@ def build_parser() -> argparse.ArgumentParser:
     chk.add_argument("--anchor-manifest", dest="anchor_manifest", default="",
                      help="基准通路：manifest.json 路径，批次报销基准日取 expense_anchor；"
                           "缺省为常规通路（anchor=导入时刻）")
+    bench = sub.add_parser(
+        "benchmark", help="内置评测基准：解析 F1 + 检出率/误报率 + 门槛断言（M4 交付）")
+    bench.add_argument("--data", default="data",
+                       help="冻结数据根目录（默认 data，须含 invoices/ 与 ground_truth/）")
+    bench.add_argument("--report", default="benchmarks/report.md",
+                       help="报告输出路径（默认 benchmarks/report.md；生成物，README 引用）")
+    bench.add_argument("--no-report", action="store_true",
+                       help="只打印指标表，不写报告文件")
     for name, (milestone, desc) in sorted(_STUB_COMMANDS.items()):
         sub.add_parser(name, help="[%s 未交付] %s" % (milestone, desc))
     return parser
@@ -89,6 +98,8 @@ def main(argv: Optional[List[str]] = None) -> int:
             return _cmd_parse(args)
         if args.command == "check":
             return _cmd_check(args)
+        if args.command == "benchmark":
+            return _cmd_benchmark(args)
         return _cmd_stub(args.command)
     except OptionalDependencyError as exc:
         print("[缺少依赖] %s" % exc)
@@ -378,6 +389,101 @@ def _cmd_check(args) -> int:
     _print_findings(findings)
     print("-" * 56)
     print("findings 已落库（幂等）；台账查询/筛选与 GUI 见 M5。")
+    return 0
+
+
+# ---------------------------------------------------------------- benchmark
+
+
+def _print_benchmark(metrics: Dict[str, Any]) -> None:
+    """指标表 stdout 形态（与报告同数字；DoD：一条命令出指标表）。"""
+    parse = metrics["parse"]
+    detect = metrics["detect"]
+    man = metrics["manifest"]
+    print("数据: seed=%s n=%s anomaly_rate=%s；批次 %d 个；格式 %s"
+          % (man["seed"], man["n"], man["anomaly_rate"], len(man["batches"]),
+             " / ".join("%s %d" % (fmt, man["by_format"][fmt])
+                        for fmt in sorted(man["by_format"]))))
+    print("解析: 成功 %d / %d；OFD 顺延 %d 份（P2 登记，不参与指标）；失败 %d"
+          % (parse["parsed_count"], parse["files_total"],
+             len(parse["deferred_ofd"]), len(parse["failed_files"])))
+    print("字段解析基准（冻结数据 vs cards.json 字段级对账）:")
+    print("  微平均 P/R/F1 = %s / %s / %s"
+          % ("%.4f" % parse["micro"]["precision"], "%.4f" % parse["micro"]["recall"],
+             "%.4f" % parse["micro"]["f1"]))
+    print("  宏平均 P/R/F1 = %s / %s / %s（门槛 >= 0.95）"
+          % ("%.4f" % parse["macro"]["precision"], "%.4f" % parse["macro"]["recall"],
+             "%.4f" % parse["macro"]["f1"]))
+    print("  分字段表:")
+    for field_stat in parse["fields"]:
+        print("    %-22s TP %4d  FP %3d  FN %3d  P %s  R %s  F1 %s"
+              % (field_stat["field"], field_stat["tp"], field_stat["fp"],
+                 field_stat["fn"], "%.4f" % field_stat["precision"],
+                 "%.4f" % field_stat["recall"], "%.4f" % field_stat["f1"]))
+    print("异常检测基准（八规则 vs expect∪also_expect 全集）:")
+    print("  真值异常 %d 条（%d 号码）；告警 %d 条（%d findings）；"
+          "TP %d / FP %d / FN %d / 级别不符 %d"
+          % (detect["truth_anomalies"], detect["numbers_expected"], detect["alerts"],
+             detect["findings_total"], detect["tp"], detect["fp"], detect["fn"],
+             detect["level_mismatch"]))
+    print("  检出率 = %s（门槛 =100%%）" % ("%.2f%%" % (100 * detect["detection_rate"])))
+    print("  误报率 = %s（门槛 =0）" % ("%.2f%%" % (100 * detect["false_positive_rate"])))
+    print("  判定准确率 = %s（门槛 =100%%）" % ("%.2f%%" % (100 * detect["level_accuracy"])))
+    print("  finding 形态: %s" % "、".join(
+        "%s %s×%d" % (rule_id, level, count)
+        for rule_id, level, count in detect["findings_shape"]))
+
+
+def _cmd_benchmark(args) -> int:
+    """内置评测基准（M4）：两条基准 + 门槛断言 + 确定性报告。
+
+    退出码：全部门槛通过=0；门槛未达（回归信号）=1；数据目录/真值缺失、
+    缺依赖=2。零 API 可重复：纯规则通路、固定输入、无墙钟（R-TIME 只走
+    manifest 批次 expense_anchor 基准通路，缺映射批次列为门槛失败）；报告
+    不含时间戳/路径，同输入重跑逐字节一致。
+    """
+    import importlib.util
+
+    from .benchmarks.benchmark import gate_failures, run_benchmark, write_report
+
+    if not os.path.isdir(args.data):
+        print("[参数错误] 数据目录不存在: %s" % args.data)
+        return 2
+    for required in (os.path.join("ground_truth", "manifest.json"),
+                     os.path.join("ground_truth", "cards.json"),
+                     os.path.join("ground_truth", "expectations.json")):
+        if not os.path.isfile(os.path.join(args.data, required)):
+            print("[参数错误] %s 缺 %s（请先 generate --seed 42 --n 60 重建冻结数据）"
+                  % (args.data, required))
+            return 2
+    try:
+        with open(os.path.join(args.data, "ground_truth", "manifest.json"),
+                  encoding="utf-8") as fh:
+            manifest = json.load(fh)
+    except (OSError, ValueError) as exc:
+        print("[参数错误] manifest.json 不可读（%s）" % exc)
+        return 2
+    if (any(f["format"] == "pdf" for f in manifest.get("files", []))
+            and importlib.util.find_spec("pdfplumber") is None):
+        print("[缺少依赖] 冻结数据含 PDF 样本，基准需 pdfplumber："
+              "py -m pip install -e \".[parse]\"")
+        return 2
+
+    metrics = run_benchmark(args.data)
+    print("invoice-ledger benchmark（内置基准：零 API 可重复，R-TIME 走 manifest 基准通路）")
+    print("-" * 56)
+    _print_benchmark(metrics)
+    print("-" * 56)
+    if not args.no_report:
+        report_path = write_report(metrics, args.report)
+        print("报告: %s" % report_path)
+    failures = gate_failures(metrics)
+    if failures:
+        print("门槛断言: 未通过（退出码 1，回归信号）")
+        for item in failures:
+            print("  ✗ %s" % item)
+        return 1
+    print("门槛断言: 全部通过（解析 F1>=0.95；检出率=100%；误报=0；判定准确率=100%）")
     return 0
 
 

@@ -17,7 +17,8 @@
 | [HANDOFF-M1.md](HANDOFF-M1.md) | 交接快照：M0 收尾 → M1 数据先行续接（已过时留档） | ✅ 2026-10-05 |
 | [HANDOFF-M2.md](HANDOFF-M2.md) | 交接快照：M1 收尾 → M2 解析层续接（已过时留档） | ✅ 2026-10-06 |
 | [HANDOFF-M3.md](HANDOFF-M3.md) | 交接快照：M2 收尾 → M3 规则引擎续接（已过时留档） | ✅ 2026-10-06 |
-| [HANDOFF-M4.md](HANDOFF-M4.md) | 交接快照：M3 收尾 → M4 内置基准续接 | ✅ 2026-10-06 |
+| [HANDOFF-M4.md](HANDOFF-M4.md) | 交接快照：M3 收尾 → M4 内置基准续接（已过时留档） | ✅ 2026-10-06 |
+| [HANDOFF-M5.md](HANDOFF-M5.md) | 交接快照：M4 收尾 → M5 桌面交付续接（含既定口径清单速查区） | ✅ 2026-10-06 |
 
 ## 决策记录
 
@@ -31,6 +32,7 @@
 | 2026-10-06 | 法规查证收口 | 764号令/《发票管理办法》修订原文已直连核对入库；11号公告/56号令原文未直连成功 → 条文标"待核对"+登记渠道，不空转（M2+ 补核） |
 | 2026-10-06 | 解析层映射与实现定稿 | 字段映射权威 = TEMPLATE_REFERENCE（synthetic-v1）；PDF label-slot 实测固化三条口径：双栏版式 value 词以同线下一标签 x0 为右边界、`价税合计（大写）：` 与值同词合并取冒号后文本、明细四列按表头 x0 锚点最近列归并；对账器落 benchmarks/field_match.py（M4 基准同源复用） |
 | 2026-10-06 | M3 规则语义定稿 | 入库与判重分离（引擎输入=全部解析卡含被拒副本，R-DUP-01=批内重复+台账既有号码）；R-DUP-02 纯复制件判定=语义字段全等（evidence/confidence/field_flags/batch_id 不参与）；R-TIME-02 仅追溯方向（未来票 R-TIME-01 全覆盖防双报）；R-SEQ-01 跨前缀不产出 finding；R-TIME 双通路（基准=manifest 批次 anchor / 常规=导入时刻）；详见 plan/04 §3/§3.1 |
+| 2026-10-06 | M4 基准定稿 | 基准模块 benchmarks/benchmark.py（复用 field_match.py 同口径，逐文件与 compare 一致性内部断言）；指标语义：检出率=TP/真值异常、误报率=FP/全部告警、判定准确率=级别一致三元组/真值异常（对账键=(号码,rule_id)，级别并入三元组）；门槛=F1≥0.95、检出率 100%、误报 0、判定准确率 100% + 零容忍项（冻结数据解析失败/未知号码告警/批次锚点缺失）；`benchmark` 退出码 0/1（门槛未达）/2（参数或缺依赖）；报告 benchmarks/report.md 无墙钟（无时间戳/路径/环境，同输入逐字节一致，守门测试断言）；R-TIME 基准只走 manifest 批次 anchor（禁 default_anchor 墙钟兜底，缺映射列为门槛失败）；CI 增 benchmark 作业（win-3.8 + parse/data extras） |
 
 ## 里程碑
 
@@ -38,6 +40,6 @@
 - **M1 数据先行 ✅（2026-10-06）**：合成发票生成器（5 类型 × XML/PDF/OFD 三格式，seed 可复现位级一致）；9 类注入 + 基线全落地，真值 JSON（cards/expectations/manifest）语义定稿；`generate --out data --seed 42 --n 60` 冻结 60 份入仓；法规知识库（764号令已核对、11号公告/56号令待核对挂渠道）；数据台账四行登记齐；65 项测试全绿
 - **M2 解析层 ✅（2026-10-06）**：XML 解析器（FIELD_MAP localname 路径映射 + 命名空间降级 + 数值清洗丢值降置信）+ PDF 解析器（pdfplumber 词级 label-slot，双栏截断/大写合并词/明细 x 列聚类）→ InvoiceCard；`parse data/invoices --report` 一键全量（57 成功 + OFD 3 顺延登记，坏文件拒绝清单，缺依赖 exit 2）；冻结 60 份对账 XML 35/35、PDF 22/22 字段级 F1=1.0（门槛 0.95）；坏文件路径 7 项测试；pytest 95 项全绿（干净 venv 89 绿/6 skip = CI 平价）
 - **M3 规则引擎 ✅（2026-10-06）**：八规则全量（DUP-01/02/03、SEQ-01、ARITH-01/02、TIME-01/02，三级语义 + 门控互斥：DUP-03 排除 DUP-01/02 命中号、DUP-02 排除纯复制件）；入库与判重分离（被拒副本仍参与判定）；R-TIME 双通路（manifest 批次 anchor / 导入时刻）；`check --db` 一键解析→入库→检测→findings 落库 + 三级清单；demo 升级端到端；冻结 60 份对拍 expect∪also_expect 全集：检出率 100%、误报 0、级别全对（13 findings）；pytest 138 全绿（干净 venv 129 绿/9 skip CI 平价）；M3 语义定稿回写 plan/04 §3/§3.1
-- M4 内置基准：解析 F1 ≥0.95、检出率 100%、误报 0
+- **M4 内置基准 ✅（2026-10-06）**：benchmarks/benchmark.py 双基准（字段级解析 P/R/F1 复用 field_match.py + 异常检测检出率/误报率/判定准确率按 expect∪also_expect 全集对拍）+ 门槛断言 + 确定性报告；`benchmark` 一条命令出指标表（退出码 0/1/2 契约）；冻结 60 份实测宏平均 F1=1.0000、检出率 100%（18/18）、误报 0、判定准确率 100%（13 findings 形态同 M3 锚点）；报告落 benchmarks/report.md（同输入重跑逐字节一致，OFD 3 份顺延显式登记）；README 回填指标表；CI 增 benchmark 作业；pytest 144 绿（干净 venv 131 绿/13 skip）；既定口径清单收口入 HANDOFF-M5
 - M5 桌面交付：PySide6 界面（导入/台账/看板/异常清单）+ Excel 导出 + PyInstaller 打包
 - M6 脱敏发布 GitHub + Release（exe）+ 收尾固化
