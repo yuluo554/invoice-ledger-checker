@@ -307,7 +307,7 @@ M5 产出的发行 exe 实测：`doctor` 报 pdfplumber 未安装；`check` **�
 | 全新 venv CLI 冒烟：`demo` / `benchmark --no-report` | ✅ exit 0；基准门槛全过（F1≥0.95 / 检出 100% / 误报 0 / 判定 100%） |
 | `gh run list` 对账：push 数 = run 数，全作业绿 | ✅ **CI 五运行全绿**：`test`×3（win-3.8 / win-3.12 / ubuntu-3.12）+ `desktop`（win-3.8，1m45s）+ `benchmark`（win-3.8，1m15s） |
 | `gh api` 回读仓库元信息与 topics | ✅ public / MIT / `default_branch=main`；topics **10 个回读生效**（invoice·e-invoice·expense-audit·duplicate-detection·pyside6·sqlite·python·desktop-app·rule-engine·chinese）；README 渲染含状态行、RELEASE-M6 链接与三徽章 |
-| Release 资产可下载且 sha256 与 §5 表一致 | ✅（下载核对记录见 §9 末行） |
+| Release 资产可下载且 sha256 与 §5 表一致 | ✅（下载核对记录见 §9「Release 资产复核」行） |
 
 **首跑异常的真相（首轮判断被自己推翻，如实登记）**：首轮把 0 秒失败归因为"workflow 随首个 push
 引入的注册时序现象"——**这个判断是错的**。第二次 push 仍 0 秒失败后改做隔离实验，真因见 §7.5。
