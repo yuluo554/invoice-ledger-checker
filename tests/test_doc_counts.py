@@ -7,13 +7,19 @@
 判定口径：
 - 用 subprocess 跑 `pytest --co -q -o addopts=""` 取**当前环境**的收集数
   （`-o addopts=""` 是必须的：本仓 addopts="-q"，再传 -q 会变 -qq 吞掉汇总行）；
-- 按当前环境是否装齐重依赖判定走 README 的哪一条口径（.[dev] 还是 .[all]）；
-- 断言该条目的「收集数」与实测相等，并静态校验该行的 passed/skipped 算术自洽
+- **收集数只由「GUI 模块能否导入」决定**（tests/test_app.py 是全仓唯一的模块级
+  importorskip，PySide6 缺失时整模块不进收集列表）；据此选 README 的哪一条口径：
+  GUI 可导入 -> .[all] 口径（重依赖齐备，GUI 用例在收集列表内）；
+  GUI 不可导入 -> .[dev] 口径。
+  *注意*：不能拿"有任一重依赖缺失"当判据——CI 的 desktop 作业装
+  `[dev,parse,data,export,desktop]`（缺 report/docx），但 GUI 在收集列表里，
+  收集数与 .[all] 相同；用"缺任一"会误判成 .[dev] 口径（实测踩过）。
+- 断言该条目的「收集数」与实测相等，并静态校验 README 两行的算术自洽
   （.[all]：passed == 收集数且 skipped == 0；.[dev]：passed + skipped == 收集数 + 1，
   其中 +1 是 test_app.py 模块级 importorskip 产生的那条模块级 skip——它不进收集
   列表，却是 skip 计数里的一条）。
 
-README 措辞一变（比如把「183 收集」改成别的写法）本测试就解析失败并报清晰错误，
+README 措辞一变（比如把「201 收集」改成别的写法）本测试就解析失败并报清晰错误，
 提示同步改测试——这是有意的耦合：数字和命令必须待在一起。
 """
 
@@ -32,6 +38,9 @@ _COLLECTED_RE = re.compile(r"\*{0,2}\s*(\d+)\s*收集")
 _OUTCOME_RE = re.compile(r"(\d+) passed \+ (\d+) skipped")
 
 _HEAVY_MODULES = ("PySide6", "pdfplumber", "openpyxl", "reportlab", "docx")
+
+# 决定「GUI 用例是否进收集列表」的唯一开关（tests/test_app.py 模块级 importorskip）
+_GUI_MODULE = "PySide6"
 
 
 def _readme_text() -> str:
@@ -57,6 +66,13 @@ def _missing_heavy_modules() -> list:
 
     return [name for name in _HEAVY_MODULES
             if importlib.util.find_spec(name) is None]
+
+
+def _gui_module_importable() -> bool:
+    """GUI 模块（test_app.py）能否进收集列表 = PySide6 是否可导入。"""
+    import importlib.util
+
+    return importlib.util.find_spec(_GUI_MODULE) is not None
 
 
 def _profile_lines():
@@ -104,16 +120,16 @@ def test_dev_profile_arithmetic_counts_module_level_skip():
 
 
 def test_readme_collected_count_matches_current_environment():
-    """README 的收集数必须与当前环境实测一致（按装了哪些 extras 选对应口径）。"""
+    """README 的收集数必须与当前环境实测一致（按 GUI 模块是否进收集选口径）。"""
     measured = _collect_count()
-    missing = _missing_heavy_modules()
     candidates = [entry[0] for entry in _profile_lines()]
-    if missing:
-        expected = min(candidates)  # 最小口径 = .[dev]
-        profile = ".[dev]（缺 %s）" % "、".join(missing)
+    if _gui_module_importable():
+        expected = max(candidates)  # GUI 用例在收集列表里 -> .[all] 口径
+        profile = ".[all]（PySide6 可导入）"
     else:
-        expected = max(candidates)  # 全 extras 口径 = .[all]
-        profile = ".[all]（重依赖齐备）"
+        expected = min(candidates)  # GUI 整模块不进收集 -> .[dev] 口径
+        missing = _missing_heavy_modules()
+        profile = ".[dev]（缺 %s）" % "、".join(missing)
     assert measured == expected, (
         "README 收集数与实测不一致：README（%s）= %d，实测 = %d。"
         "改测试或改 README 后请同步 tests/test_doc_counts.py 的口径说明"
