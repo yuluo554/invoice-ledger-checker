@@ -1,8 +1,11 @@
-# HANDOFF-FINAL（M6 终版收官快照）
+# HANDOFF-FINAL（M6 终版收官快照；M7 修订注记见 §3 第 10/11 条）
 
 > 用法：新对话启动命令 `/goal 读取 plan/HANDOFF-FINAL.md 继续完成任务`（相对路径；启动命令由
 > 用户侧拼绝对路径——**入库文档一律相对路径**，脱敏纪律）。
 > 落盘 2026-10-06，**M0-M6 全部完成、项目已公开发布**。方法论：ai-tool-project-sprint。
+> **2026-10-21 注记**：M7 二次迭代已完成并发布 v0.2.0（法规依据进产品 + floor 3.12 +
+> 测试数口径守门），逐项证据见 [RELEASE-M7.md](RELEASE-M7.md)。本文件保留 M6 时点的快照形态，
+> 涉及测试计数与 CI 矩阵的条目已加括号订正——**当次权威以 README 与 `tests/test_doc_counts.py` 为准**。
 > 本文件是系列第六题的终版收官：既定口径全量收口在 §3，后续可捡起项在 §6。
 > 历史快照按序见 HANDOFF-M1…M6（均已标注过时留档）；发布留档见 [RELEASE-M6.md](RELEASE-M6.md)。
 
@@ -164,10 +167,11 @@
 
 ```bash
 # 测试（全程携带 PYTHONDONTWRITEBYTECODE=1）
-PYTHONDONTWRITEBYTECODE=1 py -X utf8 -m pytest -rs          # dev 全 extras：179 项
+PYTHONDONTWRITEBYTECODE=1 py -X utf8 -m pytest -rs          # dev 全 extras：179 项（M6 时点）
 py -X utf8 -m pytest --co -q                                # 只数收集项（防 summary 行被吞）
 # 干净 venv（仅 dev）：170 = 151 绿 + 19 skip；[all]：179 = 178 + 1
 # （2026-10-21 复核订正：实测仅 dev 169 = 152 绿 + 18 skip；M7 后 dev 191 收集 / 174+18、all 201 全绿）
+# M7 起口径由 tests/test_doc_counts.py 与 README 保活：本区只作历史快照
 
 # CLI（未装则 PYTHONPATH=src py -X utf8 -m invoice_ledger_checker ...）
 py -X utf8 -m invoice_ledger_checker doctor|demo|generate|parse|check|export|app|benchmark
