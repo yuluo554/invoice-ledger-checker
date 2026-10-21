@@ -41,7 +41,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from ..cli import _register_batches, _run_check_pipeline, _scan_and_parse
+from ..cli import _register_batches, _run_check_pipeline, _scan_and_parse, format_basis
 from ..export.excel import export_ledger
 from .dialogs import ImportSummaryDialog, InvoiceDetailDialog, InvoiceEditDialog
 from .models import LEVEL_LABELS, FindingsTableModel, InvoiceTableModel
@@ -387,11 +387,14 @@ class FindingsTab(QWidget):
         finding = self.model.finding_at(index.row())
         if finding is None:
             return
+        basis_text = format_basis(finding.get("basis"))
         text = "说明: %s\n关联发票: %s\n\n证据:\n%s" % (
             finding["message"],
             "、".join(finding["invoice_numbers"]) or "（无）",
             json.dumps(finding.get("evidence", {}), ensure_ascii=False, indent=2),
         )
+        if basis_text:
+            text += "\n\n依据: %s" % basis_text
         self.evidence.setPlainText(text)
 
     def _open_detail(self, index) -> None:

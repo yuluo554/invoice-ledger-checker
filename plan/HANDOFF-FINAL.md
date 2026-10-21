@@ -38,6 +38,9 @@
 - **计数对账**：dev **179 项全绿**；干净 venv（仅 dev）**170 = 151 绿 + 19 skip**；
   干净 venv（`[all]`）**179 = 178 + 1**（与 dev 同构，CI `desktop` 作业等价）。
   **差 9 = test_app.py 模块级 importorskip 收成 1 条目**；19 skip 逐项指认（见 §3 第 12 条）。
+  （2026-10-21 复核订正：M7 实测仅 dev = **169 = 152 绿 + 18 skip**，收集 169；全 extras = 179 全绿。
+  原记 170/151/19 三个数各差 1，已按实测订正；M7 新增 22 项测试后现为 dev 191 收集 / 174 passed + 18 skip、
+  all 201 命中全绿——同一口径，数字随测试增长，README 与 tests/test_doc_counts.py 为当次权威。）
 - **建仓、push 与 CI 首跑**（GitHub `yuluo554/invoice-ledger-checker`，public + MIT）：不带 `--push` 建仓
   → SSH 通路一次 push → **CI 五运行全绿**（`test` 三矩阵 + `desktop` + `benchmark`，其中 desktop 与
   benchmark 作业在发布前**从未执行过**）；topics 10 个回读生效；README 渲染核对通过。
@@ -92,8 +95,12 @@
 10. **测试计数口径**：dev 全 extras = **179 项**；干净 venv（仅 `[dev]`）= **170 = 151 绿 + 19 skip**；
     干净 venv（`[all]`）= **179 = 178 + 1**（dist 缺席）。差 9 = `test_app.py` 模块级 `importorskip`。
     改 extras 装机清单或新增模块级 importorskip 会改变此对账 → 须回写本速查区与 RELEASE-M6。
-11. **CI 三作业（五运行）**：`test`（win3.8/win3.12/ubuntu3.12，仅 dev）+ `desktop`（win-3.8，
-    `[dev,parse,data,export,desktop]`，GUI/导出真跑）+ `benchmark`（win-3.8，`[dev,parse,data]`，门槛）。
+    （2026-10-21 复核订正：实测仅 dev = **169 = 152 绿 + 18 skip**（收集 169），原 170/151/19 各差 1；
+    M7 追加 22 项测试 → dev **191 收集 / 174 passed + 18 skip**、all **201 收集全绿**。
+    自本版起口径由 `tests/test_doc_counts.py` 与 README 保活，本行只作历史记录。）
+11. **CI 三作业（五运行 -> M7 起四运行）**：`test`（M7 起 win3.12/ubuntu3.12 两矩阵，仅 dev）
+    + `desktop`（win-3.12，`[dev,parse,data,export,desktop]`，GUI/导出真跑）
+    + `benchmark`（win-3.12，`[dev,parse,data]`，门槛）。actions 全部 v7（Node20 弃用注解归零）。
 12. **19 skip 明细（干净 venv 仅 dev）**：test_app 1（模块级）+ pdfplumber 11（parsing 3 /
     baseline_detection 2 / benchmark 4 / cli 2）+ test_cli openpyxl 1 + test_export openpyxl 2 +
     test_extras PySide6 1 + test_generator reportlab 2 + test_packaging dist 1。
@@ -160,6 +167,7 @@
 PYTHONDONTWRITEBYTECODE=1 py -X utf8 -m pytest -rs          # dev 全 extras：179 项
 py -X utf8 -m pytest --co -q                                # 只数收集项（防 summary 行被吞）
 # 干净 venv（仅 dev）：170 = 151 绿 + 19 skip；[all]：179 = 178 + 1
+# （2026-10-21 复核订正：实测仅 dev 169 = 152 绿 + 18 skip；M7 后 dev 191 收集 / 174+18、all 201 全绿）
 
 # CLI（未装则 PYTHONPATH=src py -X utf8 -m invoice_ledger_checker ...）
 py -X utf8 -m invoice_ledger_checker doctor|demo|generate|parse|check|export|app|benchmark

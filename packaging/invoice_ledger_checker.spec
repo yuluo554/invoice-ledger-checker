@@ -1,8 +1,9 @@
 # -*- mode: python ; coding: utf-8 -*-
 """invoice-ledger-checker 主打包 spec（PyInstaller 6.x，onedir 双 exe）。
 
-- 打包机 = win-3.8 CI 同环境：Python 3.8.8 + PyInstaller >=6,<7（实测
-  6.22.3）+ PySide6 6.6.3.1（cp38-abi3，plan/03 §3 已复核）；
+- 打包机 = **Python 3.12 干净 venv + PyInstaller >=6,<7（实测 6.22.3）+
+  PySide6 6.11/6.12**（M7 floor 统一为 >=3.12 后源码支持面与构建解释器同档；
+  M6 实录：旧 3.8.8 解释器跑 PyInstaller 有构建工具级不稳定，故改走 3.12）；
 - onedir 双 exe：invoice-ledger（GUI，console=False，双击即用）+
   invoice-ledger-cli（console=True，无 Python 机器的脚本化验证通路：
   doctor/demo/generate/check/export/benchmark 全可跑——前提是 hiddenimports

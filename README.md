@@ -6,9 +6,14 @@
 [![Release](https://img.shields.io/github/v/release/yuluo554/invoice-ledger-checker)](https://github.com/yuluo554/invoice-ledger-checker/releases/latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-> ✅ **状态：v0.1.0 已发布（M0-M6 全部完成）**。Windows 免安装产物见
+> ✅ **状态：v0.2.0 已发布（M0-M7 完成）**。Windows 免安装产物见
 > [Releases](https://github.com/yuluo554/invoice-ledger-checker/releases/latest)；路线图见下，
-> 发布留档（脱敏四步 + 干净环境验证逐项证据）见 [plan/RELEASE-M6.md](plan/RELEASE-M6.md)。
+> 发布留档（脱敏四步 + 干净环境验证逐项证据）见 [plan/RELEASE-M6.md](plan/RELEASE-M6.md)
+> 与 [plan/RELEASE-M7.md](plan/RELEASE-M7.md)。
+>
+> **v0.2.0 变更**：法规依据进产品输出（8 条规则各挂 basis，CLI/Excel/GUI 三处显示「依据」）；
+> Python floor 3.8 → **3.12**（extras 删两组环境标记、CI 矩阵 3 腿 → 2 腿、actions 升 v7）；
+> README 测试数两条口径化并加守门（`tests/test_doc_counts.py` / `test_version_single_source.py`）。
 
 ## 它解决什么问题
 
@@ -25,10 +30,10 @@
 | 特性 | 状态 |
 |---|---|
 | 合成发票生成器：固定 seed 可复现（位级一致），程序化植入 9 类已知异常 + 真值 JSON，60 份样本入仓（XML/PDF/OFD） | ✅ M1 |
-| 法规知识库：764号令/《发票管理办法》/11号公告/56号令**原文逐字核对入库**（条例挂条号+渠道+核对日期） | ✅ M1（11号公告/56号令 M5 补核完成） |
+| 法规知识库：764号令/《发票管理办法》/11号公告/56号令**原文逐字核对入库**（条例挂条号+渠道+核对日期），8 条规则各挂 basis 并在 CLI/Excel/GUI 三处输出「依据：法规 条号」 | ✅ M1（补核 M5 完成；依据进产品 M7） |
 | 数电票 XML 数据电文解析器（stdlib ElementTree，规则优先） | ✅ M2 |
 | 版式 PDF 文本层解析（pdfplumber，label-slot 规则） | ✅ M2 |
-| OFD 解析（加分项） | P2 |
+| OFD 解析（加分项） | ⬜ P2（未交付，导入时登记顺延） |
 | SQLite 本地台账：解析->入库->检测流水线（多维筛选 GUI 见 M5） | ✅ M3 |
 | 异常检测规则引擎：重复报销×3 / 连号拆分 / 时间逻辑×2 / 票面算术×2，三级判定（确认/疑似/待人工确认）挂证据 | ✅ M3 |
 | 内置评测基准：字段解析 F1、检出率/误报率，零 API 可复现 | ✅ M4 |
@@ -45,12 +50,18 @@
 git clone https://github.com/yuluo554/invoice-ledger-checker.git
 cd invoice-ledger-checker
 
-# Windows 自带 Python 3.8 的老 pip 无法可编辑安装，先升级（Linux/Mac 可跳过升级步）
+# 需要 Python >=3.12（打包产物即由 3.12 构建）
 py -m pip install -U pip
 py -m pip install -e ".[dev]"
 
-# 冒烟：全量 179 项测试（核心逻辑零第三方依赖；GUI/PDF/导出相关测试缺依赖时自动 skip 并计数）
+# 冒烟（最小依赖口径，只需 pytest）：191 收集 / 174 passed + 18 skipped
+# （GUI 整模块不进收集列表，PDF/导出用例按缺依赖声明式跳过）
 py -m pytest
+
+# 全 extras（GUI/PDF/导出/报告全在）：201 收集 / 201 passed + 0 skipped
+# （dist/ 缺席时 test_packaging 动态层记 1 条 skip，passed 相应减 1）
+# py -m pip install -e ".[all]"
+# py -m pytest
 
 # 发布脱敏门（可复跑）：跟踪内容/历史/提交信息/元数据/二进制样例五模式 + 自测对照
 py -X utf8 tools/sensitive_scan.py all        # 退出码 0=干净；selftest 子命令跑阳性+阴性对照
@@ -173,6 +184,7 @@ flowchart LR
 | M4 | 内置基准达标（F1≥0.95 / 检出 100% / 误报 0） | ✅ 2026-10-06 |
 | M5 | PySide6 桌面交付 + Excel 导出 + PyInstaller exe | ✅ 2026-10-06 |
 | M6 | 脱敏发布 GitHub + Release（exe + sha256） | ✅ 2026-10-06 |
+| M7 | 二次迭代：法规依据进产品输出 + floor 3.12 + 测试数口径守门 + v0.2.0 重打包 | ✅ 2026-10-21 |
 
 ## 边界与免责声明
 
@@ -185,10 +197,23 @@ flowchart LR
 
 - **OFD 格式为加分项顺延（P2）**：OFD 文件导入时显式登记顺延清单、不参与解析对账（冻结数据中 OFD 3 份无对应期望，无结构性缺口）。XML / 版式 PDF 为完整支持路径。
 - **版式 PDF 依赖文本层**：解析面向程序生成的可抽取版式文件；扫描件（图片型 PDF）不在支持范围（不做 OCR）。
-- **GUI 依赖 PySide6 6.x + QtCharts（PySide6-Addons）**：Python 3.8 下 extras 锁 `>=6.5,<6.7`（6.7+ 不提供 cp38 wheel，实测 6.6.3.1 为可用档）；Python ≥3.9 放开。
-- **生成器依赖 reportlab 双向约束（实测踩坑，如实记录）**：Python <3.9 锁 `reportlab<4`（4.x 的 `hashlib.md5(usedforsecurity=)` 是 3.9 才有的参数，3.8 上 `generate` 直接 TypeError）；Python ≥3.9 放开（3.6.13 在 3.12 装不起来）。入仓冻结数据的 PDF 字节由 3.6.13 产出，故"同 seed 逐字节一致"的 PDF 字节比对只在 reportlab 3.x 环境断言（XML/OFD 与真值任何环境全量断言）。
-- **PyInstaller 打包解释器通道（实测偏差，如实记录）**：本机唯一解释器 3.8.8 跑 PyInstaller 构建出现构建工具级不稳定（modulegraph 字节码扫描层多种报错 + 段错误，清 pyc、换 venv 均不解，与项目代码无关）；改用 **Python 3.12 干净 venv 构建**一次成功（PyInstaller 6.22.3 + PySide6 6.11）。这与项目**源码运行时底线 3.8 无关**——源码 3.8 兼容性由 CI 的 win-3.8 矩阵继续守（构建产物与构建解释器绑定，运行时无需 Python）。
-- **CI 作业分工**：`test`（win3.8/win3.12/ubuntu3.12，仅 dev extras，GUI/PDF 用例声明式跳过）+ `desktop`（win-3.8，装 desktop+export extras 使 GUI/导出测试真正执行）+ `benchmark`（win-3.8，基准门槛断言）。改装机清单会改变 skip 计数口径。
+- **GUI 依赖 PySide6 6.x + QtCharts（PySide6-Addons）**：`requires-python >=3.12`，extras 声明
+  `PySide6>=6.5` / `PySide6-Addons>=6.5`（无上界，实测装到 6.12.0）。
+  *历史记录（已不需要，保留踩坑事实）*：支持 3.8 时 extras 曾锁 `>=6.5,<6.7`——6.7+ 不提供 cp38
+  wheel，实测 6.6.3.1 为当时可用档。
+- **生成器依赖 reportlab**：`data` extra 为单一 `reportlab>=3.6`（无上界、无环境标记）。
+  *历史记录（已不需要，保留踩坑事实）*：支持 3.8 时曾做双向约束——Python <3.9 锁 `reportlab<4`
+  （4.x 的 `hashlib.md5(usedforsecurity=)` 是 3.9 才有的参数，3.8 上 `generate` 直接 TypeError）；
+  Python ≥3.9 放开（3.6.13 在 3.12 装不起来）。**入仓冻结数据的 PDF 字节由 reportlab 3.6.13 产出**，
+  故"同 seed 逐字节一致"的 PDF 字节比对只在 reportlab 3.x 环境断言（XML/OFD 与真值任何环境全量断言）；
+  当前 CI 装到 reportlab 5.x，因此 **PDF 位级门在 CI 上不生效**（如实披露）。
+- **PyInstaller 打包解释器通道（实测偏差，如实记录）**：本机旧解释器（3.8.8）跑 PyInstaller 构建出现
+  构建工具级不稳定（modulegraph 字节码扫描层多种报错 + 段错误，清 pyc、换 venv 均不解，与项目代码无关）；
+  改用 **Python 3.12 干净 venv 构建**一次成功（PyInstaller 6.22.3 + PySide6 6.11）。现 floor 已统一为
+  `>=3.12`，源码支持面与构建解释器一致（构建产物与构建解释器绑定，运行时无需 Python）。
+- **CI 作业分工**：`test`（win3.12 / ubuntu3.12 两矩阵，仅 dev extras，GUI/PDF 用例声明式跳过）
+  + `desktop`（win-3.12，装 desktop+export extras 使 GUI/导出测试真正执行）
+  + `benchmark`（win-3.12，基准门槛断言）。改装机清单会改变 skip 计数口径。
 
 ## License
 

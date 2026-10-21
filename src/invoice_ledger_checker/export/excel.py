@@ -47,7 +47,7 @@ INVOICE_HEADERS = [
 ]
 FINDING_HEADERS = [
     "finding_id", "规则ID", "规则名称", "级别", "关联发票号码", "说明",
-    "批次", "状态", "检出时间",
+    "批次", "状态", "检出时间", "法规依据",
 ]
 
 
@@ -148,6 +148,8 @@ def _fill_invoice_sheet(sheet, cards) -> None:
 
 
 def _fill_finding_sheet(sheet, findings) -> None:
+    from ..cli import format_basis
+
     sheet.append(FINDING_HEADERS)
     for finding in findings:
         sheet.append([
@@ -160,9 +162,10 @@ def _fill_finding_sheet(sheet, findings) -> None:
             finding.get("batch_id") or "",
             finding.get("status", "open"),
             finding.get("created_at", ""),
+            format_basis(finding.get("basis")),
         ])
     _style_header(sheet)
-    _fit_columns(sheet, {1: 44, 3: 14, 4: 12, 5: 46, 6: 40, 9: 20})
+    _fit_columns(sheet, {1: 44, 3: 14, 4: 12, 5: 46, 6: 40, 9: 20, 10: 34})
     _add_level_conditional_formatting(sheet, max(sheet.max_row, 2))
 
 

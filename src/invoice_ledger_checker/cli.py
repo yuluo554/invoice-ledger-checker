@@ -321,6 +321,21 @@ def _run_check_pipeline(result: Dict[str, Any], ledger: Ledger,
     return accepted, pk_rejected, findings
 
 
+def format_basis(basis) -> str:
+    """依据显示串：<法规简称> <条号>[（工程口径）]（M7；CLI/Excel/GUI 三处同源）。
+
+    空依据返回空串（调用方据此决定是否输出该行）。
+    """
+    if not basis:
+        return ""
+    short = basis.get("regulation_short") or basis.get("regulation") or ""
+    article = basis.get("article") or ""
+    text = "%s %s" % (short, article) if short and article else (short or article)
+    if basis.get("note"):
+        text += "（工程口径，法规无直接条款）"
+    return text
+
+
 def _print_findings(findings) -> None:
     by_level: Dict[str, List[Any]] = {level: [] for level in _LEVEL_ORDER}
     for finding in findings:
@@ -337,6 +352,9 @@ def _print_findings(findings) -> None:
             print("  [%s] %s %s | %s"
                   % (level, finding.rule_id,
                      ",".join(finding.invoice_numbers), finding.message))
+            basis_text = format_basis(getattr(finding, "basis", None))
+            if basis_text:
+                print("      依据：%s" % basis_text)
 
 
 def _register_batches(result: Dict[str, Any], ledger: Ledger,

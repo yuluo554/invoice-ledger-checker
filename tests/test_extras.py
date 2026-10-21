@@ -6,7 +6,7 @@
 2. 动态层——模拟缺依赖运行期路径：export 组件与 cli app 命令必须抛/退
    出"带安装提示"的失败（exit 2），不裸崩。
 
-py3.8 无 tomllib：extras 块用正则解析（CI/干净环境同路径）。
+pyproject extras 块用正则解析（不依赖 tomllib，保持与 CI/干净环境同路径）。
 """
 
 import importlib
@@ -73,36 +73,50 @@ def test_all_extra_composition():
     assert "pack" not in referenced
 
 
-def test_desktop_locked_below_67_on_py38():
-    """py<3.9 锁 <6.7（6.7+ 无 cp38 wheel，M5 实测回写 plan/03）。"""
-    desktop_section = re.search(r"desktop\s*=\s*\[(.*?)\]", PYPROJECT,
-                                re.S).group(1)
-    py38_lines = [line for line in desktop_section.splitlines()
-                  if "python_version < '3.9'" in line]
-    assert py38_lines, "desktop extras 缺 py<3.9 环境标记行"
-    assert all("<6.7" in line for line in py38_lines)
+def test_desktop_has_no_python_version_markers():
+    """M7：floor 抬到 >=3.12 后 desktop extras 不再需要 py<3.9 分支。
+
+    历史事实（保留可追溯）：py3.8 上 6.7+ 无 cp38 wheel，曾锁 `PySide6>=6.5,<6.7`；
+    3.12 上可直接解析最新线，故现在只留 `>=6.5` 两条、零环境标记。
+    """
+    desktop_section = re.search(r"^desktop\s*=\s*\[(.*?)\]", PYPROJECT,
+                                re.S | re.M).group(1)
+    lines = [line for line in desktop_section.splitlines() if line.strip()]
+    assert len(lines) == 2, "desktop extras 应收敛为 2 条（PySide6 + PySide6-Addons）"
+    assert not any("python_version" in line for line in lines), \
+        "floor >=3.12 后 desktop extras 不应再有 python_version 环境标记"
+    assert not any("<6.7" in line for line in lines), \
+        "floor >=3.12 后不应再锁 PySide6<6.7"
+    assert all(">=6.5" in line for line in lines)
 
 
-def test_reportlab_locked_below_4_on_py38():
-    """py<3.9 的 data extras 锁 reportlab <4，py>=3.9 放开。
+def test_reportlab_single_unpinned_upper_bound():
+    """M7：floor >=3.12 后 data extras 收敛为单一 `reportlab>=3.6`（无上界）。
 
-    单一上界不可行（M6 干净环境实测两个方向都踩过）：
+    历史事实（保留可追溯，M6 干净环境两个方向都踩过）：
     ① 4.x 调用 hashlib.md5(usedforsecurity=False)，该参数 py3.9 才有——3.8 上
-       generate 直接 TypeError 崩（README 的 generate 步骤与 CI 的 win-3.8 作业同挂）；
-    ② 3.6.13 在 3.12 装不起来（无 wheel、sdist 构建失败）——统一锁 <4 会打挂 3.12。
+       generate 直接 TypeError 崩；
+    ② 3.6.13 在 3.12 装不起来——统一锁 <4 会打挂 3.12。
+    3.8 支持面移除后这两个约束都不再需要。
     冻结数据集的 PDF 字节由 3.6.13 产出，故 tests/test_generator.py 只在
     reportlab 3.x 环境做 PDF 字节比对（XML/OFD/真值仍全量守门）。
     """
     data_section = re.search(r"^data\s*=\s*\[(.*?)\]", PYPROJECT,
                              re.S | re.M).group(1)
-    py38_lines = [line for line in data_section.splitlines()
-                  if "python_version < '3.9'" in line]
-    assert py38_lines, "data extras 缺 py<3.9 环境标记行"
-    assert all("<4" in line for line in py38_lines), \
-        "py<3.9 的 reportlab 未锁 <4（3.8 运行时崩溃）"
-    py39_lines = [line for line in data_section.splitlines()
-                  if "python_version >= '3.9'" in line]
-    assert py39_lines, "data extras 缺 py>=3.9 环境标记行"
+    lines = [line.strip() for line in data_section.splitlines() if line.strip()]
+    assert len(lines) == 1, "data extras 应收敛为 1 条（单一 reportlab 声明）"
+    assert "python_version" not in lines[0], "不应再有 python_version 环境标记"
+    assert "<4" not in lines[0], "不应再锁 reportlab<4（3.12 上会装到三年前分支）"
+    assert ">=3.6" in lines[0]
+
+
+def test_requires_python_floor_is_312():
+    """floor 与 classifiers 一致（四处同一集合：pyproject/CI/classifiers/README）。"""
+    requires = re.search(r'^requires-python\s*=\s*"([^"]+)"', PYPROJECT, re.M).group(1)
+    assert requires == ">=3.12"
+    assert '"Programming Language :: Python :: 3.8"' not in PYPROJECT, \
+        "floor >=3.12 后不应再声明 3.8 classifier"
+    assert '"Programming Language :: Python :: 3.12"' in PYPROJECT
 
 
 def test_missing_openpyxl_raises_install_hint(tmp_path, monkeypatch):

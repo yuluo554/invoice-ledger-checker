@@ -38,12 +38,39 @@ def test_workflow_files_are_valid_yaml_with_jobs():
 
 
 def test_ci_workflow_declares_expected_jobs():
-    """CI 分工固化：test（三矩阵）/ desktop / benchmark。
+    """CI 分工固化：test（两矩阵）/ desktop / benchmark。
 
+    M7：floor 由 3.8 抬到 3.12，test 矩阵随之 3 腿 -> 2 腿（win-3.12 / ubuntu-3.12），
+    desktop 与 benchmark 作业同抬到 3.12。
     改 CI 作业分工或矩阵规模须同步本测试 + README 限制节（既定口径：改装机清单
     会改变 skip 计数口径）。
     """
     data = yaml.safe_load((WORKFLOWS / "ci.yml").read_text(encoding="utf-8"))
     assert set(data["jobs"]) == {"test", "desktop", "benchmark"}
     matrix = data["jobs"]["test"]["strategy"]["matrix"]["include"]
-    assert len(matrix) == 3, "test 作业应为三矩阵（win-3.8 / win-3.12 / ubuntu-3.12）"
+    assert len(matrix) == 2, "test 作业应为两矩阵（win-3.12 / ubuntu-3.12）"
+    assert {entry["python"] for entry in matrix} == {"3.12"}, \
+        "test 矩阵应全部为 Python 3.12（floor >=3.12）"
+
+
+def test_ci_actions_use_current_majors():
+    """actions 版本固化（M7 D5）：checkout/setup-python 均 >=v7。
+
+    v4/v5 会在每个 job 各留一条 "Node.js 20 is deprecated" 注解（实测 run
+    37429409826：5 job 各 1 条），把真信号埋在噪声里。
+    """
+    data = yaml.safe_load((WORKFLOWS / "ci.yml").read_text(encoding="utf-8"))
+    versions = {}
+    for job in data["jobs"].values():
+        for step in job["steps"]:
+            uses = step.get("uses") or ""
+            if "/" in uses and "@" in uses:
+                action, version = uses.split("@", 1)
+                major = int(version.lstrip("v").split(".")[0])
+                versions.setdefault(action, set()).add(major)
+    assert versions, "CI 应有至少一个 uses 步骤"
+    for action in ("actions/checkout", "actions/setup-python"):
+        assert action in versions, "CI 缺 %s 步骤" % action
+        assert min(versions[action]) >= 7, \
+            "%s 版本过低（%s），会产生 Node20 弃用注解" % (action, sorted(versions[action]))
+

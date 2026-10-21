@@ -8,12 +8,17 @@
   },
   "verification": {
     "status": "已核对",
+    "status_note": "",
     "checked_at": "2026-10-06",
     "channels": [
       "https://shanghai.chinatax.gov.cn/zcfw/zcfgk/zhsszc/202308/t468416.html（上海税务局转载国务院令原文，直连核验）",
       "https://policy.mofcom.gov.cn/claw/clawContent.shtml?id=97715（商务部政策库 2023 修订全文，直连核验）"
     ],
-    "method": "可直连官方页面原文逐字核对（plan/05 §1.4：摘要不采信）"
+    "method": "可直连官方页面原文逐字核对（plan/05 §1.4：摘要不采信）",
+    "corrections": [],
+    "reviewed_at": "2026-10-06",
+    "next_review": "2027-10-06",
+    "review_interval": "annual"
   },
   "entries": [
     {

@@ -26,7 +26,7 @@ ALL_MODULES = [
 
 
 def test_version():
-    assert invoice_ledger_checker.__version__ == "0.1.0"
+    assert invoice_ledger_checker.__version__ == "0.2.0"
 
 
 def test_all_modules_importable():

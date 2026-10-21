@@ -38,9 +38,12 @@ def test_no_command_exits_two_with_help():
 
 
 def test_version_flag():
+    """--version 输出须含包版本（与 test_version_single_source 的单一来源一致）。"""
+    import invoice_ledger_checker
+
     result = run_cli("--version")
     assert result.returncode == 0
-    assert "0.1.0" in result.stdout
+    assert "invoice-ledger " + invoice_ledger_checker.__version__ in result.stdout
 
 
 def test_demo_end_to_end_all_rules():

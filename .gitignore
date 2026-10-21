@@ -21,6 +21,10 @@ docs/*.docx
 build-venv/
 build-venv312/
 
+# 二次迭代交接物（诊断报告/迭代路线/提示词/执行记录）——不入仓：
+# 它们含本机绝对路径与交接过程记录，且脱敏扫描器的 tracked 模式会扫到
+update/
+
 # 环境与密钥
 .env
 *.key

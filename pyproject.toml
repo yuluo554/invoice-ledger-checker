@@ -1,23 +1,22 @@
 [build-system]
-requires = ["setuptools>=61"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "invoice-ledger-checker"
-version = "0.1.0"
+version = "0.2.0"
 description = "电子发票智能台账与重复报销检测桌面应用：数电票 XML/版式 PDF 解析、本地 SQLite 台账、规则引擎异常检测、全离线运行"
 readme = "README.md"
-requires-python = ">=3.8"
-license = { text = "MIT" }
+requires-python = ">=3.12"
+license = "MIT"
+license-files = ["LICENSE"]
 authors = [{ name = "yuluo554" }]
 keywords = ["invoice", "e-invoice", "expense", "audit", "ledger", "desktop"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Financial and Insurance Industry",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: Microsoft :: Windows",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.12",
     "Topic :: Office/Business :: Financial",
 ]
@@ -30,25 +29,22 @@ dependencies = []
 # GitHub 直接不建 job（run 0 秒失败、jobs=0），红都看不见
 dev = ["pytest>=7.0", "pyyaml>=6"]
 parse = ["pdfplumber>=0.10"]
-# reportlab 版本策略（M6 干净环境实测，两个方向都踩过）：
-#   py<3.9 锁 <4 —— 4.x 的 hashlib.md5(usedforsecurity=False) 是 py3.9 才有的参数，
-#     3.8 上 generate 直接 TypeError（README 步骤与 CI 的 win-3.8 作业同挂）；
-#   py>=3.9 放开 —— 3.6.13 在 3.12 装不起来（无 wheel、sdist 构建失败），单一上界不可行。
+# reportlab 版本策略（M7 收口：floor 抬到 3.12 后不再需要环境标记）：
+#   历史踩坑（M6 干净环境实测，两个方向都踩过）——py<3.9 曾必须锁 <4（4.x 的
+#   hashlib.md5(usedforsecurity=False) 是 py3.9 才有的参数，3.8 上 generate 直接
+#   TypeError），而 3.6.13 在 3.12 装不起来（无 wheel、sdist 构建失败）。
+#   现 requires-python >=3.12 → 单一 `>=3.6` 即正确，上界放开装最新线。
 # 入仓冻结数据集由 3.6.13 产出：PDF 字节比对只在 reportlab 3.x 环境生效
 # （tests/test_generator.py 按主版本收敛，XML/OFD/真值仍全量守门）
-data = [
-    "reportlab>=3.6,<4; python_version < '3.9'",
-    "reportlab>=3.6; python_version >= '3.9'",
-]
+data = ["reportlab>=3.6"]
 export = ["openpyxl>=3.1"]
 report = ["python-docx>=0.8.11"]
 # QtCharts 位于 PySide6-Addons，必须显式声明（extras 覆盖真实 import 纪律）
-# M5 实测复核（2026-10-06）：6.6.3.1 发 cp38-abi3 wheel 且为 <6.7 内最新可解析版（6.7+ requires-python>=3.9）
+# M7 收口：floor >=3.12 后不再需要 <6.7 锁（6.7+ 只是 requires-python>=3.9，
+# 3.12 上可解析到最新线；实测装到 6.12.0）
 desktop = [
-    "PySide6>=6.5,<6.7; python_version < '3.9'",
-    "PySide6>=6.5; python_version >= '3.9'",
-    "PySide6-Addons>=6.5,<6.7; python_version < '3.9'",
-    "PySide6-Addons>=6.5; python_version >= '3.9'",
+    "PySide6>=6.5",
+    "PySide6-Addons>=6.5",
 ]
 # 打包子集：独立 extra（不进 all），仅打包机/发布环境安装（CI 测试矩阵保持精简）
 pack = ["pyinstaller>=6,<7"]

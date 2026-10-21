@@ -21,7 +21,13 @@ BatchRuleFunc = Callable[[List[InvoiceCard], Dict[str, Any]], List["Finding"]]
 
 @dataclass
 class Finding:
-    """异常记录（入库形态见 storage.findings 表）。"""
+    """异常记录（入库形态见 storage.findings 表）。
+
+    basis = 法规依据（追加字段，不参与判定）：形如
+    {"regulation": ..., "regulation_short": ..., "article": ...,
+     "knowledge_ref": "764号令.json#764-21-1", "quote": ..., "note": ...}。
+    空 dict 表示该 finding 无依据（非内置规则或规则未挂 basis）。
+    """
 
     rule_id: str
     level: str
@@ -29,6 +35,7 @@ class Finding:
     message: str
     evidence: Dict[str, Any] = field(default_factory=dict)
     finding_id: str = ""  # 空表示未持久化；engine.run 时确定性生成
+    basis: Dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -38,6 +45,7 @@ class Finding:
             "invoice_numbers": list(self.invoice_numbers),
             "message": self.message,
             "evidence": dict(self.evidence),
+            "basis": dict(self.basis),
         }
 
 
@@ -48,6 +56,9 @@ class Rule:
     level: str
     scope: str            # "card" | "batch"
     func: Callable       # (card, ctx) -> [Finding] | (cards, ctx) -> [Finding]
+    # 法规依据（plan/04 §3 规则表 + data/knowledge/ 逐字条文）；追加字段，
+    # 不参与判定。字段同 Finding.basis。
+    basis: Dict[str, Any] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
         if self.level not in LEVELS:
@@ -102,6 +113,9 @@ class DetectionEngine:
                     )
                 if finding.level not in LEVELS:
                     raise ValueError("finding 非法级别: %r" % finding.level)
+                if not finding.basis and rule.basis:
+                    # 依据透传（规则级 -> 异常级）；判定/级别/message 一概不动
+                    finding.basis = dict(rule.basis)
                 if not finding.finding_id:
                     # 多号码 finding 号码全集入 ID，保证 findings 表主键唯一
                     finding.finding_id = "%s:%s" % (

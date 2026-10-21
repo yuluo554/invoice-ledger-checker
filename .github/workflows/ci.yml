@@ -11,14 +11,14 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # win-3.8 镜像开发机环境（最能抓环境差异），ubuntu-3.12 验前向兼容
-          - { os: windows-latest, python: "3.8" }
+          # win-3.12 贴近发布构建解释器（exe 由 3.12 构建），ubuntu-3.12 验跨平台
+          # （M7：floor 由 3.8 抬到 3.12，3.8 腿随支持面收窄一并移除）
           - { os: windows-latest, python: "3.12" }
           - { os: ubuntu-latest, python: "3.12" }
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python }}
       - name: Install package with dev extras
@@ -34,10 +34,10 @@ jobs:
     # test_app.py 会整体 skip（收集数 -10）。两作业职责分离（同 benchmark 作业）。
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
-          python-version: "3.8"
+          python-version: "3.12"
       - name: Install package with desktop+export extras
         run: |
           python -m pip install -U pip
@@ -49,14 +49,14 @@ jobs:
 
   benchmark:
     # M4 回归纪律：改数据/改规则/改接口 -> 基准门槛不回退（F1>=0.95、检出率
-    # 100%、误报 0）。win-3.8 镜像开发机同环境；需 parse+data extras 解析
+    # 100%、误报 0）。win-3.12 与发布构建解释器同档；需 parse+data extras 解析
     # 冻结 PDF 样本（门槛未达退出码 1 即失败）。
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
-          python-version: "3.8"
+          python-version: "3.12"
       - name: Install package with parse+data extras
         run: |
           python -m pip install -U pip

@@ -42,6 +42,7 @@ CREATE TABLE IF NOT EXISTS findings (
     invoice_numbers TEXT NOT NULL,
     message TEXT NOT NULL,
     evidence_json TEXT NOT NULL,
+    basis_json TEXT NOT NULL DEFAULT '{}',
     batch_id TEXT,
     status TEXT DEFAULT 'open',
     created_at TEXT NOT NULL
@@ -62,6 +63,7 @@ class Ledger:
         self.path = path
         self.conn = sqlite3.connect(path)
         self.conn.executescript(SCHEMA_SQL)
+        _migrate_findings_basis(self.conn)
 
     def close(self) -> None:
         self.conn.close()
@@ -135,8 +137,8 @@ class Ledger:
         try:
             self.conn.execute(
                 "INSERT INTO findings (finding_id, rule_id, level, invoice_numbers,"
-                " message, evidence_json, batch_id, status, created_at)"
-                " VALUES (?, ?, ?, ?, ?, ?, ?, 'open', ?)",
+                " message, evidence_json, basis_json, batch_id, status, created_at)"
+                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'open', ?)",
                 (
                     finding["finding_id"],
                     finding["rule_id"],
@@ -144,6 +146,7 @@ class Ledger:
                     json.dumps(finding["invoice_numbers"], ensure_ascii=False),
                     finding["message"],
                     json.dumps(finding.get("evidence", {}), ensure_ascii=False),
+                    json.dumps(finding.get("basis", {}), ensure_ascii=False),
                     batch_id,
                     _now_iso(),
                 ),
@@ -157,7 +160,8 @@ class Ledger:
     def list_findings(self) -> List[Dict[str, Any]]:
         rows = self.conn.execute(
             "SELECT finding_id, rule_id, level, invoice_numbers, message, evidence_json,"
-            " batch_id, status, created_at FROM findings ORDER BY created_at, finding_id"
+            " batch_id, status, created_at, basis_json FROM findings"
+            " ORDER BY created_at, finding_id"
         ).fetchall()
         return [
             {
@@ -170,6 +174,7 @@ class Ledger:
                 "batch_id": r[6],
                 "status": r[7],
                 "created_at": r[8],
+                "basis": json.loads(r[9] or "{}"),
             }
             for r in rows
         ]
@@ -316,3 +321,16 @@ def _now_iso() -> str:
     import datetime
 
     return datetime.datetime.now().replace(microsecond=0).isoformat()
+
+
+def _migrate_findings_basis(conn: sqlite3.Connection) -> None:
+    """旧库（M6 及以前）无 basis_json 列 -> 原地 ADD COLUMN 补空（不重写数据）。
+
+    CHECK 约束/主键不变；已有 finding 的 basis 为 '{}'（历史记录本就无依据），
+    重跑 check 时同 finding_id 幂等拒收，不会回填——这是如实形态，不做假回填。
+    """
+    columns = {row[1] for row in conn.execute("PRAGMA table_info(findings)")}
+    if "basis_json" not in columns:
+        conn.execute(
+            "ALTER TABLE findings ADD COLUMN basis_json TEXT NOT NULL DEFAULT '{}'")
+        conn.commit()
